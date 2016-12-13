@@ -11,17 +11,17 @@
 // (This is the original behaviour of ProjectScaffold prior to multi project support)
 let referenceBinaries = []
 // Web site location for the generated documentation
-let website = "/csharp_sumtypes"
+let website = "/BrightSword.CSharpExtensions.DiscriminatedUnion"
 
 let githubLink = "https://github.com/johnazariah/csharp-sumtypes"
 
 // Specify more information about your project
 let info =
-  [ "project-name", "csharp_sumtypes"
+  [ "project-name", "BrightSword.CSharpExtensions.DiscriminatedUnion"
     "project-author", "John Azariah"
     "project-summary", "DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#"
     "project-github", githubLink
-    "project-nuget", "http://nuget.org/packages/csharp_sumtypes" ]
+    "project-nuget", "http://nuget.org/packages/BrightSword.CSharpExtensions.DiscriminatedUnion" ]
 
 // --------------------------------------------------------------------------------------
 // For typical project, no changes are needed below

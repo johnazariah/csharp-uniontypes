@@ -10,8 +10,8 @@ Introducing your project
 Say more
 
 *)
-#r "csharp_sumtypes.dll"
-open csharp_sumtypes
+#r "BrightSword.CSharpExtensions.DiscriminatedUnion.dll"
+open BrightSword.CSharpExtensions.DiscriminatedUnion
 
 Library.hello 0
 (**

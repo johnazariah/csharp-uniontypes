@@ -4,7 +4,7 @@
 #I "../../bin"
 
 (**
-csharp_sumtypes
+BrightSword.CSharpExtensions.DiscriminatedUnion
 ======================
 
 Documentation
@@ -13,8 +13,8 @@ Documentation
   <div class="span1"></div>
   <div class="span6">
     <div class="well well-small" id="nuget">
-      The csharp_sumtypes library can be <a href="https://nuget.org/packages/csharp_sumtypes">installed from NuGet</a>:
-      <pre>PM> Install-Package csharp_sumtypes</pre>
+      The BrightSword.CSharpExtensions.DiscriminatedUnion library can be <a href="https://nuget.org/packages/BrightSword.CSharpExtensions.DiscriminatedUnion">installed from NuGet</a>:
+      <pre>PM> Install-Package BrightSword.CSharpExtensions.DiscriminatedUnion</pre>
     </div>
   </div>
   <div class="span1"></div>
@@ -26,8 +26,8 @@ Example
 This example demonstrates using a function defined in this sample library.
 
 *)
-#r "csharp_sumtypes.dll"
-open csharp_sumtypes
+#r "BrightSword.CSharpExtensions.DiscriminatedUnion.dll"
+open BrightSword.CSharpExtensions.DiscriminatedUnion
 
 printfn "hello = %i" <| Library.hello 0
 
@@ -59,9 +59,9 @@ The library is available under Public Domain license, which allows modification 
 redistribution for both commercial and non-commercial purposes. For more information see the 
 [License file][license] in the GitHub repository. 
 
-  [content]: https://github.com/fsprojects/csharp_sumtypes/tree/master/docs/content
-  [gh]: https://github.com/fsprojects/csharp_sumtypes
-  [issues]: https://github.com/fsprojects/csharp_sumtypes/issues
-  [readme]: https://github.com/fsprojects/csharp_sumtypes/blob/master/README.md
-  [license]: https://github.com/fsprojects/csharp_sumtypes/blob/master/LICENSE.txt
+  [content]: https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion/tree/master/docs/content
+  [gh]: https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion
+  [issues]: https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion/issues
+  [readme]: https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion/blob/master/README.md
+  [license]: https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion/blob/master/LICENSE.txt
 *)

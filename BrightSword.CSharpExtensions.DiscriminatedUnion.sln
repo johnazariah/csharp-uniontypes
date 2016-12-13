@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A6A6AF7D-D6E3-442D-9B1E-58CC91879BE1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "csharp_sumtypes", "src\csharp_sumtypes\csharp_sumtypes.fsproj", "{BADD2E7C-35A6-413B-A4C8-F291A8FFCB94}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BrightSword.CSharpExtensions.DiscriminatedUnion", "src\BrightSword.CSharpExtensions.DiscriminatedUnion\BrightSword.CSharpExtensions.DiscriminatedUnion.fsproj", "{BADD2E7C-35A6-413B-A4C8-F291A8FFCB94}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{BF60BC93-E09B-4E5F-9D85-95A519479D54}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{8E6D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ED8079DD-2B06-4030-9F0F-DC548F98E1C4}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "csharp_sumtypes.Tests", "tests\csharp_sumtypes.Tests\csharp_sumtypes.Tests.fsproj", "{1227F507-F770-483E-8E8B-C90B1E14E316}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BrightSword.CSharpExtensions.DiscriminatedUnion.Tests", "tests\BrightSword.CSharpExtensions.DiscriminatedUnion.Tests\BrightSword.CSharpExtensions.DiscriminatedUnion.Tests.fsproj", "{1227F507-F770-483E-8E8B-C90B1E14E316}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

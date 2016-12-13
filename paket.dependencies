@@ -1,6 +1,7 @@
 source https://nuget.org/api/v2
 
 nuget FSharp.Core redirects: force
+nuget FParsec redirects: force
 
 group Build
   source https://nuget.org/api/v2
