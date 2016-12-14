@@ -35,8 +35,15 @@ module CodeGeneratorTests =
         |> generateCodeToString
 
     [<Test>]
-    let ``private constructor is generated`` () =
+    let ``code-gen: private constructor`` () =
         maybe_of_T
         |> build_class_declaration_syntax [ to_private_ctor ]
+        |> to_code
+        |> printf "%s"
+
+    [<Test>]
+    let ``code-gen: match function abstract`` () =
+        maybe_of_T
+        |> build_class_declaration_syntax [ to_match_function_abstract ]
         |> to_code
         |> printf "%s"

@@ -171,7 +171,40 @@ module internal CodeGenerator =
                         []
                     ``}``
                 :> MemberDeclarationSyntax
-        }       
+        }
+          
+    let to_match_function_parameter_name = toParameterName >> sprintf "%sFunc"
+
+    //<code>
+    //   // match_function_abstract
+    //   public abstract R Match{R}(Func{R} noneFunc, Func{T, R} someFunc);
+    //                   
+    //</code>
+    let to_match_function_parameters result_type du =
+        let to_match_function_parameter um =
+            let match_function_parameter_type = 
+                um.MemberArgumentType 
+                |> Option.fold (fun _ t -> sprintf "Func<%s, %s>" t.unapply result_type) (sprintf "Func<%s>" result_type)
+            let match_function_parameter_name =
+                um.MemberName.unapply
+                |> to_match_function_parameter_name
+            in 
+            (match_function_parameter_name, match_function_parameter_type)
+        in
+        du.UnionMembers |> Seq.map to_match_function_parameter
+    
+    let to_match_function invocation du =
+        let parameters = to_match_function_parameters "TResult" du
+        in
+        seq {
+            yield ``method`` "TResult" "Match" ``<<`` [ "TResult" ] ``>>`` ``(`` parameters ``)``
+                [``public``; (invocation |> Option.fold (fun _ s -> ``override``) ``abstract``)]
+                ``=>`` invocation
+            :> MemberDeclarationSyntax
+        }
+
+    let to_match_function_abstract = 
+        to_match_function None
 
     let build_class_declaration_syntax fns du = 
         let className = du.UnionTypeName.unapply   
@@ -185,7 +218,10 @@ module internal CodeGenerator =
             [``public``; ``abstract``; ``partial``]
             ``{``
                 members
-            ``}``    
+            ``}``
+
+    
+
     // <summary>
     // Entry-point to the C# DU generator.
     //
@@ -298,6 +334,7 @@ module internal CodeGenerator =
         let fns =
             [
                 to_private_ctor
+                to_match_function_abstract
             ]
         in
         build_class_declaration_syntax fns du

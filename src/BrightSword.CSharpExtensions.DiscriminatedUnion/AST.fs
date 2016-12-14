@@ -75,12 +75,12 @@ module AST =
             {MemberName = memberName; MemberArgumentType = Some typeArgument}
         static member CaseObject (memberName) =
             {MemberName = memberName; MemberArgumentType = None}
-        member this.unapply = 
+        override this.ToString() = 
             this.MemberArgumentType 
             |> Option.fold 
                 (fun _ s -> sprintf "%s of %s" this.MemberName.unapply s.unapply) 
                 (sprintf "%s" this.MemberName.unapply)
-        override this.ToString() = this.unapply
+
 
     and UnionMemberName = 
     | UnionMemberName of string
