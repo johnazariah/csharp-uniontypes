@@ -47,3 +47,24 @@ module CodeGeneratorTests =
         |> build_class_declaration_syntax [ to_match_function_abstract ]
         |> to_code
         |> printf "%s"
+
+    [<Test>]
+    let ``code-gen: access members`` () =
+        maybe_of_T
+        |> build_class_declaration_syntax [ to_access_members ]
+        |> to_code
+        |> printf "%s"
+
+    [<Test>]
+    let ``code-gen: wrapper type`` () =
+        maybe_of_T
+        |> build_class_declaration_syntax [ to_wrapper_type ]
+        |> to_code
+        |> printf "%s"
+    
+    [<Test>]
+    let ``code-gen: complete`` () =
+        maybe_of_T
+        |> to_class_declaration
+        |> to_code
+        |> printf "%s"

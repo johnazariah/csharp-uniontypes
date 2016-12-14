@@ -39,19 +39,23 @@ module AST =
             UnionTypeParameters = typeArgumentListOption |> Option.fold (fun _ s -> s) []
             BaseType = baseType
         }
-        override this.ToString() = 
-            let args = 
+        member this.unapply = 
+            let typeParameters = 
                 this.UnionTypeParameters
                 |> Seq.map (fun a -> a.ToString())
                 |> String.concat ", "
-                |> (fun a -> if a <> "" then sprintf "<%s> " a else " ")
+                |> (fun a -> if a <> "" then sprintf "<%s>" a else "")
+            let bareTypeName = this.UnionTypeName.unapply
+            in
+            sprintf "%s%s" bareTypeName typeParameters
 
+        override this.ToString() = 
             let members = 
                 this.UnionMembers 
                 |> Seq.map (fun m -> m.ToString())
                 |> String.concat " | "
             in
-            sprintf "union %s%s::= [ %s ]" (this.UnionTypeName.ToString()) args members
+            sprintf "union %s ::= [ %s ]" this.unapply members
 
     and UnionTypeName = 
     | UnionTypeName of string
