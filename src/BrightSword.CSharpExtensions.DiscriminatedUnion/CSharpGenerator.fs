@@ -291,6 +291,7 @@ module internal CodeGenerator =
             ``{``
                 members
             ``}``
+        :> MemberDeclarationSyntax
 
     // <summary>
     // Entry-point to the C# DU generator.
@@ -414,5 +415,6 @@ module internal CodeGenerator =
     let to_namespace_declaration ns = 
         ``namespace`` ns.NamespaceName.unapply
             ``{``
-                ns.
+                (ns.Usings |> List.map (fun u -> u.unapply))
+                (ns.Unions |> List.map to_class_declaration)
             ``}``

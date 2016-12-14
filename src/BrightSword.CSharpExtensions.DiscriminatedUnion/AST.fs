@@ -14,28 +14,29 @@ module AST =
         { NamespaceName : NamespaceName
           NamespaceMembers : NamespaceMember list }
         
-        member private this.getUsingString = 
-            function 
-            | Using x -> Some x.unapply
-            | _ -> None
-        
-        member private this.getUnionString = 
-            function 
-            | UnionType x -> Some x.unapply
-            | _ -> None
-        
         static member apply (name, members) = 
             { NamespaceName = name
               NamespaceMembers = members }
         
-        member this.Usings = this.NamespaceMembers |> List.choose this.getUsingString
+        member this.Usings = 
+            let isUsing = 
+                function 
+                | Using x -> Some x
+                | _ -> None
+            this.NamespaceMembers |> List.choose isUsing
+        
+        member this.Unions = 
+            let isUnion = 
+                function 
+                | UnionType x -> Some x
+                | _ -> None
+            this.NamespaceMembers |> List.choose isUnion
+        
         override this.ToString() = 
-            let getMembersString f = this.NamespaceMembers |> List.choose f
-            
             let members = 
                 seq { 
-                    yield! getMembersString getUsingString
-                    yield! getMembersString getUnionString
+                    yield! this.Usings |> List.map (fun u -> u.unapply)
+                    yield! this.Unions |> List.map (fun u -> u.unapply)
                 }
                 |> String.concat ("; ")
             sprintf @"namespace %s{%s}" this.NamespaceName.unapply members

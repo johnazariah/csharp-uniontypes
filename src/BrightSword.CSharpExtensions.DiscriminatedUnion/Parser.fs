@@ -53,4 +53,10 @@ module internal Parser =
     let namespaceMember = using <|> unionType
     let ``namespace`` = bracedNamedBlock "namespace" namespaceName namespaceMember |>> Namespace.apply <?> "Namespace"
 
-    let parseTextToNamespace = run ``namespace``
+    let parseTextToNamespace str = 
+        match run ``namespace`` str with
+        | Success(result, _, _) -> 
+            Some result
+        | Failure(err, _, _) -> 
+            printfn "Failure:%s[%s]" str err
+            None

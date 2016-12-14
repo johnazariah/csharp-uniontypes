@@ -23,7 +23,7 @@ module CodeGeneratorTests =
                              TypeArguments = [] } } ]
           BaseType = None }
     
-    let to_code class_declaration_syntax = 
+    let class_to_code class_declaration_syntax = 
         ``compilation unit`` 
             [ ``namespace`` "DU.Tests" ``{`` [] [ class_declaration_syntax ] ``}`` :> MemberDeclarationSyntax ] 
         |> generateCodeToString
@@ -32,33 +32,33 @@ module CodeGeneratorTests =
     let ``code-gen: private constructor``() = 
         maybe_of_T
         |> build_class_declaration_syntax [ to_private_ctor ]
-        |> to_code
+        |> class_to_code
         |> printf "%s"
     
     [<Test>]
     let ``code-gen: match function abstract``() = 
         maybe_of_T
         |> build_class_declaration_syntax [ to_match_function_abstract ]
-        |> to_code
+        |> class_to_code
         |> printf "%s"
     
     [<Test>]
     let ``code-gen: access members``() = 
         maybe_of_T
         |> build_class_declaration_syntax [ to_access_members ]
-        |> to_code
+        |> class_to_code
         |> printf "%s"
     
     [<Test>]
     let ``code-gen: wrapper type``() = 
         maybe_of_T
         |> build_class_declaration_syntax [ to_wrapper_type ]
-        |> to_code
+        |> class_to_code
         |> printf "%s"
     
     [<Test>]
     let ``code-gen: complete``() = 
         maybe_of_T
         |> to_class_declaration
-        |> to_code
+        |> class_to_code
         |> printf "%s"
