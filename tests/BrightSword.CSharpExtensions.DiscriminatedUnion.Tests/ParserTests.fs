@@ -1,4 +1,4 @@
-namespace Tests
+namespace BrightSword.CSharpExtensions.DiscriminatedUnion.Tests
 
 open BrightSword.CSharpExtensions.DiscriminatedUnion
 open NUnit.Framework
@@ -107,9 +107,10 @@ module public ParserTests =
     
     [<Test>]
     let ``non-generic union parses``() = 
+        // let input = @" union TrafficLight { Red | Amber | Green }";
         let input = @"
 union TrafficLight 
-{ 
+{     
     case object Red;
     case object Amber;
     case object Green;
@@ -129,9 +130,10 @@ union TrafficLight[A]
     
     [<Test>]
     let ``generic hybrid union parses``() = 
+        //let input = @"union Maybe<T> { Some<T> | None }";
         let input = @"
 union Maybe<T> 
-{ 
+{     
     case class Some<T>; 
     case object None; 
 }"

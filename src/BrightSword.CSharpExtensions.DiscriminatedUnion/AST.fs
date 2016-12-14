@@ -1,7 +1,7 @@
 ﻿namespace BrightSword.CSharpExtensions.DiscriminatedUnion
 
 [<AutoOpen>]
-module internal AST =
+module AST =
     type Namespace = 
     | Namespace of (NamespaceName * NamespaceMember list)
     
