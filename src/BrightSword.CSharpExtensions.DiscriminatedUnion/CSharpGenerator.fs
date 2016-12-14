@@ -186,114 +186,114 @@ module internal CodeGenerator =
             ``{``
                 members
             ``}``    
-    /// <summary>
-    /// Entry-point to the C# DU generator.
-    ///
-    /// Generates the Roslyn <code>ClassDeclarationSyntax</code> for a given a UnionType AST. 
-    ///
-    /// Given 
-    /// <code lang="csharp">
-    ///     union Maybe{T} 
-    ///     {
-    ///         Some{T};
-    ///         None;
-    ///     }
-    /// </code>
-    ///
-    /// this function generates the syntax to define a class that looks like:
-    ///
-    /// <code lang="csharp">
-    ///    // class_declaration
-    ///    public abstract class Maybe{T}
-    ///    {
-    ///        // private_ctor
-    ///        private Maybe() {}
-    ///
-    ///        // match_function_abstract
-    ///        public abstract R Match{R}(Func{R} noneFunc, Func{T, R} someFunc);
-    ///
-    ///        // access_member
-    ///        public static readonly Maybe{T} None = new ChoiceTypes.None();
-    ///        public static Maybe{T} NewSome(T value) => new ChoiceTypes.Some(value);
-    ///
-    ///        // wrapper_type
-    ///        private static class ChoiceTypes
-    ///        {
-    ///            // choice_class (value)
-    ///            public class Some : Maybe{T}
-    ///            {
-    ///                // choice_class_ctor
-    ///                public Some(T value)
-    ///                {
-    ///                    Value = value;
-    ///                }
-    ///
-    ///                // value_property
-    ///                public T Value { get; }
-    ///
-    ///                // match_function_override
-    ///                public override R Match{R}(Func{R} noneFunc, Func{T, R} someFunc) => 
-    ///                    someFunc(Value);
-    ///
-    ///                // Value Semantics (https://msdn.microsoft.com/en-us/library/dd183755.aspx)
-    ///                // equals_object_override
-    ///                public override bool Equals(object other) =>
-    ///                    this.Equals(other as Some{T});
-    ///
-    ///                // equals_implementation
-    ///                public bool Equals(Some{T} other) =>
-    ///                    (Object.ReferenceEquals(this, other)
-    ///                    || (!Object.ReferenceEquals(this, null)
-    ///                        && (this.GetType() == other.GetType())
-    ///                        && (Value == other.Value)));
-    ///
-    ///                // hashcode_override
-    ///                public override int GetHashCode() =>
-    ///                    Value.GetHashCode();
-    ///
-    ///                // eq_operator
-    ///                public static bool operator ==(Some{T} left, Some{T} right) =>
-    ///                    (((left == null) && (right == null))
-    ///                    || ((left != null) && (left.Equals(right))));
-    ///
-    ///                // neq_operator
-    ///                public static bool operator !=(Some{T} left, Some{T} right) =>
-    ///                    (!(left == right));
-    ///            }
-    ///
-    ///            // choice_class (singleton)
-    ///            public class None : Maybe{T}
-    ///            {
-    ///                // choice_class_ctor
-    ///                public None {}
-    ///
-    ///                // match_function_override
-    ///                public override R Match{R}(Func{R} noneFunc, Func{T, R} someFunc) => 
-    ///                    noneFunc(Value);
-    ///
-    ///                // equals_object_override
-    ///                public override bool Equals(object other) =>
-    ///                    this.Equals(other as None);
-    ///
-    ///                // equals_implementation
-    ///                public bool Equals(None other) => true;
-    ///
-    ///                // hashcode_override
-    ///                public override int GetHashCode() =>
-    ///                    this.GetType().FullName.GetHashCode();
-    ///
-    ///                // eq_operator
-    ///                public static bool operator ==(None left, None right) => true;
-    ///
-    ///                // neq_operator
-    ///                public static bool operator !=(None left, None right) => false;
-    ///            }
-    ///        }
-    ///    }
-    /// </code>
-    /// 
-    /// </summary>
-    /// <param name="du">The UnionType AST to generate code for</param>
+    // <summary>
+    // Entry-point to the C# DU generator.
+    //
+    // Generates the Roslyn <code>ClassDeclarationSyntax</code> for a given a UnionType AST. 
+    //
+    // Given 
+    // <code lang="csharp">
+    //     union Maybe{T} 
+    //     {
+    //         Some{T};
+    //         None;
+    //     }
+    // </code>
+    //
+    // this function generates the syntax to define a class that looks like:
+    //
+    // <code lang="csharp">
+    //    // class_declaration
+    //    public abstract class Maybe{T}
+    //    {
+    //        // private_ctor
+    //        private Maybe() {}
+    //
+    //        // match_function_abstract
+    //        public abstract R Match{R}(Func{R} noneFunc, Func{T, R} someFunc);
+    //
+    //        // access_member
+    //        public static readonly Maybe{T} None = new ChoiceTypes.None();
+    //        public static Maybe{T} NewSome(T value) => new ChoiceTypes.Some(value);
+    //
+    //        // wrapper_type
+    //        private static class ChoiceTypes
+    //        {
+    //            // choice_class (value)
+    //            public class Some : Maybe{T}
+    //            {
+    //                // choice_class_ctor
+    //                public Some(T value)
+    //                {
+    //                    Value = value;
+    //                }
+    //
+    //                // value_property
+    //                public T Value { get; }
+    //
+    //                // match_function_override
+    //                public override R Match{R}(Func{R} noneFunc, Func{T, R} someFunc) => 
+    //                    someFunc(Value);
+    //
+    //                // Value Semantics (https://msdn.microsoft.com/en-us/library/dd183755.aspx)
+    //                // equals_object_override
+    //                public override bool Equals(object other) =>
+    //                    this.Equals(other as Some{T});
+    //
+    //                // equals_implementation
+    //                public bool Equals(Some{T} other) =>
+    //                    (Object.ReferenceEquals(this, other)
+    //                    || (!Object.ReferenceEquals(this, null)
+    //                        && (this.GetType() == other.GetType())
+    //                        && (Value == other.Value)));
+    //
+    //                // hashcode_override
+    //                public override int GetHashCode() =>
+    //                    Value.GetHashCode();
+    //
+    //                // eq_operator
+    //                public static bool operator ==(Some{T} left, Some{T} right) =>
+    //                    (((left == null) && (right == null))
+    //                    || ((left != null) && (left.Equals(right))));
+    //
+    //                // neq_operator
+    //                public static bool operator !=(Some{T} left, Some{T} right) =>
+    //                    (!(left == right));
+    //            }
+    //
+    //            // choice_class (singleton)
+    //            public class None : Maybe{T}
+    //            {
+    //                // choice_class_ctor
+    //                public None {}
+    //
+    //                // match_function_override
+    //                public override R Match{R}(Func{R} noneFunc, Func{T, R} someFunc) => 
+    //                    noneFunc(Value);
+    //
+    //                // equals_object_override
+    //                public override bool Equals(object other) =>
+    //                    this.Equals(other as None);
+    //
+    //                // equals_implementation
+    //                public bool Equals(None other) => true;
+    //
+    //                // hashcode_override
+    //                public override int GetHashCode() =>
+    //                    this.GetType().FullName.GetHashCode();
+    //
+    //                // eq_operator
+    //                public static bool operator ==(None left, None right) => true;
+    //
+    //                // neq_operator
+    //                public static bool operator !=(None left, None right) => false;
+    //            }
+    //        }
+    //    }
+    // </code>
+    // 
+    // </summary>
+    // <param name="du">The UnionType AST to generate code for</param>
     let to_class_declaration du =
         let fns =
             [
