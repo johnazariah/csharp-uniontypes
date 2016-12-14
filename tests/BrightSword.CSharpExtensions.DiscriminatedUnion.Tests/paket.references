@@ -1,5 +1,7 @@
 FSharp.Core
 FParsec
+BrightSword.RoslynWrapper
+
 group Test
 NUnit
 NUnit.Runners

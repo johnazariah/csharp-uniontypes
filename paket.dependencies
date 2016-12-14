@@ -2,6 +2,7 @@ source https://nuget.org/api/v2
 
 nuget FSharp.Core redirects: force
 nuget FParsec redirects: force
+nuget BrightSword.RoslynWrapper >= 0.0.1-beta redirects: force
 
 group Build
   source https://nuget.org/api/v2
