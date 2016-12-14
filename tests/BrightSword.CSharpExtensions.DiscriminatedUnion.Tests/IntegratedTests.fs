@@ -7,8 +7,17 @@ open NUnit.Framework
 
 module IntegratedTests = 
     let maybe_of_T = @"
-union Maybe<T> 
+namespace Foo 
 {
-    case class Some<T>;
-    case object None;
+    using System;
+
+    union Maybe<T> 
+    {
+        case class Some<T>;
+        case object None;
+    }
 }"
+
+    maybe_of_T 
+    |> parseTextToNamespace
+    |> 

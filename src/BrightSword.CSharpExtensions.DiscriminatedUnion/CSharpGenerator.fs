@@ -13,6 +13,9 @@ module internal CodeGenerator =
     open BrightSword.RoslynWrapper.ClassDeclaration
     open BrightSword.RoslynWrapper.ObjectCreation
     open BrightSword.RoslynWrapper.Conversion
+    open BrightSword.RoslynWrapper.NamespaceDeclaration
+    open BrightSword.RoslynWrapper.CompilationUnit
+    open BrightSword.RoslynWrapper.CodeGenerator
 
     type SF = SyntaxFactory
 
@@ -407,3 +410,9 @@ module internal CodeGenerator =
             ]
         in
         build_class_declaration_syntax fns du
+
+    let to_namespace_declaration ns = 
+        ``namespace`` ns.NamespaceName.unapply
+            ``{``
+                ns.
+            ``}``
