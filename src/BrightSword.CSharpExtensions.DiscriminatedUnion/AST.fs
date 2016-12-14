@@ -1,112 +1,166 @@
 ﻿namespace BrightSword.CSharpExtensions.DiscriminatedUnion
 
 [<AutoOpen>]
-module AST =
+module AST = 
+    let toDottedName (head, (dotComponents : string list)) = 
+        let tail' = dotComponents |> String.concat "."
+        
+        let tail = 
+            if (tail' <> "") then ("." + tail')
+            else ""
+        sprintf "%s%s" head tail
+    
     type Namespace = 
-    | Namespace of (NamespaceName * NamespaceMember list)
+        { NamespaceName : NamespaceName
+          NamespaceMembers : NamespaceMember list }
+        
+        static member apply (name, members) = 
+            { NamespaceName = name
+              NamespaceMembers = members }
+        
+        override this.ToString() = 
+            let getUsingString = 
+                function 
+                | Using x -> Some x.unapply
+                | _ -> None
+            
+            let getUnionString = 
+                function 
+                | UnionType x -> Some x.unapply
+                | _ -> None
+            
+            let getMembersString f = 
+                this.NamespaceMembers
+                |> List.choose f
+            
+            let members = 
+                seq {
+                    yield! getMembersString getUsingString
+                    yield! getMembersString getUnionString
+                } |> String.concat ("; ")
+
+            sprintf @"namespace %s{%s}" this.NamespaceName.unapply members
     
     and NamespaceName = 
-    | NamespaceName of string 
-    with 
-        member this.unapply =  match this with | NamespaceName x -> x
+        | NamespaceName of string
+        
+        member this.unapply = 
+            match this with
+            | NamespaceName x -> x
+        
         override this.ToString() = this.unapply
-
-    and NamespaceMember =
-    | Using of UsingName
-    | UnionType of UnionType
-    with
+    
+    and NamespaceMember = 
+        | Using of UsingName
+        | UnionType of UnionType
         override this.ToString() = 
             match this with
             | Using x -> x.ToString()
             | UnionType x -> x.ToString()
-
+    
     and UsingName = 
-    | UsingName of string
-    with 
-        member this.unapply =  match this with | UsingName x -> x
+        | UsingName of string
+        static member apply = toDottedName >> UsingName
+        
+        member this.unapply = 
+            match this with
+            | UsingName x -> x
+        
         override this.ToString() = this.unapply
-
-    and UnionType = {
-        UnionTypeName : UnionTypeName
-        UnionTypeParameters : TypeParameter list
-        UnionMembers  : UnionMember list
-        BaseType : FullTypeName option
-    }
-    with 
-        static member apply (((unionTypeName, typeArgumentListOption), baseType), unionMemberList) = {
-            UnionTypeName = unionTypeName
-            UnionMembers  = unionMemberList
-            UnionTypeParameters = typeArgumentListOption |> Option.fold (fun _ s -> s) []
-            BaseType = baseType
-        }
+    
+    and UnionType = 
+        { UnionTypeName : UnionTypeName
+          UnionTypeParameters : TypeParameter list
+          UnionMembers : UnionMember list
+          BaseType : FullTypeName option }
+        
+        static member apply (((unionTypeName, typeArgumentListOption), baseType), unionMemberList) = 
+            { UnionTypeName = unionTypeName
+              UnionMembers = unionMemberList
+              UnionTypeParameters = typeArgumentListOption |> Option.fold (fun _ s -> s) []
+              BaseType = baseType }
+        
         member this.unapply = 
             let typeParameters = 
                 this.UnionTypeParameters
                 |> Seq.map (fun a -> a.ToString())
                 |> String.concat ", "
-                |> (fun a -> if a <> "" then sprintf "<%s>" a else "")
+                |> (fun a -> 
+                if a <> "" then sprintf "<%s>" a
+                else "")
+            
             let bareTypeName = this.UnionTypeName.unapply
-            in
             sprintf "%s%s" bareTypeName typeParameters
-
+        
         override this.ToString() = 
             let members = 
-                this.UnionMembers 
+                this.UnionMembers
                 |> Seq.map (fun m -> m.ToString())
                 |> String.concat " | "
-            in
             sprintf "union %s ::= [ %s ]" this.unapply members
-
+    
     and UnionTypeName = 
-    | UnionTypeName of string
-    with 
-        member this.unapply = match this with | UnionTypeName x -> x
+        | UnionTypeName of string
+        
+        member this.unapply = 
+            match this with
+            | UnionTypeName x -> x
+        
         override this.ToString() = this.unapply
-
+    
     and TypeParameter = 
-    | TypeArgument of string
-    with 
-        member this.unapply = match this with | TypeArgument x -> x
+        | TypeArgument of string
+        
+        member this.unapply = 
+            match this with
+            | TypeArgument x -> x
+        
         override this.ToString() = this.unapply
     
     and UnionMember = 
-        {
-            MemberName : UnionMemberName
-            MemberArgumentType : FullTypeName option
-        }
-    with
-        static member CaseClass (memberName, typeArgument) = 
-            {MemberName = memberName; MemberArgumentType = Some typeArgument}
-        static member CaseObject (memberName) =
-            {MemberName = memberName; MemberArgumentType = None}
+        { MemberName : UnionMemberName
+          MemberArgumentType : FullTypeName option }
+        
+        static member CaseClass(memberName, typeArgument) = 
+            { MemberName = memberName
+              MemberArgumentType = Some typeArgument }
+        
+        static member CaseObject(memberName) = 
+            { MemberName = memberName
+              MemberArgumentType = None }
+        
         override this.ToString() = 
             this.MemberArgumentType 
-            |> Option.fold 
-                (fun _ s -> sprintf "%s of %s" this.MemberName.unapply s.unapply) 
-                (sprintf "%s" this.MemberName.unapply)
-
-
+            |> Option.fold (fun _ s -> sprintf "%s of %s" this.MemberName.unapply s.unapply) 
+                   (sprintf "%s" this.MemberName.unapply)
+    
     and UnionMemberName = 
-    | UnionMemberName of string
-    with 
-        member this.unapply = match this with | UnionMemberName x -> x
-        override this.ToString() = this.unapply
-
-    and FullTypeName = {
-        FullyQualifiedTypeName : string
-        TypeArguments : FullTypeName list
-    }
-    with 
-        static member apply ((head, dotComponents), typeArguments) = 
-            let tail' = dotComponents |> String.concat "."
-            let tail = if (tail' <> "") then ("." + tail') else ""
-            let composedName = sprintf "%s%s" head tail
-            {
-                FullyQualifiedTypeName = composedName
-                TypeArguments = typeArguments |> Option.fold (fun _ s -> s) [] 
-            }
+        | UnionMemberName of string
+        
         member this.unapply = 
-            let typeArguments' = this.TypeArguments |> Seq.map (fun ta -> ta.unapply) |> String.concat ", "
-            let typeArguments = if (typeArguments' <> "") then sprintf "<%s>" typeArguments' else ""
+            match this with
+            | UnionMemberName x -> x
+        
+        override this.ToString() = this.unapply
+    
+    and FullTypeName = 
+        { FullyQualifiedTypeName : string
+          TypeArguments : FullTypeName list }
+        
+        static member apply (nonGenericNamePart, typeArguments) = 
+            { FullyQualifiedTypeName = toDottedName nonGenericNamePart
+              TypeArguments = typeArguments |> Option.fold (fun _ s -> s) [] }
+        
+        member this.unapply = 
+            let typeArguments' = 
+                this.TypeArguments
+                |> Seq.map (fun ta -> ta.unapply)
+                |> String.concat ", "
+            
+            let typeArguments = 
+                if (typeArguments' <> "") then sprintf "<%s>" typeArguments'
+                else ""
+            
             sprintf "%s%s" this.FullyQualifiedTypeName typeArguments
+        
         override this.ToString() = this.unapply

@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="ParserTests.fs" />
     <Compile Include="CodeGeneratorTests.fs" />
+    <Compile Include="IntegratedTests.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>
