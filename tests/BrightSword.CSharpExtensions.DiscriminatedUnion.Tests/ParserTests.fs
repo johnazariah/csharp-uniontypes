@@ -32,15 +32,15 @@ module public ParserTests =
     
     [<Test>]
     let ``parser: case class parses``() = 
-        let input = "case class Result<T>;"
-        let parser = caseClassMember
-        AssertIsValid parser input
+        let input = "Result<T>"
+        let parser = caseMember
+        AssertParsesTo parser input "Result of T"
     
     [<Test>]
     let ``parser: case object parses``() = 
-        let input = "case object Exception;"
-        let parser = caseObjectMember
-        AssertIsValid parser input
+        let input = "Exception;"
+        let parser = caseMember
+        AssertParsesTo parser input "Exception"
     
     [<Test>]
     let ``parser: type - simple name``() = 
@@ -109,14 +109,7 @@ module public ParserTests =
     
     [<Test>]
     let ``parser: union - non-generic union parses``() = 
-        // let input = @" union TrafficLight { Red | Amber | Green }";
-        let input = @"
-union TrafficLight 
-{     
-    case object Red;
-    case object Amber;
-    case object Green;
-}"
+        let input = @" union TrafficLight { Red | Amber | Green }";
         AssertParsesTo unionType input "union TrafficLight ::= [ Red | Amber | Green ]"
     
     [<Test>]
@@ -124,21 +117,15 @@ union TrafficLight
         let input = @"
 union TrafficLight[A] 
 { 
-    case object Red;
-    case object Amber;
-    case object Green;
+    Red
+    | Amber
+    | Green
 }"
         AssertIsInvalidUnion input
     
     [<Test>]
     let ``parser: union - generic hybrid union parses``() = 
-        //let input = @"union Maybe<T> { Some<T> | None }";
-        let input = @"
-union Maybe<T> 
-{     
-    case class Some<T>; 
-    case object None; 
-}"
+        let input = @"union Maybe<T> { Some<T> | None }";
         AssertParsesTo unionType input "union Maybe<T> ::= [ Some of T | None ]"
     
     [<Test>]
@@ -146,8 +133,7 @@ union Maybe<T>
         let input = @"
 union Either<L, R>
 { 
-    case class Left<L>; 
-    case class Right<R>; 
+    Left<L> | Right<R>
 }"
         AssertParsesTo unionType input "union Either<L, R> ::= [ Left of L | Right of R ]"
     
@@ -156,19 +142,13 @@ union Either<L, R>
         let input = @"
 union Either<L, R> 
 { 
-    case class Left<L, R>; 
-    case class Right<R>; 
+    Left<L, R> | Right<R> 
 }"
         AssertIsInvalidUnion input
     
     [<Test>]
     let ``parser: union - total generic union - generic type enclosing type argument``() = 
-        let input = @"
-union Either<L, R> 
-{ 
-    case class Left<List<L>>; 
-    case class Right<R>; 
-}"
+        let input = @"union Either<L, R> { Left<List<L>> | Right<R> }"
         AssertParsesTo unionType input "union Either<L, R> ::= [ Left of List<L> | Right of R ]"
     
     [<Test>]
@@ -176,40 +156,27 @@ union Either<L, R>
         let input = @"
 union Result<T> 
 { 
-    case class Result<T>; 
-    case class Error<Exception>; 
+    Result<T> | Error<Exception>
 }"
         AssertParsesTo unionType input "union Result<T> ::= [ Result of T | Error of Exception ]"
     
     [<Test>]
     let ``parser: union - fully qualified types can be used as case class arguments``() = 
-        let input = @"
-union Result<T> 
-{ 
-    case class Result<T>; 
-    case class Error<String.Exception>; 
-}"
-        AssertParsesTo unionType input "union Result<T> ::= [ Result of T | Error of String.Exception ]"
+        let input = @"union Result<T> { Result<T> | Error<System.Exception> }"
+        AssertParsesTo unionType input "union Result<T> ::= [ Result of T | Error of System.Exception ]"
     
     [<Test>]
     let ``parser: union - union generic types - union may contain superfluous arguments``() = 
         let input = @"
 union Either<X, L, R> 
 { 
-    case class Left<L>; 
-    case class Right<R>; 
+    Left<L> | Right<R> 
 }"
         AssertParsesTo unionType input "union Either<X, L, R> ::= [ Left of L | Right of R ]"
     
     [<Test>]
     let ``parser: union - non generic union may have case class members``() = 
-        let input = @"
-union Payment 
-{ 
-    case object Cash; 
-    case class CreditCard<CreditCardDetails>; 
-    case class Cheque<ChequeDetails>; 
-}"
+        let input = @"union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> }"
         AssertParsesTo unionType input 
             "union Payment ::= [ Cash | CreditCard of CreditCardDetails | Cheque of ChequeDetails ]"
     
@@ -238,9 +205,9 @@ namespace CoolMonads
     
     union Payment 
     { 
-        case object Cash; 
-        case class CreditCard<CreditCardDetails>; 
-        case class Cheque<ChequeDetails>; 
+        Cash 
+        | CreditCard<CreditCardDetails>
+        | Cheque<ChequeDetails>
     }
 } 
 "
@@ -258,16 +225,12 @@ namespace CoolMonads
 
     union Payment 
     { 
-        case object Cash; 
-        case class CreditCard<CreditCardDetails>; 
-        case class Cheque<ChequeDetails>; 
+        Cash 
+        | CreditCard<CreditCardDetails>
+        | Cheque<ChequeDetails>
     }
 
-    union Result<T> 
-    { 
-        case class Result<T>; 
-        case class Error<String.Exception>; 
-    }
+    union Result<T> { Result<T> | Error<System.Exception> }
 } 
 "
         let expected = 
