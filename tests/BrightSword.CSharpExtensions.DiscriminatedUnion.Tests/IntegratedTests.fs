@@ -20,16 +20,12 @@ namespace CoolMonads
 {
     using System;
 
-    union Maybe<T> 
-    {
-        case class Some<T>;
-        case object None;
-    }
+    union Maybe<T> { Some<T> | None }
 }"
 
     [<Test>]
     let ``parse-and-code-gen: maybe``() = 
         maybe_of_T 
-        |> parseTextToNamespace
-        |> Option.map (to_namespace_declaration >> namespace_to_code >> printf "%s")
+        |> (parseTextToNamespace >> to_namespace_declaration >> namespace_to_code)
+        |> printf "%s"
         |> ignore

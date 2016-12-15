@@ -55,7 +55,7 @@ module internal CodeGenerator =
         in
         seq {
             yield ``method`` "TResult" "Match" ``<<`` [ "TResult" ] ``>>`` ``(`` parameters ``)``
-                [``public``; (invocation |> Option.fold (fun _ s -> ``override``) ``abstract``)]
+                [``public``; (invocation |> Option.fold (fun _ _ -> ``override``) ``abstract``)]
                 ``=>`` invocation
             :> MemberDeclarationSyntax
         }

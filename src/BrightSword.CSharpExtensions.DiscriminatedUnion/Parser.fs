@@ -20,8 +20,8 @@ module internal Parser =
     
     let braced p = wstr "{" >>. p .>> wstr "}"
     let pointed p = wstr "<" >>. p .>> wstr ">"
-    let splitWords sep = sepBy1 word sep
     let comma = wstr ","
+    let pipe = wstr "|"
     let identifier = 
         spaces >>. regex "[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}_][\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\d_]*[?]?" .>> spaces
     let dotComponent : Parser<string, unit> = (pchar '.') >>. identifier .>> spaces
@@ -32,31 +32,25 @@ module internal Parser =
     do fullTypeNameImpl := nonGenericNamePart .>>. opt typeArguments |>> FullTypeName.apply
     
     let memberName = word |>> UnionMemberName
-    let caseClassMember = 
-        (wstr "case class" >>. memberName) .>>. (pointed fullTypeName) .>> wstr ";" |>> UnionMember.CaseClass 
-        <?> "Case Class"
-    let caseObjectMember = wstr "case object" >>. memberName .>> wstr ";" |>> UnionMember.CaseObject <?> "Case Object"
-    let bracedMany p = braced (many p)
-    let bracedMany1 p = braced (many1 p)
-    let caseMember = caseClassMember <|> caseObjectMember
-    let caseMembers = (bracedMany1 caseMember) .>> opt (wstr ";")
-    let typeParameters = pointed (splitWords comma) |>> List.map TypeArgument
+    let caseMemberArgOpt = pointed fullTypeName |> opt
+    let caseMember = ((memberName .>>. caseMemberArgOpt) |> ws) |>> UnionMember.apply
+    let caseMembers = sepBy1 caseMember pipe
+    let caseMembersBlock = braced caseMembers
+    let typeParameters = (sepBy1 word comma |> pointed) |>> List.map TypeArgument
+    let constrainsOpt = ((wstr "constrains") >>. fullTypeName) |> opt
     let unionTypeName = word |>> UnionTypeName
     let unionType = 
-        (wstr "union" >>. unionTypeName) .>>. (opt typeParameters) .>>. opt ((wstr "constrains") >>. fullTypeName) 
-        .>>. caseMembers |>> (UnionType.apply >> UnionType) <?> "Union"
-    let namespaceName = word |>> NamespaceName
-    let bracedNamedBlock blockTag blockNameParser blockItemParser = 
-        (wstr blockTag >>. blockNameParser) .>>. bracedMany blockItemParser
+        (wstr "union" >>. unionTypeName) .>>. (opt typeParameters) .>>. constrainsOpt .>>. caseMembersBlock 
+        .>> opt (wstr ";") |>> (UnionType.apply >> UnionType) <?> "Union"
     let usingName = nonGenericNamePart |>> UsingName.apply
     let using = wstr "using" >>. usingName .>> wstr ";" |>> Using <?> "Using"
+    let namespaceName = word |>> NamespaceName
     let namespaceMember = using <|> unionType
-    let ``namespace`` = bracedNamedBlock "namespace" namespaceName namespaceMember |>> Namespace.apply <?> "Namespace"
-
+    let ``namespace`` = 
+        wstr "namespace" >>. namespaceName .>>. (namespaceMember |> (many >> braced)) |>> Namespace.apply 
+        <?> "Namespace"
+    
     let parseTextToNamespace str = 
         match run ``namespace`` str with
-        | Success(result, _, _) -> 
-            Some result
-        | Failure(err, _, _) -> 
-            printfn "Failure:%s[%s]" str err
-            None
+        | Success(result, _, _) -> result
+        | Failure(err, _, _) -> sprintf "Failure:%s[%s]" str err |> failwith

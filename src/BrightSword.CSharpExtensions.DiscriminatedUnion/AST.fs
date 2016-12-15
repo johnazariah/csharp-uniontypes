@@ -121,13 +121,9 @@ module AST =
         { MemberName : UnionMemberName
           MemberArgumentType : FullTypeName option }
         
-        static member CaseClass(memberName, typeArgument) = 
+        static member apply(memberName, typeArgument) = 
             { MemberName = memberName
-              MemberArgumentType = Some typeArgument }
-        
-        static member CaseObject(memberName) = 
-            { MemberName = memberName
-              MemberArgumentType = None }
+              MemberArgumentType = typeArgument }
         
         override this.ToString() = 
             this.MemberArgumentType 
