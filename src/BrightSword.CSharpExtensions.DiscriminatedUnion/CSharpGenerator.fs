@@ -228,8 +228,28 @@ module internal UnionTypeCodeGenerator =
         ]
 
     //   public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
+    let to_eq_operator du =
+        let class_name = du.UnionTypeName.unapply
+        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
+        let duType = ``generic type`` class_name ``<<`` type_parameters ``>>``
+        [
+            ``operator ==`` ("left", "right", duType)
+                (``=>`` (((ident "left") <?.> ("Equals", [ident "right"])) <??> ``false``))
+                :> MemberDeclarationSyntax
+        ]
+
     //   public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
-                    
+    let to_neq_operator du =
+        let class_name = du.UnionTypeName.unapply
+        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
+        let duType = ``generic type`` class_name ``<<`` type_parameters ``>>``
+        [
+            ``operator !=`` ("left", "right", duType)
+                (``=>`` (! ((ident "left") <==> (ident "right"))))
+
+                :> MemberDeclarationSyntax
+        ]
+
     let to_class_declaration_internal fns du = 
         let class_name = du.UnionTypeName.unapply
         let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
@@ -252,6 +272,8 @@ module internal UnionTypeCodeGenerator =
                 to_equatable_equals_method
                 to_structural_equality_equals_method 
                 to_structural_equality_gethashcode_method
+                to_eq_operator
+                to_neq_operator
             ]
         to_class_declaration_internal fns du
 

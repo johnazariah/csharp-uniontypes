@@ -126,6 +126,33 @@ module CodeGeneratorTests =
         test_code_gen to_structural_equality_gethashcode_method expected 
 
     [<Test>]
+    let ``code-gen: eq operator``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public abstract partial class Maybe<T>
+    {
+        public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
+    }
+}"
+        test_code_gen to_eq_operator expected 
+
+
+    [<Test>]
+    let ``code-gen: neq operator``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public abstract partial class Maybe<T>
+    {
+        public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
+    }
+}"
+        test_code_gen to_neq_operator expected 
+
+    [<Test>]
     let ``code-gen-choice : equals_object_override``() =
         let expected = @"namespace DU.Tests
 {
@@ -224,6 +251,8 @@ namespace DU.Tests
         public bool Equals(Maybe<T> other) => Equals(other as object);
         public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
         public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
+        public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
+        public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
     }
 }"
     
