@@ -27,9 +27,9 @@ module internal Parser =
     let dotComponent : Parser<string, unit> = (pchar '.') >>. identifier .>> spaces
     let fullTypeName, fullTypeNameImpl = createParserForwardedToRef()
     let typeArguments = pointed (sepBy1 fullTypeName comma)
-    let nonGenericNamePart = spaces >>. identifier .>>. many dotComponent
+    let dottedName = spaces >>. identifier .>>. many dotComponent
     
-    do fullTypeNameImpl := nonGenericNamePart .>>. opt typeArguments |>> FullTypeName.apply
+    do fullTypeNameImpl := dottedName .>>. opt typeArguments |>> FullTypeName.apply
     
     let memberName = word |>> UnionMemberName
     let caseMemberArgOpt = pointed fullTypeName |> opt
@@ -42,9 +42,9 @@ module internal Parser =
     let unionType = 
         (wstr "union" >>. unionTypeName) .>>. (opt typeParameters) .>>. constrainsOpt .>>. caseMembersBlock 
         .>> opt (wstr ";") |>> (UnionType.apply >> UnionType) <?> "Union"
-    let usingName = nonGenericNamePart |>> UsingName.apply
+    let usingName = dottedName |>> UsingName.apply
     let using = wstr "using" >>. usingName .>> wstr ";" |>> Using <?> "Using"
-    let namespaceName = word |>> NamespaceName
+    let namespaceName = dottedName |>> NamespaceName.apply
     let namespaceMember = using <|> unionType
     let ``namespace`` = 
         wstr "namespace" >>. namespaceName .>>. (namespaceMember |> (many >> braced)) |>> Namespace.apply 

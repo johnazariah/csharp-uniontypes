@@ -195,6 +195,15 @@ namespace CoolMonads
 } 
 "
         AssertParsesTo ``namespace`` input "namespace CoolMonads{}"
+
+    [<Test>]
+    let ``parser: namespace - dotted name``() = 
+        let input = @"
+namespace DU.Tests
+{
+} 
+"
+        AssertParsesTo ``namespace`` input "namespace DU.Tests{}"
     
     [<Test>]
     let ``parser: namespace - single using and union``() = 

@@ -43,7 +43,8 @@ module AST =
     
     and NamespaceName = 
         | NamespaceName of string
-        
+        static member apply = toDottedName >> NamespaceName
+
         member this.unapply = 
             match this with
             | NamespaceName x -> x
