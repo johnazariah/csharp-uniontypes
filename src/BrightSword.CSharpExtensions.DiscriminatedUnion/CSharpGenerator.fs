@@ -155,11 +155,6 @@ module internal UnionTypeCodeGenerator =
                 :> MemberDeclarationSyntax 
         ]
     
-    //<code>
-    //  // access_member
-    //  public static readonly Maybe{T} None = new ChoiceTypes.None();
-    //  public static Maybe{T} NewSome(T value) => new ChoiceTypes.Some(value);
-    //</code>
     let to_access_members (du : UnionType) =
         let union_name = du.unapply
         
@@ -201,6 +196,39 @@ module internal UnionTypeCodeGenerator =
                 ``}`` 
                 :> MemberDeclarationSyntax
         ]
+
+    //  public bool Equals(Maybe<T> other) => Equals(other as object);
+    let to_equatable_equals_method (du : UnionType) = 
+        let class_name = du.UnionTypeName.unapply
+        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
+        in 
+        [
+            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``generic type`` class_name ``<<`` type_parameters ``>>``) ]``)``
+                [``public``]
+                (Some (``=>`` (``invoke`` (ident "Equals") ``(`` [ (ident "other") |~> "object" ] ``)``)))
+                :> MemberDeclarationSyntax
+        ]
+
+    //  public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
+    let to_structural_equality_equals_method (du : UnionType) = 
+        [
+            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object"); ("comparer", ``type`` "IEqualityComparer") ]``)``
+                [``public``]
+                (Some (``=>`` (``invoke`` (ident "Equals") ``(`` [ (ident "other") ] ``)``)))
+                :> MemberDeclarationSyntax
+        ]
+
+    //  public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
+    let to_structural_equality_gethashcode_method (du : UnionType) = 
+        [
+            ``arrow_method`` "int" "GetHashCode" ``<<`` [] ``>>`` ``(`` [ ("comparer", ``type`` "IEqualityComparer") ]``)``
+                [``public``]
+                (Some (``=>`` (``invoke`` (ident "GetHashCode") ``(`` [] ``)``)))
+                :> MemberDeclarationSyntax
+        ]
+
+    //   public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
+    //   public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
                     
     let to_class_declaration_internal fns du = 
         let class_name = du.UnionTypeName.unapply
@@ -213,9 +241,18 @@ module internal UnionTypeCodeGenerator =
                 members 
             ``}`` 
             :> MemberDeclarationSyntax
-    
+      
     let to_class_declaration du = 
-        let fns = [ to_private_ctor; to_match_function_abstract; to_access_members; to_wrapper_type ]
+        let fns = 
+            [ 
+                to_private_ctor
+                to_match_function_abstract
+                to_access_members
+                to_wrapper_type
+                to_equatable_equals_method
+                to_structural_equality_equals_method 
+                to_structural_equality_gethashcode_method
+            ]
         to_class_declaration_internal fns du
 
 module internal CodeGenerator =     
