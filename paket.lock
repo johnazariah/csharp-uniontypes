@@ -1,6 +1,6 @@
 NUGET
   remote: https://www.nuget.org/api/v2
-    BrightSword.RoslynWrapper (0.0.1-beta) - redirects: force
+    BrightSword.RoslynWrapper (1.0) - redirects: force
       FSharp.Core
       Microsoft.CodeAnalysis.Analyzers
       Microsoft.CodeAnalysis.Common
@@ -545,7 +545,7 @@ NUGET
 GROUP Build
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.46.1)
+    FAKE (4.47.2)
     FSharp.Compiler.Service (2.0.0.6)
     FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
@@ -563,7 +563,7 @@ NUGET
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (ab0bacd2f21ee486879a3ea2a765f15b536181fb)
+    modules/Octokit/Octokit.fsx (be6e4b2b513b5f2cd64ec689fe7f1f45c39f4e92)
       Octokit (>= 0.20)
 GROUP Test
 NUGET
