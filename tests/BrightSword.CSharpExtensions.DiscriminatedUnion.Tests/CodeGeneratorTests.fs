@@ -151,28 +151,6 @@ module CodeGeneratorTests =
     }
 }"
         test_code_gen to_neq_operator expected 
-
-    [<Test>]
-    let ``code-gen-choice : equals_object_override``() =
-        let expected = @"namespace DU.Tests
-{
-    using System;
-
-    public class None : Maybe<T>, IEquatable<None>
-    {
-        public override bool Equals(object other) => this.Equals(other as None);
-    }
-}
-namespace DU.Tests
-{
-    using System;
-
-    public class Some : Maybe<T>, IEquatable<Some>
-    {
-        public override bool Equals(object other) => this.Equals(other as Some);
-    }
-}"
-        test_code_gen_choice equals_object_override expected
     
     [<Test>]
     let ``code-gen: wrapper type``() = 
@@ -184,13 +162,13 @@ namespace DU.Tests
     {
         private static class ChoiceTypes
         {
-            public class None : Maybe<T>, IEquatable<None>
+            public class None : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
-                public override bool Equals(object other) => this.Equals(other as None);
+                public override string ToString() => ""None"";
             }
 
-            public class Some : Maybe<T>, IEquatable<Some>
+            public class Some : Maybe<T>
             {
                 public Some(T value)
                 {
@@ -203,12 +181,41 @@ namespace DU.Tests
                 }
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
-                public override bool Equals(object other) => this.Equals(other as Some);
+<<<<<<< HEAD
+                public override string ToString() => ""Some"";
+=======
+                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override string ToString() => String.Format(""Some {0}"", Value);
+>>>>>>> aebf77a... fixup! Add ToString() to inner class
             }
         }
     }
 }"
         test_code_gen to_wrapper_type expected
+
+    
+    [<Test>]
+    let ``code-gen-choice: ToString``() = 
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public class None : Maybe<T>
+    {
+        public override string ToString() => ""None"";
+    }
+}
+namespace DU.Tests
+{
+    using System;
+
+    public class Some : Maybe<T>
+    {
+        public override string ToString() => String.Format(""Some {0}"", Value);
+    }
+}"
+        test_code_gen_choice tostring expected
+
 
     let COMPLETE_EXPECTED = @"namespace DU.Tests
 {
@@ -225,13 +232,13 @@ namespace DU.Tests
         public static Maybe<T> NewSome(T value) => new ChoiceTypes.Some(value);
         private static class ChoiceTypes
         {
-            public class None : Maybe<T>, IEquatable<None>
+            public class None : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
-                public override bool Equals(object other) => this.Equals(other as None);
+                public override string ToString() => ""None"";
             }
 
-            public class Some : Maybe<T>, IEquatable<Some>
+            public class Some : Maybe<T>
             {
                 public Some(T value)
                 {
@@ -244,7 +251,12 @@ namespace DU.Tests
                 }
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
-                public override bool Equals(object other) => this.Equals(other as Some);
+<<<<<<< HEAD
+                public override string ToString() => ""Some"";
+=======
+                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override string ToString() => String.Format(""Some {0}"", Value);
+>>>>>>> aebf77a... fixup! Add ToString() to inner class
             }
         }
 

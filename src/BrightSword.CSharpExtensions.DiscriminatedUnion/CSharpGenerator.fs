@@ -71,37 +71,48 @@ module internal ChoiceClassCodeGenerator =
         |> pick_value_or_singleton value_property_value value_property_singleton
 
     let match_function_override du um = 
-        let argument_names = um.MemberArgumentType |> Option.fold (fun _ _ -> [ "Value" ]) []
+        let argument_names = um.MemberArgumentType |> Option.fold (fun _ _ -> [ ident "Value" ]) []
         let match_function_name = um.MemberName.unapply |> to_match_function_parameter_name
-        let invocation = 
-            let invocation_arguments = 
-                argument_names
-                |> List.map (SyntaxFactory.IdentifierName >> SyntaxFactory.Argument)
-                |> (SyntaxFactory.SeparatedList >> SyntaxFactory.ArgumentList)
-            match_function_name
-            |> (ident >> SyntaxFactory.InvocationExpression)
-            |> (fun ie -> ie.WithArgumentList invocation_arguments)
-            |> SyntaxFactory.ArrowExpressionClause
+        let invocation = ``=>`` (``invoke`` (ident match_function_name) ``(`` argument_names ``)`` )
         
         du 
         |> to_match_function (Some invocation)
-            
-    let equals_object_override _ um = 
-        let member_name = um.MemberName.unapply
-        let initialization_expression = 
-            ``=>`` (invoke (ident "this.Equals") ``(`` [ ident "other" |~> member_name] ``)``)
-        
+
+    let hashcode du um = []
+    let equals du um = []
+
+<<<<<<< HEAD
+    let tostring du um = 
+=======
         [
-            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object") ] ``)`` 
-                [ ``public``; ``override`` ] 
-                (Some initialization_expression) 
+            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object") ]``)``
+                [``public``; ``override``]
+                (Some (``=>`` equality_expression))
                 :> MemberDeclarationSyntax
         ]
 
-    let equals_implementation du um = []
-    let hashcode_override du um = []
-    let eq_operator du um = []
-    let neq_operator du um = []
+    let hashcode_override du um = 
+        [
+        ]
+
+    let tostring_override du um = 
+        let member_name = um.MemberName.unapply
+        let string_expression_value _ _ =
+            ``invoke`` (ident "String.Format") ``(`` [ (literal (sprintf "%s {0}" member_name)) :> ExpressionSyntax; ident "Value" :> ExpressionSyntax ] ``)``
+            :> ExpressionSyntax
+        let string_expression_singleton =
+            literal (sprintf ("%s") member_name)
+            :> ExpressionSyntax
+        let string_expression =
+            um
+            |> pick_value_or_singleton string_expression_value string_expression_singleton
+>>>>>>> aebf77a... fixup! Add ToString() to inner class
+        [
+            ``arrow_method`` "string" "ToString" ``<<`` [ ] ``>>`` ``(`` [] ``)`` 
+                [ ``public``; ``override``] 
+                (Some (``=>`` string_expression))
+                :> MemberDeclarationSyntax
+        ]
 
     let to_choice_class_internal fns (du: UnionType) um = 
         let union_name = du.unapply
@@ -111,10 +122,8 @@ module internal ChoiceClassCodeGenerator =
             fns
             |> Seq.collect (fun f -> f du um)
 
-        let iequatable = sprintf "IEquatable<%s>" member_name
-
         ``class`` member_name ``<<`` [] ``>>`` 
-            ``:`` (Some union_name) ``,`` [ iequatable ] 
+            ``:`` (Some union_name) ``,`` [ ] 
             [ ``public`` ] 
             ``{`` 
                 members 
@@ -132,11 +141,9 @@ module internal ChoiceClassCodeGenerator =
 
         let value_semantics_member_fns = 
             [
-                equals_object_override
-                equals_implementation
-                hashcode_override
-                eq_operator
-                neq_operator
+                hashcode
+                equals
+                tostring
             ]
 
         let fns = common_member_fns @ value_semantics_member_fns
