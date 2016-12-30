@@ -63,6 +63,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="AST.fs" />
     <Compile Include="Parser.fs" />
+    <Compile Include="EqualityOperators.fs" />
     <Compile Include="CSharpGenerator.fs" />
     <None Include="paket.references" />
     <None Include="paket.template" />

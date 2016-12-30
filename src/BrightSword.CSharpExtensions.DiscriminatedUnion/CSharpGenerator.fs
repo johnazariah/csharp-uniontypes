@@ -71,37 +71,68 @@ module internal ChoiceClassCodeGenerator =
         |> pick_value_or_singleton value_property_value value_property_singleton
 
     let match_function_override du um = 
-        let argument_names = um.MemberArgumentType |> Option.fold (fun _ _ -> [ "Value" ]) []
+        let argument_names = um.MemberArgumentType |> Option.fold (fun _ _ -> [ ident "Value" ]) []
         let match_function_name = um.MemberName.unapply |> to_match_function_parameter_name
-        let invocation = 
-            let invocation_arguments = 
-                argument_names
-                |> List.map (SyntaxFactory.IdentifierName >> SyntaxFactory.Argument)
-                |> (SyntaxFactory.SeparatedList >> SyntaxFactory.ArgumentList)
-            match_function_name
-            |> (ident >> SyntaxFactory.InvocationExpression)
-            |> (fun ie -> ie.WithArgumentList invocation_arguments)
-            |> SyntaxFactory.ArrowExpressionClause
+        let invocation = ``=>`` (``invoke`` (ident match_function_name) ``(`` argument_names ``)`` )
         
         du 
         |> to_match_function (Some invocation)
-            
-    let equals_object_override _ um = 
+
+    let equals_override _ um = 
         let member_name = um.MemberName.unapply
-        let initialization_expression = 
-            ``=>`` (invoke (ident "this.Equals") ``(`` [ ident "other" |~> member_name] ``)``)
         
+        let equality_expression_builder base_expression _ = 
+            let other_value_is_same = ``invoke`` (ident "Value.Equals") ``(`` [ ``((`` (``cast`` member_name (ident "other")) ``))`` <.> (ident "Value") ] ``)``
+            base_expression <&&> other_value_is_same
+
+        let equality_expression = 
+            um.MemberArgumentType
+            |> Option.fold equality_expression_builder (``is`` member_name (ident "other"))
+
         [
-            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object") ] ``)`` 
-                [ ``public``; ``override`` ] 
-                (Some initialization_expression) 
+            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object") ]``)``
+                [``public``; ``override``]
+                (Some (``=>`` equality_expression))
                 :> MemberDeclarationSyntax
         ]
 
-    let equals_implementation du um = []
-    let hashcode_override du um = []
-    let eq_operator du um = []
-    let neq_operator du um = []
+    let hashcode_override _ um = 
+        let hashcode_expression_builder base_expression _ =
+            base_expression <^> (``invoke`` (ident "Value.GetHashCode") ``(`` [] ``)``)
+            :> ExpressionSyntax
+
+        let get_hash_code_expression = 
+            ``invoke`` (ident "GetType().FullName.GetHashCode") ``(`` [] ``)``
+            :> ExpressionSyntax
+        
+        let hashcode_expression = 
+            um.MemberArgumentType
+            |> Option.fold hashcode_expression_builder get_hash_code_expression
+
+        [
+            ``arrow_method`` "int" "GetHashCode" ``<<`` [] ``>>`` ``(`` []``)``
+                [``public``; ``override``]
+                (Some (``=>`` hashcode_expression))
+                :> MemberDeclarationSyntax
+        ]
+
+    let tostring_override _ um = 
+        let member_name = um.MemberName.unapply
+        let string_expression_value _ _ =
+            ``invoke`` (ident "String.Format") ``(`` [ (literal (sprintf "%s {0}" member_name)) :> ExpressionSyntax; ident "Value" :> ExpressionSyntax ] ``)``
+            :> ExpressionSyntax
+        let string_expression_singleton =
+            literal (sprintf ("%s") member_name)
+            :> ExpressionSyntax
+        let string_expression =
+            um
+            |> pick_value_or_singleton string_expression_value string_expression_singleton
+        [
+            ``arrow_method`` "string" "ToString" ``<<`` [ ] ``>>`` ``(`` [] ``)`` 
+                [ ``public``; ``override``] 
+                (Some (``=>`` string_expression))
+                :> MemberDeclarationSyntax
+        ]
 
     let to_choice_class_internal fns (du: UnionType) um = 
         let union_name = du.unapply
@@ -111,10 +142,8 @@ module internal ChoiceClassCodeGenerator =
             fns
             |> Seq.collect (fun f -> f du um)
 
-        let iequatable = sprintf "IEquatable<%s>" member_name
-
         ``class`` member_name ``<<`` [] ``>>`` 
-            ``:`` (Some union_name) ``,`` [ iequatable ] 
+            ``:`` (Some union_name) ``,`` [ ] 
             [ ``public`` ] 
             ``{`` 
                 members 
@@ -132,11 +161,9 @@ module internal ChoiceClassCodeGenerator =
 
         let value_semantics_member_fns = 
             [
-                equals_object_override
-                equals_implementation
+                equals_override
                 hashcode_override
-                eq_operator
-                neq_operator
+                tostring_override
             ]
 
         let fns = common_member_fns @ value_semantics_member_fns
@@ -155,11 +182,6 @@ module internal UnionTypeCodeGenerator =
                 :> MemberDeclarationSyntax 
         ]
     
-    //<code>
-    //  // access_member
-    //  public static readonly Maybe{T} None = new ChoiceTypes.None();
-    //  public static Maybe{T} NewSome(T value) => new ChoiceTypes.Some(value);
-    //</code>
     let to_access_members (du : UnionType) =
         let union_name = du.unapply
         
@@ -201,21 +223,86 @@ module internal UnionTypeCodeGenerator =
                 ``}`` 
                 :> MemberDeclarationSyntax
         ]
-                    
-    let to_class_declaration_internal fns du = 
+
+    //  public bool Equals(Maybe<T> other) => Equals(other as object);
+    let to_equatable_equals_method (du : UnionType) = 
         let class_name = du.UnionTypeName.unapply
         let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
+        in 
+        [
+            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``generic type`` class_name ``<<`` type_parameters ``>>``) ]``)``
+                [``public``]
+                (Some (``=>`` (``invoke`` (ident "Equals") ``(`` [ (ident "other") |~> "object" ] ``)``)))
+                :> MemberDeclarationSyntax
+        ]
+
+    //  public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
+    let to_structural_equality_equals_method _ = 
+        [
+            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object"); ("comparer", ``type`` "IEqualityComparer") ]``)``
+                [``public``]
+                (Some (``=>`` (``invoke`` (ident "Equals") ``(`` [ (ident "other") ] ``)``)))
+                :> MemberDeclarationSyntax
+        ]
+
+    //  public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
+    let to_structural_equality_gethashcode_method _ = 
+        [
+            ``arrow_method`` "int" "GetHashCode" ``<<`` [] ``>>`` ``(`` [ ("comparer", ``type`` "IEqualityComparer") ]``)``
+                [``public``]
+                (Some (``=>`` (``invoke`` (ident "GetHashCode") ``(`` [] ``)``)))
+                :> MemberDeclarationSyntax
+        ]
+
+    //   public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
+    let to_eq_operator du =
+        let class_name = du.UnionTypeName.unapply
+        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
+        let duType = ``generic type`` class_name ``<<`` type_parameters ``>>``
+        [
+            ``operator ==`` ("left", "right", duType)
+                (``=>`` (((ident "left") <?.> ("Equals", [ident "right"])) <??> ``false``))
+                :> MemberDeclarationSyntax
+        ]
+
+    //   public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
+    let to_neq_operator du =
+        let class_name = du.UnionTypeName.unapply
+        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
+        let duType = ``generic type`` class_name ``<<`` type_parameters ``>>``
+        [
+            ``operator !=`` ("left", "right", duType)
+                (``=>`` (! ((ident "left") <==> (ident "right"))))
+
+                :> MemberDeclarationSyntax
+        ]
+
+    let to_class_declaration_internal fns du = 
+        let class_name = du.UnionTypeName.unapply
+        let type_parameters = du.UnionTypeParameters |> List.map (fun p -> p.unapply)
+        let full_class_name_string = sprintf "%s%s" class_name (if type_parameters = [] then "" else sprintf "<%s>" (String.concat ", " type_parameters))
         let members = fns |> Seq.collect (fun f -> du |> (f >> List.toSeq))
         ``class`` class_name ``<<`` type_parameters ``>>`` 
-            ``:`` None ``,`` [] 
+            ``:`` None ``,`` [ sprintf "IEquatable<%s>" full_class_name_string; "IStructuralEquatable" ]
             [ ``public``; ``abstract``; ``partial`` ] 
             ``{`` 
                 members 
             ``}`` 
             :> MemberDeclarationSyntax
-    
+      
     let to_class_declaration du = 
-        let fns = [ to_private_ctor; to_match_function_abstract; to_access_members; to_wrapper_type ]
+        let fns = 
+            [ 
+                to_private_ctor
+                to_match_function_abstract
+                to_access_members
+                to_wrapper_type
+                to_equatable_equals_method
+                to_structural_equality_equals_method 
+                to_structural_equality_gethashcode_method
+                to_eq_operator
+                to_neq_operator
+            ]
         to_class_declaration_internal fns du
 
 module internal CodeGenerator =     

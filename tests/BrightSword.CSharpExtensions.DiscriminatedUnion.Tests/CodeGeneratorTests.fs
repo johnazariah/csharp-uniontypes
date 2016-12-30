@@ -50,7 +50,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         private Maybe()
         {
@@ -65,7 +65,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public abstract TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc);
     }
@@ -78,53 +78,187 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public static readonly Maybe<T> None = new ChoiceTypes.None();
         public static Maybe<T> NewSome(T value) => new ChoiceTypes.Some(value);
     }
 }"
         test_code_gen to_access_members expected
-
+    
     [<Test>]
-    let ``code-gen-choice : equals_object_override``() =
+    let ``code-gen: equatable equals``() =
         let expected = @"namespace DU.Tests
 {
     using System;
 
-    public class None : Maybe<T>, IEquatable<None>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
-        public override bool Equals(object other) => this.Equals(other as None);
+        public bool Equals(Maybe<T> other) => Equals(other as object);
+    }
+}"
+        test_code_gen to_equatable_equals_method expected 
+
+    [<Test>]
+    let ``code-gen: structuralequality equals``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
+    {
+        public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
+    }
+}"
+        test_code_gen to_structural_equality_equals_method expected 
+
+    [<Test>]
+    let ``code-gen: structuralequality gethashcode``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
+    {
+        public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
+    }
+}"
+        test_code_gen to_structural_equality_gethashcode_method expected 
+
+    [<Test>]
+    let ``code-gen: eq operator``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
+    {
+        public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
+    }
+}"
+        test_code_gen to_eq_operator expected 
+
+
+    [<Test>]
+    let ``code-gen: neq operator``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
+    {
+        public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
+    }
+}"
+        test_code_gen to_neq_operator expected 
+
+    [<Test>]
+    let ``code-gen-choice: match_function_override``() = 
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public class None : Maybe<T>
+    {
+        public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
     }
 }
 namespace DU.Tests
 {
     using System;
 
-    public class Some : Maybe<T>, IEquatable<Some>
+    public class Some : Maybe<T>
     {
-        public override bool Equals(object other) => this.Equals(other as Some);
+        public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
     }
 }"
-        test_code_gen_choice equals_object_override expected
-    
+        test_code_gen_choice match_function_override expected
+
     [<Test>]
-    let ``code-gen: wrapper type``() = 
+    let ``code-gen-choice: ToString``() = 
         let expected = @"namespace DU.Tests
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public class None : Maybe<T>
+    {
+        public override string ToString() => ""None"";
+    }
+}
+namespace DU.Tests
+{
+    using System;
+
+    public class Some : Maybe<T>
+    {
+        public override string ToString() => String.Format(""Some {0}"", Value);
+    }
+}"
+        test_code_gen_choice tostring_override expected
+    
+    [<Test>]
+    let ``code-gen-choice: Equals``() = 
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public class None : Maybe<T>
+    {
+        public override bool Equals(object other) => other is None;
+    }
+}
+namespace DU.Tests
+{
+    using System;
+
+    public class Some : Maybe<T>
+    {
+        public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+    }
+}"
+        test_code_gen_choice equals_override expected
+
+    [<Test>]
+    let ``code-gen-choice: GetHashCode``() = 
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public class None : Maybe<T>
+    {
+        public override int GetHashCode() => GetType().FullName.GetHashCode();
+    }
+}
+namespace DU.Tests
+{
+    using System;
+
+    public class Some : Maybe<T>
+    {
+        public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
+    }
+}"
+        test_code_gen_choice hashcode_override expected
+
+    [<Test>]
+    let ``code-gen: wrapper type``() = 
+        let expected = sprintf @"namespace DU.Tests
+{
+    using System;
+
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         private static class ChoiceTypes
         {
-            public class None : Maybe<T>, IEquatable<None>
+            public class None : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
-                public override bool Equals(object other) => this.Equals(other as None);
+                public override bool Equals(object other) => other is None;
+                public override int GetHashCode() => GetType().FullName.GetHashCode();
+                public override string ToString() => ""None"";
             }
 
-            public class Some : Maybe<T>, IEquatable<Some>
+            public class Some : Maybe<T>
             {
                 public Some(T value)
                 {
@@ -137,16 +271,70 @@ namespace DU.Tests
                 }
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
-                public override bool Equals(object other) => this.Equals(other as Some);
+                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
+                public override string ToString() => String.Format(""Some {0}"", Value);
             }
         }
     }
 }"
         test_code_gen to_wrapper_type expected
+
+    let COMPLETE_EXPECTED = sprintf @"namespace DU.Tests
+{
+    using System;
+
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
+    {
+        private Maybe()
+        {
+        }
+
+        public abstract TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc);
+        public static readonly Maybe<T> None = new ChoiceTypes.None();
+        public static Maybe<T> NewSome(T value) => new ChoiceTypes.Some(value);
+        private static class ChoiceTypes
+        {
+            public class None : Maybe<T>
+            {
+                public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
+                public override bool Equals(object other) => other is None;
+                public override int GetHashCode() => GetType().FullName.GetHashCode();
+                public override string ToString() => ""None"";
+            }
+
+            public class Some : Maybe<T>
+            {
+                public Some(T value)
+                {
+                    Value = value;
+                }
+
+                private T Value
+                {
+                    get;
+                }
+
+                public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
+                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
+                public override string ToString() => String.Format(""Some {0}"", Value);
+            }
+        }
+
+        public bool Equals(Maybe<T> other) => Equals(other as object);
+        public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
+        public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
+        public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
+        public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
+    }
+}" 
     
     [<Test>]
     let ``code-gen: complete``() = 
-        maybe_of_T
-        |> to_class_declaration
-        |> class_to_code
-        |> printf "%s"
+        let actual = 
+            maybe_of_T
+            |> to_class_declaration
+            |> class_to_code
+
+        Assert.AreEqual(Regex.Replace(COMPLETE_EXPECTED, "(?<!\r)\n", "\r\n"), Regex.Replace(actual, "(?<!\r)\n", "\r\n"))
