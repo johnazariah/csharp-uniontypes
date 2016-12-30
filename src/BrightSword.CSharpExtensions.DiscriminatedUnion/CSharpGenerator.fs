@@ -78,9 +78,30 @@ module internal ChoiceClassCodeGenerator =
         du 
         |> to_match_function (Some invocation)
 
-    let hashcode du um = []
-    let equals du um = []
+    let equals_override _ um = 
+        let member_name = um.MemberName.unapply
+        let other_is_choice_type = ``is`` member_name (ident "other")
+        
+        let equality_expression_builder base_expression (t: FullTypeName) = 
+            let other_value_is_same = ``invoke`` (ident "Value" <.> ident "Equals") ``(`` [ ``((`` (``cast`` member_name (ident "other")) ``))`` <.> (ident "Value") ] ``)``
+            base_expression <&&> other_value_is_same        
 
+        let equality_expression = 
+            um.MemberArgumentType
+            |> Option.fold equality_expression_builder other_is_choice_type
+
+        [
+            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object") ]``)``
+                [``public``; ``override``]
+                (Some (``=>`` equality_expression))
+                :> MemberDeclarationSyntax
+        ]
+
+    let hashcode_override du um = 
+        [
+        ]
+
+<<<<<<< HEAD
 <<<<<<< HEAD
     let tostring du um = 
 =======
@@ -107,6 +128,9 @@ module internal ChoiceClassCodeGenerator =
             um
             |> pick_value_or_singleton string_expression_value string_expression_singleton
 >>>>>>> aebf77a... fixup! Add ToString() to inner class
+=======
+    let tostring_override du um = 
+>>>>>>> b9af1d9... Add Equals() to inner class
         [
             ``arrow_method`` "string" "ToString" ``<<`` [ ] ``>>`` ``(`` [] ``)`` 
                 [ ``public``; ``override``] 
@@ -141,9 +165,9 @@ module internal ChoiceClassCodeGenerator =
 
         let value_semantics_member_fns = 
             [
-                hashcode
-                equals
-                tostring
+                hashcode_override
+                equals_override
+                tostring_override
             ]
 
         let fns = common_member_fns @ value_semantics_member_fns

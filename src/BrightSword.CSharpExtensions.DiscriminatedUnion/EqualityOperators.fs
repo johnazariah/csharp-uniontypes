@@ -14,14 +14,27 @@ module Expressions =
         let method' = right |> (ident >> SyntaxFactory.MemberBindingExpression >> SyntaxFactory.InvocationExpression) 
         SyntaxFactory.ConditionalAccessExpression (left, method'.WithArgumentList(args'))
 
-    let (!) expr =
-         (SyntaxKind.LogicalNotExpression, SyntaxFactory.ParenthesizedExpression expr) |> SyntaxFactory.PrefixUnaryExpression
-
     let (<==>) left right =
          (SyntaxKind.EqualsExpression, left, right) |> SyntaxFactory.BinaryExpression
 
     let (<!=>) left right =
          (SyntaxKind.NotEqualsExpression, left, right) |> SyntaxFactory.BinaryExpression
+
+    let (<&&>) left right =
+         (SyntaxKind.LogicalAndExpression, left, right) |> SyntaxFactory.BinaryExpression
+
+    let (<||>) left right =
+         (SyntaxKind.LogicalOrExpression, left, right) |> SyntaxFactory.BinaryExpression
+
+    let (!) expr =
+         (SyntaxKind.LogicalNotExpression, SyntaxFactory.ParenthesizedExpression expr) |> SyntaxFactory.PrefixUnaryExpression
+
+    let ``is`` targetType expression = 
+        SyntaxFactory.BinaryExpression (SyntaxKind.IsExpression, expression, ident targetType)
+
+    let ``))`` = None
+    let ``((`` expr ``))`` = 
+        SyntaxFactory.ParenthesizedExpression expr
 
 [<AutoOpen>]
 module EqualityOperators =

@@ -151,10 +151,10 @@ module CodeGeneratorTests =
     }
 }"
         test_code_gen to_neq_operator expected 
-    
+
     [<Test>]
     let ``code-gen: wrapper type``() = 
-        let expected = @"namespace DU.Tests
+        let expected = sprintf @"namespace DU.Tests
 {
     using System;
 
@@ -165,6 +165,7 @@ module CodeGeneratorTests =
             public class None : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
+                public override bool Equals(object other) => other is None;
                 public override string ToString() => ""None"";
             }
 
@@ -182,6 +183,10 @@ module CodeGeneratorTests =
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+>>>>>>> b9af1d9... Add Equals() to inner class
                 public override string ToString() => ""Some"";
 =======
                 public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
@@ -192,7 +197,6 @@ module CodeGeneratorTests =
     }
 }"
         test_code_gen to_wrapper_type expected
-
     
     [<Test>]
     let ``code-gen-choice: ToString``() = 
@@ -214,10 +218,33 @@ namespace DU.Tests
         public override string ToString() => String.Format(""Some {0}"", Value);
     }
 }"
-        test_code_gen_choice tostring expected
+        test_code_gen_choice tostring_override expected
+
+    
+    [<Test>]
+    let ``code-gen-choice: Equals``() = 
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public class None : Maybe<T>
+    {
+        public override bool Equals(object other) => other is None;
+    }
+}
+namespace DU.Tests
+{
+    using System;
+
+    public class Some : Maybe<T>
+    {
+        public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+    }
+}"
+        test_code_gen_choice equals_override expected
 
 
-    let COMPLETE_EXPECTED = @"namespace DU.Tests
+    let COMPLETE_EXPECTED = sprintf @"namespace DU.Tests
 {
     using System;
 
@@ -235,6 +262,7 @@ namespace DU.Tests
             public class None : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
+                public override bool Equals(object other) => other is None;
                 public override string ToString() => ""None"";
             }
 
@@ -252,6 +280,10 @@ namespace DU.Tests
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+>>>>>>> b9af1d9... Add Equals() to inner class
                 public override string ToString() => ""Some"";
 =======
                 public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
@@ -266,7 +298,7 @@ namespace DU.Tests
         public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
         public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
     }
-}"
+}" 
     
     [<Test>]
     let ``code-gen: complete``() = 
