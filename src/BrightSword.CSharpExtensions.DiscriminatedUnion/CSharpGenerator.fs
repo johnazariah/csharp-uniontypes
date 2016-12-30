@@ -144,7 +144,7 @@ module internal ChoiceClassCodeGenerator =
 
         ``class`` member_name ``<<`` [] ``>>`` 
             ``:`` (Some union_name) ``,`` [ ] 
-            [ ``public`` ] 
+            [ ``public``; ``partial`` ] 
             ``{`` 
                 members 
             ``}``
@@ -217,7 +217,7 @@ module internal UnionTypeCodeGenerator =
         [ 
             ``class`` "ChoiceTypes" ``<<`` [] ``>>`` 
                 ``:`` None ``,`` [] 
-                [ ``private``; ``static`` ] 
+                [ ``private``; ``static``; ``partial`` ] 
                 ``{`` 
                     choice_classes 
                 ``}`` 

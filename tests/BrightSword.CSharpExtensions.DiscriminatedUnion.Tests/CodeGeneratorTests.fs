@@ -158,7 +158,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public class None : Maybe<T>
+    public partial class None : Maybe<T>
     {
         public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
     }
@@ -167,7 +167,7 @@ namespace DU.Tests
 {
     using System;
 
-    public class Some : Maybe<T>
+    public partial class Some : Maybe<T>
     {
         public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
     }
@@ -180,7 +180,7 @@ namespace DU.Tests
 {
     using System;
 
-    public class None : Maybe<T>
+    public partial class None : Maybe<T>
     {
         public override string ToString() => ""None"";
     }
@@ -189,7 +189,7 @@ namespace DU.Tests
 {
     using System;
 
-    public class Some : Maybe<T>
+    public partial class Some : Maybe<T>
     {
         public override string ToString() => String.Format(""Some {0}"", Value);
     }
@@ -202,7 +202,7 @@ namespace DU.Tests
 {
     using System;
 
-    public class None : Maybe<T>
+    public partial class None : Maybe<T>
     {
         public override bool Equals(object other) => other is None;
     }
@@ -211,7 +211,7 @@ namespace DU.Tests
 {
     using System;
 
-    public class Some : Maybe<T>
+    public partial class Some : Maybe<T>
     {
         public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
     }
@@ -224,7 +224,7 @@ namespace DU.Tests
 {
     using System;
 
-    public class None : Maybe<T>
+    public partial class None : Maybe<T>
     {
         public override int GetHashCode() => GetType().FullName.GetHashCode();
     }
@@ -233,7 +233,7 @@ namespace DU.Tests
 {
     using System;
 
-    public class Some : Maybe<T>
+    public partial class Some : Maybe<T>
     {
         public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
     }
@@ -248,9 +248,9 @@ namespace DU.Tests
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
-        private static class ChoiceTypes
+        private static partial class ChoiceTypes
         {
-            public class None : Maybe<T>
+            public partial class None : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
                 public override bool Equals(object other) => other is None;
@@ -258,7 +258,7 @@ namespace DU.Tests
                 public override string ToString() => ""None"";
             }
 
-            public class Some : Maybe<T>
+            public partial class Some : Maybe<T>
             {
                 public Some(T value)
                 {
@@ -293,9 +293,9 @@ namespace DU.Tests
         public abstract TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc);
         public static readonly Maybe<T> None = new ChoiceTypes.None();
         public static Maybe<T> NewSome(T value) => new ChoiceTypes.Some(value);
-        private static class ChoiceTypes
+        private static partial class ChoiceTypes
         {
-            public class None : Maybe<T>
+            public partial class None : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
                 public override bool Equals(object other) => other is None;
@@ -303,7 +303,7 @@ namespace DU.Tests
                 public override string ToString() => ""None"";
             }
 
-            public class Some : Maybe<T>
+            public partial class Some : Maybe<T>
             {
                 public Some(T value)
                 {
