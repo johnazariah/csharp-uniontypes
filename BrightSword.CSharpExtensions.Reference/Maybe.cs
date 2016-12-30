@@ -22,7 +22,7 @@ namespace BrightSword.CSharpExtensions.Reference
 
         private static partial class ChoiceTypes
         {
-            public partial class None : Maybe<T>
+            public sealed partial class None : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc)
                     => noneFunc();
@@ -35,7 +35,7 @@ namespace BrightSword.CSharpExtensions.Reference
                 public override string ToString() => "None";
             }
 
-            public partial class Some : Maybe<T>
+            public sealed partial class Some : Maybe<T>
             {
                 public Some(T value)
                 {
@@ -51,7 +51,7 @@ namespace BrightSword.CSharpExtensions.Reference
                     => other is Some && Value.Equals(((Some) other).Value);
 
                 public override int GetHashCode() => GetType()
-                    .FullName.GetHashCode() ^ Value.GetHashCode();
+                    .FullName.GetHashCode() ^ (Value?.GetHashCode() ?? "null".GetHashCode());
 
                 public override string ToString() => string.Format($"Some {Value}");
             }
