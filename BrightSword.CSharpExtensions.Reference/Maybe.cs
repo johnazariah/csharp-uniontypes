@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace BrightSword.CSharpExtensions.Reference
 {
-    public abstract class Maybe<T> : IEquatable<Maybe<T>>,
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>,
         IStructuralEquatable
     {
         #region Private Constructor
@@ -20,9 +20,9 @@ namespace BrightSword.CSharpExtensions.Reference
 
         public abstract TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc);
 
-        private static class ChoiceTypes
+        private static partial class ChoiceTypes
         {
-            public class None : Maybe<T>
+            public partial class None : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc)
                     => noneFunc();
@@ -35,7 +35,7 @@ namespace BrightSword.CSharpExtensions.Reference
                 public override string ToString() => "None";
             }
 
-            public class Some : Maybe<T>
+            public partial class Some : Maybe<T>
             {
                 public Some(T value)
                 {
