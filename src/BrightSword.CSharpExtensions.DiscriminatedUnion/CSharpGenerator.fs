@@ -101,21 +101,6 @@ module internal ChoiceClassCodeGenerator =
         [
         ]
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    let tostring du um = 
-=======
-        [
-            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object") ]``)``
-                [``public``; ``override``]
-                (Some (``=>`` equality_expression))
-                :> MemberDeclarationSyntax
-        ]
-
-    let hashcode_override du um = 
-        [
-        ]
-
     let tostring_override du um = 
         let member_name = um.MemberName.unapply
         let string_expression_value _ _ =
@@ -127,10 +112,6 @@ module internal ChoiceClassCodeGenerator =
         let string_expression =
             um
             |> pick_value_or_singleton string_expression_value string_expression_singleton
->>>>>>> aebf77a... fixup! Add ToString() to inner class
-=======
-    let tostring_override du um = 
->>>>>>> b9af1d9... Add Equals() to inner class
         [
             ``arrow_method`` "string" "ToString" ``<<`` [ ] ``>>`` ``(`` [] ``)`` 
                 [ ``public``; ``override``] 

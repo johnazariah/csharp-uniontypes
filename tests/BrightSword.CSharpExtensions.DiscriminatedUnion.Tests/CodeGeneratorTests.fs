@@ -182,16 +182,8 @@ module CodeGeneratorTests =
                 }
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
->>>>>>> b9af1d9... Add Equals() to inner class
-                public override string ToString() => ""Some"";
-=======
                 public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
                 public override string ToString() => String.Format(""Some {0}"", Value);
->>>>>>> aebf77a... fixup! Add ToString() to inner class
             }
         }
     }
@@ -279,16 +271,8 @@ namespace DU.Tests
                 }
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
->>>>>>> b9af1d9... Add Equals() to inner class
-                public override string ToString() => ""Some"";
-=======
                 public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
                 public override string ToString() => String.Format(""Some {0}"", Value);
->>>>>>> aebf77a... fixup! Add ToString() to inner class
             }
         }
 
