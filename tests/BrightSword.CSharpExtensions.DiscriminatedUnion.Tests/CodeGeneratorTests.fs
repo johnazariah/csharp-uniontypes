@@ -50,7 +50,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         private Maybe()
         {
@@ -65,7 +65,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public abstract TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc);
     }
@@ -78,7 +78,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public static readonly Maybe<T> None = new ChoiceTypes.None();
         public static Maybe<T> NewSome(T value) => new ChoiceTypes.Some(value);
@@ -92,7 +92,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public bool Equals(Maybe<T> other) => Equals(other as object);
     }
@@ -105,7 +105,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
     }
@@ -118,7 +118,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
     }
@@ -131,7 +131,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
     }
@@ -145,7 +145,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
     }
@@ -158,7 +158,7 @@ module CodeGeneratorTests =
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         private static class ChoiceTypes
         {
@@ -221,7 +221,7 @@ namespace DU.Tests
 {
     using System;
 
-    public abstract partial class Maybe<T>
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         private Maybe()
         {

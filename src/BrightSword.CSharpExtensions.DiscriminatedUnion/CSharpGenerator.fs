@@ -259,10 +259,11 @@ module internal UnionTypeCodeGenerator =
 
     let to_class_declaration_internal fns du = 
         let class_name = du.UnionTypeName.unapply
-        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
+        let type_parameters = du.UnionTypeParameters |> List.map (fun p -> p.unapply)
+        let full_class_name_string = sprintf "%s%s" class_name (if type_parameters = [] then "" else sprintf "<%s>" (String.concat ", " type_parameters))
         let members = fns |> Seq.collect (fun f -> du |> (f >> List.toSeq))
         ``class`` class_name ``<<`` type_parameters ``>>`` 
-            ``:`` None ``,`` [] 
+            ``:`` None ``,`` [ sprintf "IEquatable<%s>" full_class_name_string; "IStructuralEquatable" ]
             [ ``public``; ``abstract``; ``partial`` ] 
             ``{`` 
                 members 
