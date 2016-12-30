@@ -23,6 +23,9 @@ module Expressions =
     let (<&&>) left right =
          (SyntaxKind.LogicalAndExpression, left, right) |> SyntaxFactory.BinaryExpression
 
+    let (<^>) left right =
+         (SyntaxKind.ExclusiveOrExpression, left, right) |> SyntaxFactory.BinaryExpression
+
     let (<||>) left right =
          (SyntaxKind.LogicalOrExpression, left, right) |> SyntaxFactory.BinaryExpression
 

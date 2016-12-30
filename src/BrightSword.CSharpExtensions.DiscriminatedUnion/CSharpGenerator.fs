@@ -80,15 +80,14 @@ module internal ChoiceClassCodeGenerator =
 
     let equals_override _ um = 
         let member_name = um.MemberName.unapply
-        let other_is_choice_type = ``is`` member_name (ident "other")
         
-        let equality_expression_builder base_expression (t: FullTypeName) = 
-            let other_value_is_same = ``invoke`` (ident "Value" <.> ident "Equals") ``(`` [ ``((`` (``cast`` member_name (ident "other")) ``))`` <.> (ident "Value") ] ``)``
-            base_expression <&&> other_value_is_same        
+        let equality_expression_builder base_expression _ = 
+            let other_value_is_same = ``invoke`` (ident "Value.Equals") ``(`` [ ``((`` (``cast`` member_name (ident "other")) ``))`` <.> (ident "Value") ] ``)``
+            base_expression <&&> other_value_is_same
 
         let equality_expression = 
             um.MemberArgumentType
-            |> Option.fold equality_expression_builder other_is_choice_type
+            |> Option.fold equality_expression_builder (``is`` member_name (ident "other"))
 
         [
             ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object") ]``)``
@@ -97,11 +96,27 @@ module internal ChoiceClassCodeGenerator =
                 :> MemberDeclarationSyntax
         ]
 
-    let hashcode_override du um = 
+    let hashcode_override _ um = 
+        let hashcode_expression_builder base_expression _ =
+            base_expression <^> (``invoke`` (ident "Value.GetHashCode") ``(`` [] ``)``)
+            :> ExpressionSyntax
+
+        let get_hash_code_expression = 
+            ``invoke`` (ident "GetType().FullName.GetHashCode") ``(`` [] ``)``
+            :> ExpressionSyntax
+        
+        let hashcode_expression = 
+            um.MemberArgumentType
+            |> Option.fold hashcode_expression_builder get_hash_code_expression
+
         [
+            ``arrow_method`` "int" "GetHashCode" ``<<`` [] ``>>`` ``(`` []``)``
+                [``public``; ``override``]
+                (Some (``=>`` hashcode_expression))
+                :> MemberDeclarationSyntax
         ]
 
-    let tostring_override du um = 
+    let tostring_override _ um = 
         let member_name = um.MemberName.unapply
         let string_expression_value _ _ =
             ``invoke`` (ident "String.Format") ``(`` [ (literal (sprintf "%s {0}" member_name)) :> ExpressionSyntax; ident "Value" :> ExpressionSyntax ] ``)``
@@ -146,8 +161,8 @@ module internal ChoiceClassCodeGenerator =
 
         let value_semantics_member_fns = 
             [
-                hashcode_override
                 equals_override
+                hashcode_override
                 tostring_override
             ]
 
@@ -222,7 +237,7 @@ module internal UnionTypeCodeGenerator =
         ]
 
     //  public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
-    let to_structural_equality_equals_method (du : UnionType) = 
+    let to_structural_equality_equals_method _ = 
         [
             ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object"); ("comparer", ``type`` "IEqualityComparer") ]``)``
                 [``public``]
@@ -231,7 +246,7 @@ module internal UnionTypeCodeGenerator =
         ]
 
     //  public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
-    let to_structural_equality_gethashcode_method (du : UnionType) = 
+    let to_structural_equality_gethashcode_method _ = 
         [
             ``arrow_method`` "int" "GetHashCode" ``<<`` [] ``>>`` ``(`` [ ("comparer", ``type`` "IEqualityComparer") ]``)``
                 [``public``]

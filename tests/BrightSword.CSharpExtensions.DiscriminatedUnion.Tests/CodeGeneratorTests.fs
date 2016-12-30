@@ -153,43 +153,27 @@ module CodeGeneratorTests =
         test_code_gen to_neq_operator expected 
 
     [<Test>]
-    let ``code-gen: wrapper type``() = 
-        let expected = sprintf @"namespace DU.Tests
+    let ``code-gen-choice: match_function_override``() = 
+        let expected = @"namespace DU.Tests
 {
     using System;
 
-    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
+    public class None : Maybe<T>
     {
-        private static class ChoiceTypes
-        {
-            public class None : Maybe<T>
-            {
-                public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
-                public override bool Equals(object other) => other is None;
-                public override string ToString() => ""None"";
-            }
+        public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
+    }
+}
+namespace DU.Tests
+{
+    using System;
 
-            public class Some : Maybe<T>
-            {
-                public Some(T value)
-                {
-                    Value = value;
-                }
-
-                private T Value
-                {
-                    get;
-                }
-
-                public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
-                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
-                public override string ToString() => String.Format(""Some {0}"", Value);
-            }
-        }
+    public class Some : Maybe<T>
+    {
+        public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
     }
 }"
-        test_code_gen to_wrapper_type expected
-    
+        test_code_gen_choice match_function_override expected
+
     [<Test>]
     let ``code-gen-choice: ToString``() = 
         let expected = @"namespace DU.Tests
@@ -211,7 +195,6 @@ namespace DU.Tests
     }
 }"
         test_code_gen_choice tostring_override expected
-
     
     [<Test>]
     let ``code-gen-choice: Equals``() = 
@@ -235,6 +218,67 @@ namespace DU.Tests
 }"
         test_code_gen_choice equals_override expected
 
+    [<Test>]
+    let ``code-gen-choice: GetHashCode``() = 
+        let expected = @"namespace DU.Tests
+{
+    using System;
+
+    public class None : Maybe<T>
+    {
+        public override int GetHashCode() => GetType().FullName.GetHashCode();
+    }
+}
+namespace DU.Tests
+{
+    using System;
+
+    public class Some : Maybe<T>
+    {
+        public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
+    }
+}"
+        test_code_gen_choice hashcode_override expected
+
+    [<Test>]
+    let ``code-gen: wrapper type``() = 
+        let expected = sprintf @"namespace DU.Tests
+{
+    using System;
+
+    public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
+    {
+        private static class ChoiceTypes
+        {
+            public class None : Maybe<T>
+            {
+                public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
+                public override bool Equals(object other) => other is None;
+                public override int GetHashCode() => GetType().FullName.GetHashCode();
+                public override string ToString() => ""None"";
+            }
+
+            public class Some : Maybe<T>
+            {
+                public Some(T value)
+                {
+                    Value = value;
+                }
+
+                private T Value
+                {
+                    get;
+                }
+
+                public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
+                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
+                public override string ToString() => String.Format(""Some {0}"", Value);
+            }
+        }
+    }
+}"
+        test_code_gen to_wrapper_type expected
 
     let COMPLETE_EXPECTED = sprintf @"namespace DU.Tests
 {
@@ -255,6 +299,7 @@ namespace DU.Tests
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
                 public override bool Equals(object other) => other is None;
+                public override int GetHashCode() => GetType().FullName.GetHashCode();
                 public override string ToString() => ""None"";
             }
 
@@ -272,6 +317,7 @@ namespace DU.Tests
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
                 public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
                 public override string ToString() => String.Format(""Some {0}"", Value);
             }
         }
