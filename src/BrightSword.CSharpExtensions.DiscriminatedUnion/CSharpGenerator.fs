@@ -98,7 +98,7 @@ module internal ChoiceClassCodeGenerator =
 
     let hashcode_override _ um = 
         let hashcode_expression_builder base_expression _ =
-            base_expression <^> (``invoke`` (ident "Value.GetHashCode") ``(`` [] ``)``)
+            base_expression <^> ``((`` ((ident "Value" <?.> ("GetHashCode", [])) <??> (``invoke`` (literal "null" <.> ident "GetHashCode") ``(`` [] ``)``)) ``))``
             :> ExpressionSyntax
 
         let get_hash_code_expression = 

@@ -235,7 +235,7 @@ namespace DU.Tests
 
     public partial class Some : Maybe<T>
     {
-        public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
+        public override int GetHashCode() => GetType().FullName.GetHashCode() ^ (Value?.GetHashCode() ?? ""null"".GetHashCode());
     }
 }"
         test_code_gen_choice hashcode_override expected
@@ -272,7 +272,7 @@ namespace DU.Tests
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
                 public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
-                public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
+                public override int GetHashCode() => GetType().FullName.GetHashCode() ^ (Value?.GetHashCode() ?? ""null"".GetHashCode());
                 public override string ToString() => String.Format(""Some {0}"", Value);
             }
         }
@@ -317,7 +317,7 @@ namespace DU.Tests
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
                 public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
-                public override int GetHashCode() => GetType().FullName.GetHashCode() ^ Value.GetHashCode();
+                public override int GetHashCode() => GetType().FullName.GetHashCode() ^ (Value?.GetHashCode() ?? ""null"".GetHashCode());
                 public override string ToString() => String.Format(""Some {0}"", Value);
             }
         }

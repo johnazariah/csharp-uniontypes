@@ -26,6 +26,14 @@ namespace BrightSword.CSharpExtensions.Reference
         }
 
         [Test]
+        public void Some_null_Hashes_safely()
+        {
+            Assert.DoesNotThrow(() => Maybe<string>.NewSome(null).GetHashCode());
+            // should not compile
+            //Assert.DoesNotThrow(() => Maybe<int>.NewSome(null).GetHashCode());
+        }
+
+        [Test]
         public void None_hashes_properly()
         {
             var set = new HashSet<Maybe<int>>();
