@@ -1,12 +1,17 @@
 ﻿namespace BrightSword.CSharpExtensions.DiscriminatedUnion
 
+open System.Text.RegularExpressions
+open System.IO
+
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.CSharp
 open Microsoft.CodeAnalysis.CSharp.Syntax
 open BrightSword.RoslynWrapper
 
+open Utility.Monads.MaybeMonad
+
 [<AutoOpen>]
-module internal CodeGeneratorCommon = 
+module internal DeclarationBuilderCommon = 
     let toParameterName (str : string) =
         sprintf "%s%s" (str.Substring(0, 1).ToLower()) (str.Substring(1))
 
@@ -32,7 +37,7 @@ module internal CodeGeneratorCommon =
         ]
     
 [<AutoOpen>]
-module internal ChoiceClassCodeGenerator = 
+module internal UnionMemberClassDeclarationBuilder = 
     let private pick_value_or_singleton fv fs um = 
        um.MemberArgumentType |> Option.fold fv fs
 
@@ -170,7 +175,7 @@ module internal ChoiceClassCodeGenerator =
         to_choice_class_internal fns du um 
 
 [<AutoOpen>]
-module internal UnionTypeCodeGenerator = 
+module internal UnionTypeClassDeclarationBuilder = 
     let to_private_ctor (du : UnionType) = 
         let className = du.UnionTypeName.unapply
         [ 
@@ -305,10 +310,46 @@ module internal UnionTypeCodeGenerator =
             ]
         to_class_declaration_internal fns du
 
-module internal CodeGenerator =     
+[<AutoOpen>]
+module internal NamespaceDeclarationBuilder =     
     let to_namespace_declaration ns = 
         ``namespace`` ns.NamespaceName.unapply 
             ``{`` 
                 (ns.Usings |> List.map (fun u -> u.unapply)) 
                 (ns.Unions |> List.map to_class_declaration) 
             ``}``
+
+[<AutoOpen>]
+module internal CompilationUnitDeclarationBuilder =     
+    let namespace_to_code namespace_declaration_syntax = 
+        ``compilation unit`` 
+            [ 
+                namespace_declaration_syntax
+            ] 
+        |> generateCodeToString
+
+module CodeGenerator =
+    let generate_code_for_text text =
+        text |> (parseTextToNamespace >> to_namespace_declaration >> namespace_to_code)
+
+    let mapTuple2 f (a, b) = (f a, f b)
+    let internal trimWS (s: System.String) = s.Trim()   
+    let internal fixupNL t = Regex.Replace(t, "(?<!\r)\n", "\r\n")
+
+    let ensure_input_file input_file = 
+        input_file  |> Option.filter (fun f -> File.Exists f) |> Option.map FileInfo
+
+    let ensure_output_directory output_file = 
+        output_file |> Option.map (FileInfo >> (fun fi -> fi.Directory.Create (); fi))
+
+    let generate_code_for_csunion_file (input_file, output_file) = 
+        maybe {
+            let! inputFileInfo = ensure_input_file input_file
+            let! outputFileInfo = ensure_output_directory output_file
+            let text = File.ReadAllText inputFileInfo.FullName
+            let! ns = parse_namespace_from_text text
+            let code = ns |> (to_namespace_declaration >> namespace_to_code >> trimWS >> fixupNL)
+            do File.WriteAllText (outputFileInfo.FullName, code)
+            return ()
+        }
+

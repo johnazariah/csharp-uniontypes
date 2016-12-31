@@ -1,8 +1,9 @@
 ﻿namespace BrightSword.CSharpExtensions.DiscriminatedUnion.Tests
 
 open BrightSword.CSharpExtensions.DiscriminatedUnion.AST
-open BrightSword.CSharpExtensions.DiscriminatedUnion.UnionTypeCodeGenerator
-open BrightSword.CSharpExtensions.DiscriminatedUnion.ChoiceClassCodeGenerator
+open BrightSword.CSharpExtensions.DiscriminatedUnion.UnionMemberClassDeclarationBuilder
+open BrightSword.CSharpExtensions.DiscriminatedUnion.UnionTypeClassDeclarationBuilder
+open BrightSword.CSharpExtensions.DiscriminatedUnion.CodeGenerator
 open BrightSword.RoslynWrapper
 open NUnit.Framework
 open Microsoft.CodeAnalysis
@@ -30,19 +31,21 @@ module CodeGeneratorTests =
             [ ``namespace`` "DU.Tests" ``{`` [] [ class_declaration_syntax ] ``}`` :> MemberDeclarationSyntax ] 
         |> generateCodeToString
     
+    let text_matches = (mapTuple2 (fixupNL >> trimWS) >> Assert.AreEqual)
+
     let private test_code_gen generator expected = 
         let actual = 
             maybe_of_T
             |> to_class_declaration_internal [ generator ]
             |> class_to_code
-        Assert.AreEqual(Regex.Replace(expected, "(?<!\r)\n", "\r\n"), Regex.Replace(actual, "(?<!\r)\n", "\r\n"))
+        text_matches (expected, actual)
 
     let private test_code_gen_choice generator expected = 
         let actual = 
             maybe_of_T.UnionMembers
             |> List.map ((to_choice_class_internal [ generator] maybe_of_T) >> class_to_code)
             |> String.concat("\n")
-        Assert.AreEqual(Regex.Replace(expected, "(?<!\r)\n", "\r\n"), Regex.Replace(actual, "(?<!\r)\n", "\r\n"))
+        text_matches (expected, actual)
     
     [<Test>]
     let ``code-gen: private constructor``() = 
@@ -337,4 +340,4 @@ namespace DU.Tests
             |> to_class_declaration
             |> class_to_code
 
-        Assert.AreEqual(Regex.Replace(COMPLETE_EXPECTED, "(?<!\r)\n", "\r\n"), Regex.Replace(actual, "(?<!\r)\n", "\r\n"))
+        text_matches (COMPLETE_EXPECTED, actual)
