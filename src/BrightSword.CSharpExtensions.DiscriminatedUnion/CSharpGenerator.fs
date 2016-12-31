@@ -87,7 +87,7 @@ module internal UnionMemberClassDeclarationBuilder =
         let member_name = um.MemberName.unapply
         
         let equality_expression_builder base_expression _ = 
-            let other_value_is_same = ``invoke`` (ident "Value.Equals") ``(`` [ ``((`` (``cast`` member_name (ident "other")) ``))`` <.> (ident "Value") ] ``)``
+            let other_value_is_same = ``invoke`` (ident "Value.Equals") ``(`` [ ``((`` (``cast`` member_name (ident "other")) ``))`` <|.|> "Value" ] ``)``
             base_expression <&&> other_value_is_same
 
         let equality_expression = 
@@ -103,12 +103,10 @@ module internal UnionMemberClassDeclarationBuilder =
 
     let hashcode_override _ um = 
         let hashcode_expression_builder base_expression _ =
-            base_expression <^> ``((`` ((ident "Value" <?.> ("GetHashCode", [])) <??> (``invoke`` (literal "null" <.> ident "GetHashCode") ``(`` [] ``)``)) ``))``
-            :> ExpressionSyntax
+            base_expression <^> ``((`` ((ident "Value" <?.> ("GetHashCode", [])) <??> (literal "null" <.> ("GetHashCode", []))) ``))``
 
         let get_hash_code_expression = 
             ``invoke`` (ident "GetType().FullName.GetHashCode") ``(`` [] ``)``
-            :> ExpressionSyntax
         
         let hashcode_expression = 
             um.MemberArgumentType
@@ -125,7 +123,6 @@ module internal UnionMemberClassDeclarationBuilder =
         let member_name = um.MemberName.unapply
         let string_expression_value _ _ =
             ``invoke`` (ident "String.Format") ``(`` [ (literal (sprintf "%s {0}" member_name)) :> ExpressionSyntax; ident "Value" :> ExpressionSyntax ] ``)``
-            :> ExpressionSyntax
         let string_expression_singleton =
             literal (sprintf ("%s") member_name)
             :> ExpressionSyntax
@@ -266,7 +263,7 @@ module internal UnionTypeClassDeclarationBuilder =
         let duType = ``generic type`` class_name ``<<`` type_parameters ``>>``
         [
             ``operator ==`` ("left", "right", duType)
-                (``=>`` (((ident "left") <?.> ("Equals", [ident "right"])) <??> ``false``))
+                (``=>`` (((ident "left") <?.> ("Equals", [ ident "right" ])) <??> ``false``))
                 :> MemberDeclarationSyntax
         ]
 
