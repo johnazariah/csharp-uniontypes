@@ -1,6 +1,6 @@
 type project
 title
-    BrightSword.CSharpExtensions.DiscriminatedUnion
+    CSharp SumTypes
 owners
     John Azariah
 authors 
