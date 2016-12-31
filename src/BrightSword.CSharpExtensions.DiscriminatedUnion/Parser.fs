@@ -54,3 +54,8 @@ module internal Parser =
         match run ``namespace`` str with
         | Success(result, _, _) -> result
         | Failure(err, _, _) -> sprintf "Failure:%s[%s]" str err |> failwith
+
+    let parse_namespace_from_text str = 
+        match run ``namespace`` str with
+        | Success(result, _, _) -> Some result
+        | _ -> None

@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B98-5CED-492C-A5B7-A5B4F73CF142}"
 	ProjectSection(SolutionItems) = preProject
@@ -37,6 +37,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BrightSword.CSharpExtension
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrightSword.CSharpExtensions.Reference", "BrightSword.CSharpExtensions.Reference\BrightSword.CSharpExtensions.Reference.csproj", "{75FCAE41-6E9E-4E79-B77C-6BD77F71A11A}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "csunion", "src\csunion\csunion.fsproj", "{F001C7B3-3597-4533-9FFE-C817F27AB4AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{75FCAE41-6E9E-4E79-B77C-6BD77F71A11A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75FCAE41-6E9E-4E79-B77C-6BD77F71A11A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75FCAE41-6E9E-4E79-B77C-6BD77F71A11A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F001C7B3-3597-4533-9FFE-C817F27AB4AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F001C7B3-3597-4533-9FFE-C817F27AB4AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F001C7B3-3597-4533-9FFE-C817F27AB4AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F001C7B3-3597-4533-9FFE-C817F27AB4AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

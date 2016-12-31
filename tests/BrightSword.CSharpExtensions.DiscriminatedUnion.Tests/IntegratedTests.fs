@@ -1,24 +1,14 @@
 ﻿namespace BrightSword.CSharpExtensions.DiscriminatedUnion.Tests
 
+open System.IO
 open System.Text.RegularExpressions
 
-open BrightSword.RoslynWrapper
-
-open BrightSword.CSharpExtensions.DiscriminatedUnion.AST
 open BrightSword.CSharpExtensions.DiscriminatedUnion.Parser
 open BrightSword.CSharpExtensions.DiscriminatedUnion.CodeGenerator
 
 open NUnit.Framework
 
-
 module IntegratedTests = 
-
-    let namespace_to_code namespace_declaration_syntax = 
-        ``compilation unit`` 
-            [ 
-                namespace_declaration_syntax
-            ] 
-        |> generateCodeToString
 
     let maybe_of_T = @"
 namespace DU.Tests 
@@ -29,9 +19,28 @@ namespace DU.Tests
 }"
 
     [<Test>]
-    let ``parse-and-code-gen: maybe``() =         
-        let actual = 
-            maybe_of_T 
-            |> (parseTextToNamespace >> to_namespace_declaration >> namespace_to_code)
-        in
-        Assert.AreEqual(Regex.Replace(CodeGeneratorTests.COMPLETE_EXPECTED, "(?<!\r)\n", "\r\n"), Regex.Replace(actual, "(?<!\r)\n", "\r\n"))
+    let ``code-gen from text: maybe``() =    
+        let actual = generate_code_for_text maybe_of_T
+        CodeGeneratorTests.text_matches (CodeGeneratorTests.COMPLETE_EXPECTED, actual) 
+
+    [<Test>]
+    let ``code-gen from file: maybe``() =
+        let input_file = FileInfo("maybe.csunion")
+        Assert.IsTrue <| File.Exists (input_file.FullName)
+
+        let input = File.ReadAllText input_file.FullName
+        CodeGeneratorTests.text_matches (maybe_of_T, input) 
+
+        let output_file = Path.Combine(input_file.Directory.FullName, "maybe.cs") |> FileInfo
+        Assert.IsTrue <| Directory.Exists output_file.Directory.FullName
+
+        File.Delete output_file.FullName
+        Assert.IsFalse <| File.Exists (output_file.FullName)
+
+        generate_code_for_csunion_file (Some input_file.FullName, Some output_file.FullName) |> ignore
+
+        Assert.IsTrue <| File.Exists (output_file.FullName)
+
+        let actual = File.ReadAllText output_file.FullName
+        CodeGeneratorTests.text_matches (CodeGeneratorTests.COMPLETE_EXPECTED, actual)
+    

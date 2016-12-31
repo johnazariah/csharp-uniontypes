@@ -1,0 +1,6 @@
+﻿namespace DU.Tests 
+{
+    using System;
+
+    union Maybe<T> { None | Some<T> }
+}
