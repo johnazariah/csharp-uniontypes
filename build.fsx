@@ -175,7 +175,9 @@ Target "NuGet" (fun _ ->
         { p with
             OutputPath = "bin"
             Version = release.NugetVersion
-            ReleaseNotes = toLines release.Notes})
+            ReleaseNotes = toLines release.Notes
+            IncludeReferencedProjects = true
+        })
 )
 
 Target "PublishNuget" (fun _ ->

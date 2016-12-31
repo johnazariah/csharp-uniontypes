@@ -37,7 +37,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BrightSword.CSharpExtension
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrightSword.CSharpExtensions.Reference", "BrightSword.CSharpExtensions.Reference\BrightSword.CSharpExtensions.Reference.csproj", "{75FCAE41-6E9E-4E79-B77C-6BD77F71A11A}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "csunion", "src\csunion\csunion.fsproj", "{F001C7B3-3597-4533-9FFE-C817F27AB4AA}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CSharp.UnionTypes", "src\CSharp.UnionTypes\CSharp.UnionTypes.fsproj", "{F001C7B3-3597-4533-9FFE-C817F27AB4AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
