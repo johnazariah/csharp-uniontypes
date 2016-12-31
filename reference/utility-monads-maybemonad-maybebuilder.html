@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>MaybeBuilder - BrightSword.CSharpExtensions.DiscriminatedUnion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="John Azariah"/>
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+
+    <link type="text/css" rel="stylesheet" href="/csharp-sumtypes/content/style.css" />
+    <script type="text/javascript" src="/csharp-sumtypes/content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="https://github.com/johnazariah/csharp-sumtypes">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="/csharp-sumtypes/index.html">BrightSword.CSharpExtensions.DiscriminatedUnion</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+
+
+
+<h1>MaybeBuilder</h1>
+<p>
+  <span>Namespace: Utility.Monads</span><br />
+  <span>Parent Module: <a href="utility-monads-maybemonad.html">MaybeMonad</a></span>
+</p>
+<div class="xmldoc">
+</div>
+  <h3>Constructors</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Constructor</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '40', 40)" onmouseover="showTip(event, '40', 40)">
+            new()
+          </code>
+          <div class="tip" id="40">
+            <strong>Signature:</strong> unit -&gt; MaybeBuilder<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L5-5" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+              <p>CompiledName: <code>.ctor</code></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Instance members</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Instance member</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '41', 41)" onmouseover="showTip(event, '41', 41)">
+            Bind(m, f)
+          </code>
+          <div class="tip" id="41">
+            <strong>Signature:</strong> (m:&#39;a option * f:(&#39;a -&gt; &#39;b option)) -&gt; &#39;b option<br />
+                          <strong>Type parameters:</strong> 'a, 'b          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L7-7" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '42', 42)" onmouseover="showTip(event, '42', 42)">
+            Return(x)
+          </code>
+          <div class="tip" id="42">
+            <strong>Signature:</strong> x:unit -&gt; unit option<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L8-8" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '43', 43)" onmouseover="showTip(event, '43', 43)">
+            ReturnFrom(x)
+          </code>
+          <div class="tip" id="43">
+            <strong>Signature:</strong> x:&#39;?7150 -&gt; &#39;?7150<br />
+                          <strong>Type parameters:</strong> '?7150          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L9-9" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '44', 44)" onmouseover="showTip(event, '44', 44)">
+            Yield(x)
+          </code>
+          <div class="tip" id="44">
+            <strong>Signature:</strong> x:&#39;?7152 -&gt; &#39;?7152 option<br />
+                          <strong>Type parameters:</strong> '?7152          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L10-10" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '45', 45)" onmouseover="showTip(event, '45', 45)">
+            YieldFrom(x)
+          </code>
+          <div class="tip" id="45">
+            <strong>Signature:</strong> x:&#39;?7154 -&gt; &#39;?7154<br />
+                          <strong>Type parameters:</strong> '?7154          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L11-11" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '46', 46)" onmouseover="showTip(event, '46', 46)">
+            Zero()
+          </code>
+          <div class="tip" id="46">
+            <strong>Signature:</strong> unit -&gt; unit option<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L6-6" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+        </div>
+        <div class="span3">
+          <img src="/csharp-sumtypes/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">BrightSword.CSharpExtensions.DiscriminatedUnion</li>
+            <li><a href="/csharp-sumtypes/index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="http://nuget.org/packages/BrightSword.CSharpExtensions.DiscriminatedUnion">Get Library via NuGet</a></li>
+            <li><a href="https://github.com/johnazariah/csharp-sumtypes">Source Code on GitHub</a></li>
+            <li><a href="/csharp-sumtypes/license.html">License</a></li>
+            <li><a href="/csharp-sumtypes/release-notes.html">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="/csharp-sumtypes/tutorial.html">Sample tutorial</a></li>
+
+            <li class="nav-header">Documentation</li>
+            <li><a href="/csharp-sumtypes/reference/index.html">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="https://github.com/johnazariah/csharp-sumtypes"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"/></a>
+  </body>
+  </html>
