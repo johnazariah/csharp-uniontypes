@@ -1,4 +1,4 @@
-# csharp-sumtypes
+# csharp-uniontypes
 
 ## Algebraic Data Types
 [Algebraic Data Types](https://en.wikipedia.org/wiki/Algebraic_data_type) are composite data types - types that are made up of other types.
