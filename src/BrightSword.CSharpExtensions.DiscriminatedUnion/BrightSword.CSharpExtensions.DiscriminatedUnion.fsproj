@@ -68,7 +68,6 @@
     <Compile Include="Parser.fs" />
     <Compile Include="CSharpGenerator.fs" />
     <None Include="paket.references" />
-    <None Include="paket.template" />
     <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
