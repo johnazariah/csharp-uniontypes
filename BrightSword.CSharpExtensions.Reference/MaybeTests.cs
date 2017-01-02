@@ -14,6 +14,7 @@ namespace BrightSword.CSharpExtensions.Reference
         {
             Assert.True(Maybe<int>.None == Maybe<int>.None);
             Assert.False(Maybe<int>.None != Maybe<int>.None);
+            Assert.True(Maybe<int>.None.Equals(Maybe<int>.None));
         }
 
         [Test]

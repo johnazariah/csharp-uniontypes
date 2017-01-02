@@ -51,7 +51,12 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
+    <None Include="paket.template" />
   </ItemGroup>
+  <PropertyGroup>
+    <RegisterOutputPackage>true</RegisterOutputPackage>
+    <RegisterWithCodebase>true</RegisterWithCodebase>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\BrightSword.CSharpExtensions.DiscriminatedUnion\BrightSword.CSharpExtensions.DiscriminatedUnion.fsproj">
       <Name>BrightSword.CSharpExtensions.DiscriminatedUnion</Name>
