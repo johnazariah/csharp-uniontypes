@@ -30,8 +30,6 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>.\bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
-    <Prefer32Bit>true</Prefer32Bit>
-    <StartArguments>--input-file="meep"</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>

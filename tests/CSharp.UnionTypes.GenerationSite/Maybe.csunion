@@ -1,4 +1,6 @@
 ﻿namespace CoolMonads
 {
 	union Maybe<T> { None | Some<T> }
+	union TrafficLights { Red | Amber | Green }
+	union Payment { Cash<Amount> | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> }
 }

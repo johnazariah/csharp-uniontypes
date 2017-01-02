@@ -172,6 +172,14 @@ module UnionMemberClassDeclarationBuilder =
 
 [<AutoOpen>]
 module UnionTypeClassDeclarationBuilder =
+    let union_typename (du : UnionType) =
+        let class_name = du.UnionTypeName.unapply
+        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
+        if Seq.isEmpty type_parameters then
+            (``type`` class_name)
+        else
+            ``generic type`` class_name ``<<`` type_parameters ``>>`` :> NameSyntax
+
     let to_private_ctor (du : UnionType) =
         let className = du.UnionTypeName.unapply
         [
@@ -231,7 +239,7 @@ module UnionTypeClassDeclarationBuilder =
         let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
         in
         [
-            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``generic type`` class_name ``<<`` type_parameters ``>>``) ]``)``
+            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", union_typename du) ]``)``
                 [``public``]
                 (Some (``=>`` (``invoke`` (ident "Equals") ``(`` [ (ident "other") |~> "object" ] ``)``)))
                 :> MemberDeclarationSyntax
@@ -257,22 +265,16 @@ module UnionTypeClassDeclarationBuilder =
 
     //   public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
     let to_eq_operator du =
-        let class_name = du.UnionTypeName.unapply
-        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
-        let duType = ``generic type`` class_name ``<<`` type_parameters ``>>``
         [
-            ``operator ==`` ("left", "right", duType)
+            ``operator ==`` ("left", "right", union_typename du)
                 (``=>`` (((ident "left") <?.> ("Equals", [ ident "right" ])) <??> ``false``))
                 :> MemberDeclarationSyntax
         ]
 
     //   public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
     let to_neq_operator du =
-        let class_name = du.UnionTypeName.unapply
-        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
-        let duType = ``generic type`` class_name ``<<`` type_parameters ``>>``
         [
-            ``operator !=`` ("left", "right", duType)
+            ``operator !=`` ("left", "right", union_typename du)
                 (``=>`` (! ((ident "left") <==> (ident "right"))))
 
                 :> MemberDeclarationSyntax
