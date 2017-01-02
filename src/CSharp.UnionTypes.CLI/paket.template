@@ -1,12 +1,12 @@
 type project
 title
-    CSharp.SumTypes
+    CSharp.UnionTypes
 owners
     John Azariah
 authors 
     John Azariah
 projectUrl
-    https://github.com/johnazariah/csharp-sumtypes
+    https://github.com/johnazariah/csharp-uniontypes
 iconUrl
     https://raw.githubusercontent.com/johnazariah/csharp-sumtypes/master/docs/files/img/logo.png
 licenseUrl

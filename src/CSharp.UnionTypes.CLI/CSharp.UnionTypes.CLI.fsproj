@@ -8,7 +8,7 @@
     <ProjectGuid>f001c7b3-3597-4533-9ffe-c817f27ab4aa</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>CSharp.UnionTypes</RootNamespace>
-    <AssemblyName>CSharp.UnionTypes</AssemblyName>
+    <AssemblyName>csutc</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
@@ -23,10 +23,9 @@
     <OutputPath>.\bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>.\bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+    <DocumentationFile>.\bin\$(Configuration)\$(Name).xml</DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
     <Prefer32Bit>true</Prefer32Bit>
-    <StartArguments>--input-file="meep"</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +34,7 @@
     <OutputPath>.\bin\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>.\bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+    <DocumentationFile>.\bin\$(Configuration)\$(Name).xml</DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
   </PropertyGroup>
   <ItemGroup>

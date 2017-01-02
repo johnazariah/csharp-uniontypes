@@ -37,9 +37,9 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BrightSword.CSharpExtension
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrightSword.CSharpExtensions.Reference", "BrightSword.CSharpExtensions.Reference\BrightSword.CSharpExtensions.Reference.csproj", "{75FCAE41-6E9E-4E79-B77C-6BD77F71A11A}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CSharp.UnionTypes", "src\CSharp.UnionTypes\CSharp.UnionTypes.fsproj", "{F001C7B3-3597-4533-9FFE-C817F27AB4AA}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CSharp.UnionTypes.CLI", "src\CSharp.UnionTypes.CLI\CSharp.UnionTypes.CLI.fsproj", "{F001C7B3-3597-4533-9FFE-C817F27AB4AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.UnionTypes.VSIX", "src\CSharp.UnionTypes.VSIX\CSharp.UnionTypes.VSIX.csproj", "{80A64DAB-DB58-4EA0-94BB-0547673D89E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.UnionTypes.CodeGenerator.VSIX", "src\CSharp.UnionTypes.CodeGenerator.VSIX\CSharp.UnionTypes.CodeGenerator.VSIX.csproj", "{B70378D2-E3BB-463E-B0A5-D87E3E3BC529}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +63,10 @@ Global
 		{F001C7B3-3597-4533-9FFE-C817F27AB4AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F001C7B3-3597-4533-9FFE-C817F27AB4AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F001C7B3-3597-4533-9FFE-C817F27AB4AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80A64DAB-DB58-4EA0-94BB-0547673D89E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80A64DAB-DB58-4EA0-94BB-0547673D89E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80A64DAB-DB58-4EA0-94BB-0547673D89E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80A64DAB-DB58-4EA0-94BB-0547673D89E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B70378D2-E3BB-463E-B0A5-D87E3E3BC529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B70378D2-E3BB-463E-B0A5-D87E3E3BC529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B70378D2-E3BB-463E-B0A5-D87E3E3BC529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B70378D2-E3BB-463E-B0A5-D87E3E3BC529}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
