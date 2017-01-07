@@ -205,7 +205,7 @@ NUGET
       System.Runtime.Extensions (>= 4.3) - framework: dnxcore50, >= netstandard13
       System.Threading (>= 4.3) - framework: dnxcore50, >= netstandard13
       System.Threading.Tasks (>= 4.3) - framework: dnxcore50, netstandard11, >= netstandard13
-    System.Collections.Immutable (1.3) - redirects: force, framework: >= net45, >= netstandard11, portable-net45+win8
+    System.Collections.Immutable (1.3.1) - redirects: force, framework: >= net45, >= netstandard11, portable-net45+win8
       System.Collections (>= 4.3) - framework: >= netstandard10
       System.Diagnostics.Debug (>= 4.3) - framework: >= netstandard10
       System.Globalization (>= 4.3) - framework: >= netstandard10
@@ -360,10 +360,10 @@ NUGET
       Microsoft.NETCore.Targets (>= 1.1) - framework: dnxcore50, >= netstandard10
       System.Reflection (>= 4.3) - framework: dnxcore50, >= netstandard10
       System.Runtime (>= 4.3) - framework: dnxcore50, >= netstandard10
-    System.Reflection.Metadata (1.4.1) - redirects: force, framework: >= net45, >= netstandard11, portable-net45+win8
+    System.Reflection.Metadata (1.4.2) - redirects: force, framework: >= net45, >= netstandard11, portable-net45+win8
       System.Collections (>= 4.3) - framework: >= netstandard11
       System.Collections.Immutable (>= 1.1.37) - framework: portable-net45+win8
-      System.Collections.Immutable (>= 1.3) - framework: >= net45, >= netstandard11, monoandroid, monotouch, xamarinios, xamarinmac, winv4.5, wpav8.1
+      System.Collections.Immutable (>= 1.3.1) - framework: >= net45, >= netstandard11, monoandroid, monotouch, xamarinios, xamarinmac, winv4.5, wpav8.1
       System.Diagnostics.Debug (>= 4.3) - framework: >= netstandard11
       System.IO (>= 4.3) - framework: >= netstandard11
       System.IO.Compression (>= 4.3) - framework: >= netstandard11
@@ -633,7 +633,7 @@ GIST
 GROUP Build
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.47.2)
+    FAKE (4.48)
     FSharp.Compiler.Service (2.0.0.6)
     FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
@@ -651,7 +651,7 @@ NUGET
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (be6e4b2b513b5f2cd64ec689fe7f1f45c39f4e92)
+    modules/Octokit/Octokit.fsx (4c38cad5f0a1d3f29c22e50ef2bff189be47c730)
       Octokit (>= 0.20)
 GROUP Test
 NUGET
