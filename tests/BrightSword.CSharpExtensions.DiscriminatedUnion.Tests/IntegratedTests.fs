@@ -8,20 +8,18 @@ open BrightSword.CSharpExtensions.DiscriminatedUnion.CodeGenerator
 
 open NUnit.Framework
 
-module IntegratedTests = 
+module IntegratedTests =
 
     let maybe_of_T = @"
-namespace DU.Tests 
+namespace DU.Tests
 {
-    using System;
-
     union Maybe<T> { None | Some<T> }
 }"
 
     [<Test>]
-    let ``code-gen from text: maybe``() =    
+    let ``code-gen from text: maybe``() =
         let actual = generate_code_for_text maybe_of_T
-        CodeGeneratorTests.text_matches (CodeGeneratorTests.COMPLETE_EXPECTED, actual) 
+        CodeGeneratorTests.text_matches (CodeGeneratorTests.COMPLETE_EXPECTED, actual)
 
     [<Test>]
     let ``code-gen from file: maybe``() =
@@ -29,7 +27,7 @@ namespace DU.Tests
         Assert.IsTrue <| File.Exists (input_file.FullName)
 
         let input = File.ReadAllText input_file.FullName
-        CodeGeneratorTests.text_matches (maybe_of_T, input) 
+        CodeGeneratorTests.text_matches (maybe_of_T, input)
 
         let output_file = Path.Combine(input_file.Directory.FullName, "maybe.cs") |> FileInfo
         Assert.IsTrue <| Directory.Exists output_file.Directory.FullName
@@ -43,4 +41,3 @@ namespace DU.Tests
 
         let actual = File.ReadAllText output_file.FullName
         CodeGeneratorTests.text_matches (CodeGeneratorTests.COMPLETE_EXPECTED, actual)
-    

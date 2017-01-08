@@ -1,6 +1,6 @@
 NUGET
   remote: https://www.nuget.org/api/v2
-    BrightSword.RoslynWrapper (1.0.2) - redirects: force
+    BrightSword.RoslynWrapper (1.0.3) - redirects: force
       FSharp.Core
       Microsoft.CodeAnalysis.Analyzers
       Microsoft.CodeAnalysis.Common

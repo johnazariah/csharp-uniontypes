@@ -12,14 +12,10 @@ namespace CSharp.UnionTypes.VSIX
 {
     [ComVisible(true)]
     [Guid("F15F1915-CDBD-46B1-9B35-72E3C04D9D0E")]
-    [CodeGeneratorRegistration(typeof(SingleFileGenerator), "SingleFileGenerator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
-    [ProvideObject(typeof(SingleFileGenerator))]
-    internal class SingleFileGenerator : IVsSingleFileGenerator, IObjectWithSite
+    [CodeGeneratorRegistration(typeof(CSharpUnionTypeGenerator), "CSharpUnionTypeGenerator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
+    [ProvideObject(typeof(CSharpUnionTypeGenerator))]
+    internal class CSharpUnionTypeGenerator : IVsSingleFileGenerator, IObjectWithSite
     {
-        // ReSharper disable InconsistentNaming
-        public static string name = "csunion";
-        // ReSharper restore InconsistentNaming
-
         private object _site;
 
         void IObjectWithSite.SetSite(object pUnkSite)
@@ -58,12 +54,20 @@ namespace CSharp.UnionTypes.VSIX
                 throw new ArgumentException(nameof(bstrInputFileContents));
             }
 
-            var code = CodeGenerator.generate_code_for_text(bstrInputFileContents);
-            var bytes = Encoding.UTF8.GetBytes(code);
+            if (bstrInputFileContents == string.Empty)
+            {
+                pcbOutput = 0;
+            }
+            else
+            {
+                var code = CodeGenerator.generate_code_for_text(bstrInputFileContents);
+                var bytes = Encoding.UTF8.GetBytes(code);
 
-            rgbOutputFileContents[0] = Marshal.AllocCoTaskMem(bytes.Length);
-            Marshal.Copy(bytes, 0, rgbOutputFileContents[0], bytes.Length);
-            pcbOutput = (uint)bytes.Length;
+                rgbOutputFileContents[0] = Marshal.AllocCoTaskMem(bytes.Length);
+                Marshal.Copy(bytes, 0, rgbOutputFileContents[0], bytes.Length);
+                pcbOutput = (uint) bytes.Length;
+            }
+
             return VSConstants.S_OK;
         }
     }

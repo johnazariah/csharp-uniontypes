@@ -67,7 +67,7 @@ let generateCode cp =
     |> ignore
 
 [<EntryPoint>]
-let main argv = 
+let main argv =
     let cp = CompilerParameters.apply argv
     let errors = validate cp
 

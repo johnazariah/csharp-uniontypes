@@ -84,7 +84,6 @@ Target "AssemblyInfo" (fun _ ->
           Attribute.Product project
           Attribute.Description summary
           Attribute.Version release.AssemblyVersion
-          Attribute.InternalsVisibleTo (sprintf "%s.Tests" project)
           Attribute.FileVersion release.AssemblyVersion ]
 
     let getProjectDetails projectPath =

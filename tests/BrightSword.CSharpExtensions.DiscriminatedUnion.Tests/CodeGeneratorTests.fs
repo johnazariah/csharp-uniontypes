@@ -13,45 +13,52 @@ open System.Text.RegularExpressions
 
 type SF = SyntaxFactory
 
-module CodeGeneratorTests = 
-    let maybe_of_T = 
+module CodeGeneratorTests =
+    let maybe_of_T =
         { UnionTypeName = UnionTypeName "Maybe"
           UnionTypeParameters = [ TypeArgument "T" ]
-          UnionMembers = 
+          UnionMembers =
               [ { MemberName = UnionMemberName "None"
                   MemberArgumentType = None }
                 { MemberName = UnionMemberName "Some"
-                  MemberArgumentType = 
+                  MemberArgumentType =
                       Some { FullyQualifiedTypeName = "T"
                              TypeArguments = [] } } ]
           BaseType = None }
-    
-    let class_to_code class_declaration_syntax = 
-        ``compilation unit`` 
-            [ ``namespace`` "DU.Tests" ``{`` [] [ class_declaration_syntax ] ``}`` :> MemberDeclarationSyntax ] 
+
+    let class_to_code class_declaration_syntax =
+        ``compilation unit``
+            [
+                ``namespace`` "DU.Tests"
+                    ``{``
+                        [ "System"; "System.Collections" ]
+                        [ class_declaration_syntax ]
+                    ``}`` :> MemberDeclarationSyntax
+            ]
         |> generateCodeToString
-    
+
     let text_matches = (mapTuple2 (fixupNL >> trimWS) >> Assert.AreEqual)
 
-    let private test_code_gen generator expected = 
-        let actual = 
+    let private test_code_gen generator expected =
+        let actual =
             maybe_of_T
             |> to_class_declaration_internal [ generator ]
             |> class_to_code
         text_matches (expected, actual)
 
-    let private test_code_gen_choice generator expected = 
-        let actual = 
+    let private test_code_gen_choice generator expected =
+        let actual =
             maybe_of_T.UnionMembers
             |> List.map ((to_choice_class_internal [ generator] maybe_of_T) >> class_to_code)
             |> String.concat("\n")
         text_matches (expected, actual)
-    
+
     [<Test>]
-    let ``code-gen: private constructor``() = 
+    let ``code-gen: private constructor``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
@@ -61,12 +68,13 @@ module CodeGeneratorTests =
     }
 }"
         test_code_gen to_private_ctor expected
-    
+
     [<Test>]
-    let ``code-gen: match function abstract``() = 
+    let ``code-gen: match function abstract``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
@@ -74,12 +82,13 @@ module CodeGeneratorTests =
     }
 }"
         test_code_gen to_match_function_abstract expected
-    
+
     [<Test>]
-    let ``code-gen: access members``() = 
+    let ``code-gen: access members``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
@@ -88,58 +97,62 @@ module CodeGeneratorTests =
     }
 }"
         test_code_gen to_access_members expected
-    
+
     [<Test>]
     let ``code-gen: equatable equals``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public bool Equals(Maybe<T> other) => Equals(other as object);
     }
 }"
-        test_code_gen to_equatable_equals_method expected 
+        test_code_gen to_equatable_equals_method expected
 
     [<Test>]
     let ``code-gen: structuralequality equals``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
     }
 }"
-        test_code_gen to_structural_equality_equals_method expected 
+        test_code_gen to_structural_equality_equals_method expected
 
     [<Test>]
     let ``code-gen: structuralequality gethashcode``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
     }
 }"
-        test_code_gen to_structural_equality_gethashcode_method expected 
+        test_code_gen to_structural_equality_gethashcode_method expected
 
     [<Test>]
     let ``code-gen: eq operator``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
     }
 }"
-        test_code_gen to_eq_operator expected 
+        test_code_gen to_eq_operator expected
 
 
     [<Test>]
@@ -147,19 +160,21 @@ module CodeGeneratorTests =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
         public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
     }
 }"
-        test_code_gen to_neq_operator expected 
+        test_code_gen to_neq_operator expected
 
     [<Test>]
-    let ``code-gen-choice: match_function_override``() = 
+    let ``code-gen-choice: match_function_override``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public partial class None : Maybe<T>
     {
@@ -169,6 +184,7 @@ module CodeGeneratorTests =
 namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public partial class Some : Maybe<T>
     {
@@ -178,10 +194,11 @@ namespace DU.Tests
         test_code_gen_choice match_function_override expected
 
     [<Test>]
-    let ``code-gen-choice: ToString``() = 
+    let ``code-gen-choice: ToString``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public partial class None : Maybe<T>
     {
@@ -191,6 +208,7 @@ namespace DU.Tests
 namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public partial class Some : Maybe<T>
     {
@@ -198,12 +216,13 @@ namespace DU.Tests
     }
 }"
         test_code_gen_choice tostring_override expected
-    
+
     [<Test>]
-    let ``code-gen-choice: Equals``() = 
+    let ``code-gen-choice: Equals``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public partial class None : Maybe<T>
     {
@@ -213,6 +232,7 @@ namespace DU.Tests
 namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public partial class Some : Maybe<T>
     {
@@ -222,10 +242,11 @@ namespace DU.Tests
         test_code_gen_choice equals_override expected
 
     [<Test>]
-    let ``code-gen-choice: GetHashCode``() = 
+    let ``code-gen-choice: GetHashCode``() =
         let expected = @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public partial class None : Maybe<T>
     {
@@ -235,6 +256,7 @@ namespace DU.Tests
 namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public partial class Some : Maybe<T>
     {
@@ -244,10 +266,11 @@ namespace DU.Tests
         test_code_gen_choice hashcode_override expected
 
     [<Test>]
-    let ``code-gen: wrapper type``() = 
+    let ``code-gen: wrapper type``() =
         let expected = sprintf @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
@@ -286,6 +309,7 @@ namespace DU.Tests
     let COMPLETE_EXPECTED = sprintf @"namespace DU.Tests
 {
     using System;
+    using System.Collections;
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
@@ -331,11 +355,11 @@ namespace DU.Tests
         public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
         public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
     }
-}" 
-    
+}"
+
     [<Test>]
-    let ``code-gen: complete``() = 
-        let actual = 
+    let ``code-gen: complete``() =
+        let actual =
             maybe_of_T
             |> to_class_declaration
             |> class_to_code
