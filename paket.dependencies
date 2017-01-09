@@ -9,6 +9,7 @@ nuget Microsoft.VisualStudio.Shell.14.0 >= 14.0.23205
 nuget Microsoft.VisualStudio.Shell.Interop.12.0 >= 12.0.30110
 nuget Microsoft.VisualStudio.Designer.Interfaces >= 1.1.4322
 nuget Microsoft.VSSDK.BuildTools >= 14.0.25123
+nuget VSSDK.VSLangProj.8
 
 group Build
   source https://nuget.org/api/v2

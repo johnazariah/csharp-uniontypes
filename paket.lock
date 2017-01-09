@@ -627,6 +627,17 @@ NUGET
       System.Xml.ReaderWriter (>= 4.3) - framework: >= netstandard13
       System.Xml.XDocument (>= 4.3) - framework: >= netstandard13
       System.Xml.XPath (>= 4.3) - framework: >= net46, >= netstandard13
+    VSSDK.DTE (7.0.4)
+      VSSDK.IDE (>= 7.0.4 < 8.0)
+    VSSDK.IDE (7.0.4)
+    VSSDK.IDE.8 (8.0.4)
+    VSSDK.VSLangProj (7.0.4)
+      VSSDK.DTE (>= 7.0.4 < 8.0)
+      VSSDK.IDE (>= 7.0.4 < 8.0)
+    VSSDK.VSLangProj.8 (8.0.4)
+      VSSDK.DTE (>= 7.0.4 < 8.0)
+      VSSDK.IDE.8 (>= 8.0.4 < 9.0)
+      VSSDK.VSLangProj (>= 7.0.4 < 8.0)
 GIST
   remote: johnazariah/b155cb600213d2d7971fd224531ebdb9
     FULLPROJECT (5eef7e297905a3ddf7180e6799cb360a147962d1)
