@@ -2,14 +2,14 @@
 using System.Reflection;
 
 [assembly: AssemblyTitleAttribute("CSharp.UnionTypes.VSIX")]
-[assembly: AssemblyProductAttribute("BrightSword.CSharpExtensions.DiscriminatedUnion")]
+[assembly: AssemblyProductAttribute("CSharp.UnionTypes")]
 [assembly: AssemblyDescriptionAttribute("DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#")]
 [assembly: AssemblyVersionAttribute("1.0.0")]
 [assembly: AssemblyFileVersionAttribute("1.0.0")]
 namespace System {
     internal static class AssemblyVersionInformation {
         internal const System.String AssemblyTitle = "CSharp.UnionTypes.VSIX";
-        internal const System.String AssemblyProduct = "BrightSword.CSharpExtensions.DiscriminatedUnion";
+        internal const System.String AssemblyProduct = "CSharp.UnionTypes";
         internal const System.String AssemblyDescription = "DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#";
         internal const System.String AssemblyVersion = "1.0.0";
         internal const System.String AssemblyFileVersion = "1.0.0";

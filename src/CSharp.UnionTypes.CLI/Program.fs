@@ -1,7 +1,7 @@
 ﻿open System.IO
 open System.Text.RegularExpressions
 
-open BrightSword.CSharpExtensions.DiscriminatedUnion.CodeGenerator
+open CSharp.UnionTypes.CodeGenerator
 
 type CompilerParameters = {
     HelpRequested : bool

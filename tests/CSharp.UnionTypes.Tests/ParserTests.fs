@@ -1,6 +1,6 @@
-namespace BrightSword.CSharpExtensions.DiscriminatedUnion.Tests
+namespace CSharp.UnionTypes.Tests
 
-open BrightSword.CSharpExtensions.DiscriminatedUnion
+open CSharp.UnionTypes
 open NUnit.Framework
 open FParsec
 

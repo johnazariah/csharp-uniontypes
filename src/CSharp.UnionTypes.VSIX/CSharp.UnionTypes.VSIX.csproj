@@ -87,9 +87,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BrightSword.CSharpExtensions.DiscriminatedUnion\BrightSword.CSharpExtensions.DiscriminatedUnion.fsproj">
+    <ProjectReference Include="..\CSharp.UnionTypes\CSharp.UnionTypes.fsproj">
       <Project>{badd2e7c-35a6-413b-a4c8-f291a8ffcb94}</Project>
-      <Name>BrightSword.CSharpExtensions.DiscriminatedUnion</Name>
+      <Name>CSharp.UnionTypes</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

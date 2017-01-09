@@ -1,10 +1,10 @@
-﻿namespace BrightSword.CSharpExtensions.DiscriminatedUnion.Tests
+﻿namespace CSharp.UnionTypes.Tests
 
 open System.IO
 open System.Text.RegularExpressions
 
-open BrightSword.CSharpExtensions.DiscriminatedUnion.Parser
-open BrightSword.CSharpExtensions.DiscriminatedUnion.CodeGenerator
+open CSharp.UnionTypes.Parser
+open CSharp.UnionTypes.CodeGenerator
 
 open NUnit.Framework
 

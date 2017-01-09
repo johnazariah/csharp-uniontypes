@@ -1,9 +1,9 @@
-﻿namespace BrightSword.CSharpExtensions.DiscriminatedUnion.Tests
+﻿namespace CSharp.UnionTypes.Tests
 
-open BrightSword.CSharpExtensions.DiscriminatedUnion.AST
-open BrightSword.CSharpExtensions.DiscriminatedUnion.UnionMemberClassDeclarationBuilder
-open BrightSword.CSharpExtensions.DiscriminatedUnion.UnionTypeClassDeclarationBuilder
-open BrightSword.CSharpExtensions.DiscriminatedUnion.CodeGenerator
+open CSharp.UnionTypes.AST
+open CSharp.UnionTypes.UnionMemberClassDeclarationBuilder
+open CSharp.UnionTypes.UnionTypeClassDeclarationBuilder
+open CSharp.UnionTypes.CodeGenerator
 open BrightSword.RoslynWrapper
 open NUnit.Framework
 open Microsoft.CodeAnalysis

@@ -3,5 +3,5 @@
     * Parser and Roslyn-Based Code Generator library for Discriminated Unions
     * Command Line Executable
 #### 0.0.1-beta - Dec 13 2016
-* Changed name from fsharp-project-scaffold to BrightSword.CSharpExtensions.DiscriminatedUnion
+* Changed name from fsharp-project-scaffold to CSharp.UnionTypes
 * Initial release

@@ -1,4 +1,4 @@
-﻿namespace BrightSword.CSharpExtensions.DiscriminatedUnion
+﻿namespace CSharp.UnionTypes
 
 open System.Text.RegularExpressions
 open System.IO

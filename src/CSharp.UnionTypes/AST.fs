@@ -1,4 +1,4 @@
-﻿namespace BrightSword.CSharpExtensions.DiscriminatedUnion
+﻿namespace CSharp.UnionTypes
 
 [<AutoOpen>]
 module AST =
