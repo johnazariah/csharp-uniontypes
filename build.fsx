@@ -28,7 +28,7 @@ open SourceLink
 
 // The name of the project
 // (used by attributes in AssemblyInfo, name of a NuGet package and directory in 'src')
-let project = "BrightSword.CSharpExtensions.DiscriminatedUnion"
+let project = "CSharp.UnionTypes"
 
 // Short summary of the project
 // (used as description in AssemblyInfo and as a short summary for NuGet package)
@@ -45,7 +45,7 @@ let authors = [ "John Azariah" ]
 let tags = "C# \"Type Theory\" \"Union Types\" \"Discriminated Union Types\" \"Sum Types\""
 
 // File system information
-let solutionFile  = "BrightSword.CSharpExtensions.DiscriminatedUnion.sln"
+let solutionFile  = "CSharp.UnionTypes.sln"
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
@@ -84,7 +84,6 @@ Target "AssemblyInfo" (fun _ ->
           Attribute.Product project
           Attribute.Description summary
           Attribute.Version release.AssemblyVersion
-          Attribute.InternalsVisibleTo (sprintf "%s.Tests" project)
           Attribute.FileVersion release.AssemblyVersion ]
 
     let getProjectDetails projectPath =

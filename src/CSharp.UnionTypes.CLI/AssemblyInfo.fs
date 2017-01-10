@@ -2,7 +2,7 @@
 namespace System
 open System.Reflection
 
-[<assembly: AssemblyTitleAttribute("CSharp.UnionTypes")>]
+[<assembly: AssemblyTitleAttribute("CSharp.UnionTypes.CLI")>]
 [<assembly: AssemblyProductAttribute("CSharp.UnionTypes")>]
 [<assembly: AssemblyDescriptionAttribute("DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#")>]
 [<assembly: AssemblyVersionAttribute("1.0.0")>]
@@ -10,7 +10,7 @@ open System.Reflection
 do ()
 
 module internal AssemblyVersionInformation =
-    let [<Literal>] AssemblyTitle = "CSharp.UnionTypes"
+    let [<Literal>] AssemblyTitle = "CSharp.UnionTypes.CLI"
     let [<Literal>] AssemblyProduct = "CSharp.UnionTypes"
     let [<Literal>] AssemblyDescription = "DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#"
     let [<Literal>] AssemblyVersion = "1.0.0"
