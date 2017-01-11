@@ -14,6 +14,7 @@ module IntegratedTests =
 namespace DU.Tests
 {
     union Maybe<T> { None | Some<T> }
+    union TrafficLights { Red | Amber | Green }
 }"
 
     [<Test>]
