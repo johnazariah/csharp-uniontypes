@@ -128,7 +128,7 @@ module AST =
 
         override this.ToString() =
             this.MemberArgumentType
-            |> Option.fold (fun _ s -> sprintf "%s of %s" this.MemberName.unapply s.unapply)
+            |> Option.fold (fun _ s -> sprintf "%s of %s" this.MemberName.unapply (s.ToString()))
                    (sprintf "%s" this.MemberName.unapply)
 
     and UnionMemberName =
@@ -144,14 +144,10 @@ module AST =
         { FullyQualifiedTypeName : string
           TypeArguments : FullTypeName list }
 
-        static member apply (nonGenericNamePart, typeArguments) =
-            { FullyQualifiedTypeName = toDottedName nonGenericNamePart
-              TypeArguments = typeArguments |> Option.fold (fun _ s -> s) [] }
-
-        member this.unapply =
+        member this.CSharpTypeName = 
             let typeArguments' =
                 this.TypeArguments
-                |> Seq.map (fun ta -> ta.unapply)
+                |> Seq.map (fun ta -> ta.ToString ())
                 |> String.concat ", "
 
             let typeArguments =
@@ -160,4 +156,8 @@ module AST =
 
             sprintf "%s%s" this.FullyQualifiedTypeName typeArguments
 
-        override this.ToString() = this.unapply
+        static member apply (nonGenericNamePart, typeArguments) =
+            { FullyQualifiedTypeName = toDottedName nonGenericNamePart
+              TypeArguments = typeArguments |> Option.fold (fun _ s -> s) [] }
+
+        override this.ToString() = this.CSharpTypeName

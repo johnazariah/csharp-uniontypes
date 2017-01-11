@@ -70,10 +70,17 @@
     <Compile Include="..\..\paket-files\johnazariah\b155cb600213d2d7971fd224531ebdb9\maybe.fs">
       <Link>maybe.fs</Link>
     </Compile>
-    <None Include="..\Key.snk" />
+    <None Include="..\Key.snk">
+      <Link>Key.snk</Link>
+    </None>
     <Compile Include="AST.fs" />
     <Compile Include="Parser.fs" />
-    <Compile Include="CSharpGenerator.fs" />
+    <Compile Include="DeclarationBuilderCommon.fs" />
+    <Compile Include="UnionMemberClassDeclarationBuilder.fs" />
+    <Compile Include="UnionTypeClassDeclarationBuilder.fs" />
+    <Compile Include="NamespaceDeclarationBuilder.fs" />
+    <Compile Include="CompilationUnitDeclarationBuilder.fs" />
+    <Compile Include="CodeGenerator.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>

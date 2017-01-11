@@ -2,4 +2,5 @@
 {
     union Maybe<T> { None | Some<T> }
     union TrafficLights { Red | Amber | Green }
+	union TrafficLightsToStopFor constrains TrafficLights { Red | Amber }
 }

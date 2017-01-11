@@ -64,7 +64,10 @@
   <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <Compile Include="ParserTests.fs" />
-    <Compile Include="CodeGeneratorTests.fs" />
+    <Compile Include="SampleTypes.fs" />
+    <Compile Include="UnitTestUtilities.fs" />
+    <Compile Include="UnionTypeClassTests.fs" />
+    <Compile Include="UnionMemberClassTests.fs" />
     <Compile Include="IntegratedTests.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
