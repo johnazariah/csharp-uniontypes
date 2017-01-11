@@ -235,9 +235,6 @@ module UnionTypeClassDeclarationBuilder =
 
     //  public bool Equals(Maybe<T> other) => Equals(other as object);
     let to_equatable_equals_method (du : UnionType) =
-        let class_name = du.UnionTypeName.unapply
-        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
-        in
         [
             ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", union_typename du) ]``)``
                 [``public``]
