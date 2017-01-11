@@ -14,12 +14,16 @@ module IntegratedTests =
 namespace DU.Tests
 {
     union Maybe<T> { None | Some<T> }
+    union TrafficLights { Red | Amber | Green }
 }"
+    let complete_expected_with_pragma = (sprintf @"#pragma warning disable CS0660
+#pragma warning disable CS0661
+%s" CodeGeneratorTests.COMPLETE_EXPECTED)
 
     [<Test>]
     let ``code-gen from text: maybe``() =
         let actual = generate_code_for_text maybe_of_T
-        CodeGeneratorTests.text_matches (CodeGeneratorTests.COMPLETE_EXPECTED, actual)
+        CodeGeneratorTests.text_matches (complete_expected_with_pragma, actual)
 
     [<Test>]
     let ``code-gen from file: maybe``() =
@@ -40,4 +44,4 @@ namespace DU.Tests
         Assert.IsTrue <| File.Exists (output_file.FullName)
 
         let actual = File.ReadAllText output_file.FullName
-        CodeGeneratorTests.text_matches (CodeGeneratorTests.COMPLETE_EXPECTED, actual)
+        CodeGeneratorTests.text_matches (complete_expected_with_pragma, actual)

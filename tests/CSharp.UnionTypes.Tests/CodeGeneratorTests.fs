@@ -15,27 +15,45 @@ type SF = SyntaxFactory
 
 module CodeGeneratorTests =
     let maybe_of_T =
-        { UnionTypeName = UnionTypeName "Maybe"
-          UnionTypeParameters = [ TypeArgument "T" ]
-          UnionMembers =
-              [ { MemberName = UnionMemberName "None"
-                  MemberArgumentType = None }
-                { MemberName = UnionMemberName "Some"
-                  MemberArgumentType =
-                      Some { FullyQualifiedTypeName = "T"
-                             TypeArguments = [] } } ]
-          BaseType = None }
+        {
+            BaseType = None
+            UnionTypeName = UnionTypeName "Maybe"
+            UnionTypeParameters = [ TypeArgument "T" ]
+            UnionMembers =
+                [ 
+                    { MemberName = UnionMemberName "None"; MemberArgumentType = None }
+                    {
+                        MemberName = UnionMemberName "Some"
+                        MemberArgumentType = Some { FullyQualifiedTypeName = "T"; TypeArguments = [] } 
+                    }
+                ]
+        }
 
-    let class_to_code class_declaration_syntax =
+    let traffic_lights =
+        {
+            BaseType = None
+            UnionTypeName = UnionTypeName "TrafficLights"
+            UnionTypeParameters = []
+            UnionMembers =
+                [ 
+                    { MemberName = UnionMemberName "Red"; MemberArgumentType = None }
+                    { MemberName = UnionMemberName "Amber"; MemberArgumentType = None }
+                    { MemberName = UnionMemberName "Green"; MemberArgumentType = None }
+                ]
+        }
+
+    let classes_to_code classes =
         ``compilation unit``
             [
                 ``namespace`` "DU.Tests"
                     ``{``
                         [ "System"; "System.Collections" ]
-                        [ class_declaration_syntax ]
+                        classes
                     ``}`` :> MemberDeclarationSyntax
             ]
         |> generateCodeToString
+
+    let class_to_code c = classes_to_code [ c ]
 
     let text_matches = (mapTuple2 (fixupNL >> trimWS) >> Assert.AreEqual)
 
@@ -355,13 +373,57 @@ namespace DU.Tests
         public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
         public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
     }
+
+    public abstract partial class TrafficLights : IEquatable<TrafficLights>, IStructuralEquatable
+    {
+        private TrafficLights()
+        {
+        }
+
+        public abstract TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc, Func<TResult> greenFunc);
+        public static readonly TrafficLights Red = new ChoiceTypes.Red();
+        public static readonly TrafficLights Amber = new ChoiceTypes.Amber();
+        public static readonly TrafficLights Green = new ChoiceTypes.Green();
+        private static partial class ChoiceTypes
+        {
+            public partial class Red : TrafficLights
+            {
+                public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc, Func<TResult> greenFunc) => redFunc();
+                public override bool Equals(object other) => other is Red;
+                public override int GetHashCode() => GetType().FullName.GetHashCode();
+                public override string ToString() => ""Red"";
+            }
+
+            public partial class Amber : TrafficLights
+            {
+                public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc, Func<TResult> greenFunc) => amberFunc();
+                public override bool Equals(object other) => other is Amber;
+                public override int GetHashCode() => GetType().FullName.GetHashCode();
+                public override string ToString() => ""Amber"";
+            }
+
+            public partial class Green : TrafficLights
+            {
+                public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc, Func<TResult> greenFunc) => greenFunc();
+                public override bool Equals(object other) => other is Green;
+                public override int GetHashCode() => GetType().FullName.GetHashCode();
+                public override string ToString() => ""Green"";
+            }
+        }
+
+        public bool Equals(TrafficLights other) => Equals(other as object);
+        public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
+        public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
+        public static bool operator ==(TrafficLights left, TrafficLights right) => left?.Equals(right) ?? false;
+        public static bool operator !=(TrafficLights left, TrafficLights right) => !(left == right);
+    }
 }"
 
     [<Test>]
     let ``code-gen: complete``() =
         let actual =
-            maybe_of_T
-            |> to_class_declaration
-            |> class_to_code
+            [ maybe_of_T; traffic_lights ]
+            |> List.map (to_class_declaration)
+            |> classes_to_code
 
         text_matches (COMPLETE_EXPECTED, actual)

@@ -5,13 +5,13 @@ open System.Reflection
 [<assembly: AssemblyTitleAttribute("CSharp.UnionTypes")>]
 [<assembly: AssemblyProductAttribute("CSharp.UnionTypes")>]
 [<assembly: AssemblyDescriptionAttribute("DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#")>]
-[<assembly: AssemblyVersionAttribute("1.0.0")>]
-[<assembly: AssemblyFileVersionAttribute("1.0.0")>]
+[<assembly: AssemblyVersionAttribute("1.0.1")>]
+[<assembly: AssemblyFileVersionAttribute("1.0.1")>]
 do ()
 
 module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "CSharp.UnionTypes"
     let [<Literal>] AssemblyProduct = "CSharp.UnionTypes"
     let [<Literal>] AssemblyDescription = "DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#"
-    let [<Literal>] AssemblyVersion = "1.0.0"
-    let [<Literal>] AssemblyFileVersion = "1.0.0"
+    let [<Literal>] AssemblyVersion = "1.0.1"
+    let [<Literal>] AssemblyFileVersion = "1.0.1"

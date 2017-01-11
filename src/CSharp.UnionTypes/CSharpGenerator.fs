@@ -172,6 +172,14 @@ module UnionMemberClassDeclarationBuilder =
 
 [<AutoOpen>]
 module UnionTypeClassDeclarationBuilder =
+    let union_typename (du : UnionType) =
+        let class_name = du.UnionTypeName.unapply
+        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
+        if Seq.isEmpty type_parameters then
+            (``type`` class_name)
+        else
+            ``generic type`` class_name ``<<`` type_parameters ``>>`` :> NameSyntax
+
     let to_private_ctor (du : UnionType) =
         let className = du.UnionTypeName.unapply
         [
@@ -227,11 +235,8 @@ module UnionTypeClassDeclarationBuilder =
 
     //  public bool Equals(Maybe<T> other) => Equals(other as object);
     let to_equatable_equals_method (du : UnionType) =
-        let class_name = du.UnionTypeName.unapply
-        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
-        in
         [
-            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``generic type`` class_name ``<<`` type_parameters ``>>``) ]``)``
+            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", union_typename du) ]``)``
                 [``public``]
                 (Some (``=>`` (``invoke`` (ident "Equals") ``(`` [ (ident "other") |~> "object" ] ``)``)))
                 :> MemberDeclarationSyntax
@@ -257,22 +262,16 @@ module UnionTypeClassDeclarationBuilder =
 
     //   public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
     let to_eq_operator du =
-        let class_name = du.UnionTypeName.unapply
-        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
-        let duType = ``generic type`` class_name ``<<`` type_parameters ``>>``
         [
-            ``operator ==`` ("left", "right", duType)
+            ``operator ==`` ("left", "right", union_typename du)
                 (``=>`` (((ident "left") <?.> ("Equals", [ ident "right" ])) <??> ``false``))
                 :> MemberDeclarationSyntax
         ]
 
     //   public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
     let to_neq_operator du =
-        let class_name = du.UnionTypeName.unapply
-        let type_parameters = du.UnionTypeParameters |> Seq.map (fun p -> p.unapply)
-        let duType = ``generic type`` class_name ``<<`` type_parameters ``>>``
         [
-            ``operator !=`` ("left", "right", duType)
+            ``operator !=`` ("left", "right", union_typename du)
                 (``=>`` (! ((ident "left") <==> (ident "right"))))
 
                 :> MemberDeclarationSyntax
@@ -309,11 +308,28 @@ module UnionTypeClassDeclarationBuilder =
 [<AutoOpen>]
 module NamespaceDeclarationBuilder =
     let to_namespace_declaration ns =
-        ``namespace`` ns.NamespaceName.unapply
-            ``{``
-                ((ns.Usings |> List.map (fun u -> u.unapply)) @ ["System"; "System.Collections"] |> Set.ofList |> Set.toList)
-                (ns.Unions |> List.map to_class_declaration)
-            ``}``
+        let pragma_trivia = 
+            SyntaxFactory.PragmaWarningDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.DisableKeyword), true) 
+
+        let disable_warnings = 
+            [
+                "CS0660"           
+                "CS0661"
+            ] 
+            |> List.map (SyntaxFactory.IdentifierName >> (fun i -> i :> ExpressionSyntax) >> SyntaxFactory.SingletonSeparatedList >> pragma_trivia.WithErrorCodes >> SyntaxFactory.Trivia)
+
+        let nsd = 
+            ``namespace`` ns.NamespaceName.unapply
+                ``{``
+                    ((ns.Usings |> List.map (fun u -> u.unapply)) @ ["System"; "System.Collections"] |> Set.ofList |> Set.toList)
+                    (ns.Unions |> List.map to_class_declaration)
+                ``}``
+        in
+        nsd.WithNamespaceKeyword(
+            SyntaxFactory.Token(
+                SyntaxFactory.TriviaList(disable_warnings),
+                SyntaxKind.NamespaceKeyword,
+                SyntaxFactory.TriviaList()))
 
 [<AutoOpen>]
 module CompilationUnitDeclarationBuilder =
