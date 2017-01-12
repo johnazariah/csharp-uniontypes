@@ -39,6 +39,7 @@ namespace CSharp.UnionTypes.GenerationSite
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             var stringOpt = Maybe<string>.NewSome("Hello, World");
@@ -54,6 +55,12 @@ namespace CSharp.UnionTypes.GenerationSite
             var lenOpt2 = from s1 in Maybe<string>.None
                           select s1.Length;
             Console.WriteLine($"The length of the given string is {lenOpt2.GetOrElse(0)}");
+
+            var userName1 = SingleValue<string>.NewSome("john");
+            var userName2 = SingleValue<string>.NewSome("john");
+            Console.WriteLine($"The two usernames are equal : {userName1 == userName2}");
+
+            ((Maybe<string>)userName1).Match(() => null, _ => { Console.WriteLine("Call me Maybe!"); return string.Empty; });
         }
     }
 }
