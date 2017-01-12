@@ -10,25 +10,28 @@ module UnionMemberClassDeclarationBuilder =
     let private pick_value_or_singleton fv fs um =
        um.MemberArgumentType |> Option.fold fv fs
 
-    let ctor du um =        
-        let (args, assignments) = 
-            match du.BaseType, um.MemberArgumentType with
-            | None, None -> ([], [])
-            | None, Some t ->
+    let ctor du um =
+        let member_name = um.MemberName.unapply
+        let args_and_assignments =
+            match um.MemberArgumentType with
+            | Some t ->
                 let arg_type_name = t.CSharpTypeName
                 ([("value", ``type`` arg_type_name)], [statement (ident "Value" <-- ident "value")])
-            | Some b, None -> ([], [])
-            | Some b, Some t ->
-                let arg_type_name = t.CSharpTypeName
-                ([("value", ``type`` arg_type_name)], [statement (ident "Value" <-- ident "value")])
+            | None -> ([], [])
 
-        match (args, assignments) with
-        | ([], []) -> []
+        let ((args, assignments), baseargs) =
+            let (_args, _assignments) = args_and_assignments
+            match du.BaseType, um.MemberArgumentType with
+            | None, _ -> (args_and_assignments, [])
+            | Some b, None -> (args_and_assignments, [ sprintf "%s.%s" b.CSharpTypeName member_name ])
+            | Some b, Some _ -> (args_and_assignments, [sprintf "%s.New%s(value)" b.CSharpTypeName member_name])
+
+        match (args, assignments, baseargs) with
+        | ([], [], []) -> []
         | _ ->
-            let member_name = um.MemberName.unapply
             [
                 ``constructor`` member_name ``(`` args ``)``
-                    ``:`` []
+                    ``:`` baseargs
                     [ ``public`` ]
                     ``{``
                         assignments
@@ -112,7 +115,7 @@ module UnionMemberClassDeclarationBuilder =
         ]
 
     let to_choice_class_internal fns (du: UnionType) um =
-        let union_name = du.unapply
+        let union_name = du.CSharpTypeName
         let member_name = um.MemberName.unapply
 
         let members =

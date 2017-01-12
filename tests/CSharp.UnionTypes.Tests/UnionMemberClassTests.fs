@@ -6,6 +6,109 @@ open NUnit.Framework
 module UnionMemberClassTests =
 
     [<Test>]
+    let ``code-gen-choice: ctor singleton | non-constraining``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public partial class Red : TrafficLights
+    {
+    }
+}
+namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public partial class Amber : TrafficLights
+    {
+    }
+}
+namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public partial class Green : TrafficLights
+    {
+    }
+}"
+        test_codegen_choice TrafficLights ctor expected
+
+    [<Test>]
+    let ``code-gen-choice: ctor singleton | constraining``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public partial class Red : TrafficLightsToStopFor
+    {
+        public Red() : base(TrafficLights.Red)
+        {
+        }
+    }
+}
+namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public partial class Amber : TrafficLightsToStopFor
+    {
+        public Amber() : base(TrafficLights.Amber)
+        {
+        }
+    }
+}"
+        test_codegen_choice TrafficLightsToStopFor ctor expected
+
+
+    [<Test>]
+    let ``code-gen-choice: ctor value | non-constraining``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public partial class None : Maybe<T>
+    {
+    }
+}
+namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public partial class Some : Maybe<T>
+    {
+        public Some(T value)
+        {
+            Value = value;
+        }
+    }
+}"
+        test_codegen_choice Maybe_T ctor expected
+
+    [<Test>]
+    let ``code-gen-choice: ctor value | constraining``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public partial class Some : SingleValue<T>
+    {
+        public Some(T value) : base(Maybe<T>.NewSome(value))
+        {
+            Value = value;
+        }
+    }
+}"
+        test_codegen_choice SingleValue_T ctor expected
+
+    [<Test>]
     let ``code-gen-choice: match_function_override``() =
         let expected = @"namespace DU.Tests
 {

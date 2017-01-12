@@ -21,20 +21,20 @@ module UnionTypeClassDeclarationBuilder =
         |> Option.fold (fun _ x -> [x]) []
 
     let to_private_ctor (du : UnionType) =
-        let ctor_args = 
-            let ctor_args_for_constrained_type _ (base_type : FullTypeName) = 
+        let ctor_args =
+            let ctor_args_for_constrained_type _ (base_type : FullTypeName) =
                 [ ("value", ``type`` [base_type.CSharpTypeName]) ]
             in
-            du.BaseType 
+            du.BaseType
             |> Option.fold ctor_args_for_constrained_type []
-        
-        let ctor_assigns = 
+
+        let ctor_assigns =
             let ctor_assigns_for_constrained_type _ _ =
                 [ (ident "_base" <-- ident "value") |> SyntaxFactory.ExpressionStatement :> StatementSyntax ]
             in
-            du.BaseType 
+            du.BaseType
             |> Option.fold ctor_assigns_for_constrained_type  []
-        
+
         let className = du.UnionTypeName.unapply
         in
         [
@@ -47,7 +47,7 @@ module UnionTypeClassDeclarationBuilder =
         ]
 
     let to_access_members (du : UnionType) =
-        let union_name = du.unapply
+        let union_name = du.CSharpTypeName
 
         let to_access_member um =
             let member_name = um.MemberName.unapply
@@ -132,6 +132,15 @@ module UnionTypeClassDeclarationBuilder =
                 :> MemberDeclarationSyntax
         ]
 
+    // public static explicit operator Maybe<T>(SingleValue<T> value) => value._base;
+    let to_base_cast du =
+        du.BaseType
+        |> Option.map (fun b ->
+            ``explicit operator`` b.CSharpTypeName ``(`` (``type`` du.CSharpTypeName) ``)``
+                (``=>`` (ident "value" <|.|> "_base"))
+                :> MemberDeclarationSyntax)
+        |> Option.fold (fun _ m -> [m]) []
+
     let to_class_declaration_internal fns du =
         let class_name = du.UnionTypeName.unapply
         let type_parameters = du.UnionTypeParameters |> List.map (fun p -> p.unapply)
@@ -158,5 +167,6 @@ module UnionTypeClassDeclarationBuilder =
                 to_structural_equality_gethashcode_method
                 to_eq_operator
                 to_neq_operator
+                to_base_cast
             ]
         to_class_declaration_internal fns du

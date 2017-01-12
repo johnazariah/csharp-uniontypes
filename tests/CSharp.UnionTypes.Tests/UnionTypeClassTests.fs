@@ -66,6 +66,47 @@ module UnionTypeClassTests =
         test_codegen TrafficLightsToStopFor to_base_value expected
 
     [<Test>]
+    let ``code-gen: base cast operator - non-constraining``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public abstract partial class TrafficLights : IEquatable<TrafficLights>, IStructuralEquatable
+    {
+    }
+}"
+        test_codegen TrafficLights to_base_cast expected
+
+    [<Test>]
+    let ``code-gen: base cast operator - singleton | constraining``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public abstract partial class TrafficLightsToStopFor : IEquatable<TrafficLightsToStopFor>, IStructuralEquatable
+    {
+        public static explicit operator TrafficLights(TrafficLightsToStopFor value) => value._base;
+    }
+}"
+        test_codegen TrafficLightsToStopFor to_base_cast expected
+
+    [<Test>]
+    let ``code-gen: base cast operator - value | constraining``() =
+        let expected = @"namespace DU.Tests
+{
+    using System;
+    using System.Collections;
+
+    public abstract partial class SingleValue<T> : IEquatable<SingleValue<T>>, IStructuralEquatable
+    {
+        public static explicit operator Maybe<T>(SingleValue<T> value) => value._base;
+    }
+}"
+        test_codegen SingleValue_T to_base_cast expected
+
+    [<Test>]
     let ``code-gen: match function abstract``() =
         let expected = @"namespace DU.Tests
 {
@@ -78,7 +119,6 @@ module UnionTypeClassTests =
     }
 }"
         test_codegen Maybe_T to_match_function_abstract expected
-
     [<Test>]
     let ``code-gen: access members``() =
         let expected = @"namespace DU.Tests

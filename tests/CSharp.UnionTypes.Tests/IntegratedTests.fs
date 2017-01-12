@@ -159,7 +159,10 @@ module IntegratedTests =
         {
             public partial class Red : TrafficLightsToStopFor
             {
-                public Red() : base(TrafficLights.Red) { }
+                public Red() : base(TrafficLights.Red)
+                {
+                }
+
                 public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc) => redFunc();
                 public override bool Equals(object other) => other is Red;
                 public override int GetHashCode() => GetType().FullName.GetHashCode();
@@ -168,7 +171,10 @@ module IntegratedTests =
 
             public partial class Amber : TrafficLightsToStopFor
             {
-                public Amber() : base(TrafficLights.Amber) { }
+                public Amber() : base(TrafficLights.Amber)
+                {
+                }
+
                 public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc) => amberFunc();
                 public override bool Equals(object other) => other is Amber;
                 public override int GetHashCode() => GetType().FullName.GetHashCode();
@@ -183,12 +189,51 @@ module IntegratedTests =
         public static bool operator !=(TrafficLightsToStopFor left, TrafficLightsToStopFor right) => !(left == right);
         public static explicit operator TrafficLights(TrafficLightsToStopFor value) => value._base;
     }
+
+    public abstract partial class SingleValue<T> : IEquatable<SingleValue<T>>, IStructuralEquatable
+    {
+        private readonly Maybe<T> _base;
+        private SingleValue(Maybe<T> value)
+        {
+            _base = value;
+        }
+
+        public abstract TResult Match<TResult>(Func<T, TResult> someFunc);
+        public static SingleValue<T> NewSome(T value) => new ChoiceTypes.Some(value);
+        private static partial class ChoiceTypes
+        {
+            public partial class Some : SingleValue<T>
+            {
+                public Some(T value) : base(Maybe<T>.NewSome(value))
+                {
+                    Value = value;
+                }
+
+                private T Value
+                {
+                    get;
+                }
+
+                public override TResult Match<TResult>(Func<T, TResult> someFunc) => someFunc(Value);
+                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override int GetHashCode() => GetType().FullName.GetHashCode() ^ (Value?.GetHashCode() ?? ""null"".GetHashCode());
+                public override string ToString() => String.Format(""Some {0}"", Value);
+            }
+        }
+
+        public bool Equals(SingleValue<T> other) => Equals(other as object);
+        public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
+        public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
+        public static bool operator ==(SingleValue<T> left, SingleValue<T> right) => left?.Equals(right) ?? false;
+        public static bool operator !=(SingleValue<T> left, SingleValue<T> right) => !(left == right);
+        public static explicit operator Maybe<T>(SingleValue<T> value) => value._base;
+    }
 }"
 
     [<Test>]
     let ``code-gen: complete``() =
         let actual =
-            [ Maybe_T; TrafficLights; TrafficLightsToStopFor ]
+            [ Maybe_T; TrafficLights; TrafficLightsToStopFor; SingleValue_T ]
             |> List.map (to_class_declaration)
             |> classes_to_code
 
@@ -200,6 +245,7 @@ namespace DU.Tests
     union Maybe<T> { None | Some<T> }
     union TrafficLights { Red | Amber | Green }
 	union TrafficLightsToStopFor constrains TrafficLights { Red | Amber }
+	union SingleValue<T> constrains Maybe<T> { Some<T> }
 }"
     let complete_expected_with_pragma = (sprintf @"#pragma warning disable CS0660
 #pragma warning disable CS0661
