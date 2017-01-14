@@ -1,4 +1,6 @@
-type project
+type file
+id
+    CSharp.UnionTypes
 title
     CSharp.UnionTypes
 owners
@@ -21,5 +23,6 @@ summary
     DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#
 description
     DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#
-
-
+files
+    ../../bin/CSharp.UnionTypes/CSharp.UnionTypes.dll ==> lib/net452
+    ../../bin/CSharp.UnionTypes.CLI/* ==> tools
