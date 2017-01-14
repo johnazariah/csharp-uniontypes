@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Introducing your project
+    <title>Union Types for C#
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#"/>
@@ -27,37 +27,368 @@
           <li><a href="http://fsharp.org">fsharp.org</a></li>
           <li><a href="https://github.com/johnazariah/csharp-sumtypes">github page</a></li>
         </ul>
-        <h3 class="muted"><a href="/csharp-sumtypes/index.html">BrightSword.CSharpExtensions.DiscriminatedUnion</a></h3>
+        <h3 class="muted"><a href="/csharp-sumtypes/index.html">CSharp.UnionTypes</a></h3>
       </div>
       <hr />
       <div class="row">
         <div class="span9" id="main">
           
-<h1><a name="Introducing-your-project" class="anchor" href="#Introducing-your-project">Introducing your project</a></h1>
-<p>Say more</p>
+<h1><a name="Union-Types-for-C" class="anchor" href="#Union-Types-for-C">Union Types for C#</a></h1>
+<h2><a name="Summary" class="anchor" href="#Summary">Summary</a></h2>
+<p>This project provides a tool-based solution to allow modelling of union types within a C# project.</p>
+<p>It defines a minimal extension to the C# language, and provides a CustomTool to automatically generate idiomatic C# classes which provide the functionality of union types.</p>
+<h2><a name="Usage-Instructions-for-Visual-Studio-2015" class="anchor" href="#Usage-Instructions-for-Visual-Studio-2015">Usage Instructions for Visual Studio 2015</a></h2>
+<p>This project provides a VSIX for use with Visual Studio 2015. You can also find this <a href="https://marketplace.visualstudio.com/items?itemName=JohnAzariah.CUnionTypes">VSIX at the Visual Studio Marketplace</a>.</p>
+<ul>
+<li>Install the VSIX into your working environment</li>
+<li>Define your union types in a file with extension <code>.csunion</code>.</li>
+</ul>
+<p>The VSIX contains a "CustomTool" (also known as a Single File Generator) called "CSharpUnionTypeGenerator". This generates "code-behind" C# for your <code>.csunion</code> file.</p>
+<ul>
+<li>Create a file to contain your union types in your Visual Studio C# Project.</li>
+</ul>
+<p>In the file properties window, ensure that:
+<em> </em><em>Build Action</em><em> is set to <em>Content</em>
+</em> <strong>Copy to Output Directory</strong> is set to <em>Never</em>
+<em> </em><em>Custom Tool</em>* is set to <em>CSharpUnionTypeGenerator</em></p>
+<p>Whenever you save the <code>.csunion</code> file, a <code>.g.cs</code> file - which is its "code-behind" - is generated. It will automatically be added to your project.</p>
+<ul>
+<li>Write more C# code (in traditional <code>.cs</code> files) using the union types.</li>
+<li>Compile the project as usual</li>
+</ul>
+<h2><a name="Manual-Usage-Instructions-for-other-environments" class="anchor" href="#Manual-Usage-Instructions-for-other-environments">Manual Usage Instructions for other environments</a></h2>
+<p>This project provides a command-line version of the tool packaged in the Nuget package. This executable is called 'csutc.exe'.</p>
+<ul>
+<li>Download the Nuget package and update your PATH to have 'csutc.exe' accessible</li>
+<li>Define your union types in a file with extension <code>.csunion</code>.</li>
+<li>Run <code>csutc.exe --input-file=&lt;full-path-to-your-file&gt;.csunion</code>. You will need to do this every time you change the <code>.csunion</code> file's contents.</li>
+</ul>
+<p>The command-line executable will generate a <code>.cs</code> file with the same name at the same location by default.</p>
+<ul>
+<li>Add this C# file to your C# Project.</li>
+<li>
+You may also add the <code>.csunion</code> file to your project, but ensure that its properties are set as follows:
+<ul>
+<li><strong>Build Action</strong> is set to <em>Content</em></li>
+<li><strong>Copy to Output Directory</strong> is set to <em>Never</em></li>
+<li><p><strong>Custom Tool</strong> is set to <em>CSharpUnionTypeGenerator</em></p></li>
+</ul>
+</li>
+<li>Write more C# code (in traditional <code>.cs</code> files) using the union types.</li>
+<li>Compile the project as usual</li>
+</ul>
+<h2><a name="Structure-of-a-csunion-file" class="anchor" href="#Structure-of-a-csunion-file">Structure of a .csunion file</a></h2>
+<p>The <code>.csunion</code> file should have the following structure:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">namespace</span> <span class="o">&lt;</span><span class="k">namespace</span><span class="o">-</span><span class="i">name</span><span class="o">&gt;</span>
+{
+    <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">using</span> <span class="o">&lt;</span><span class="i">some</span><span class="o">-</span><span class="k">namespace</span><span class="o">&gt;</span>;
+
+    <span class="i">union</span> <span class="o">&lt;</span><span class="i">union</span><span class="o">-</span><span class="i">name</span><span class="o">&gt;</span>
+    {
+        <span class="o">&lt;</span><span class="i">union</span><span class="o">-</span><span class="k">member</span><span class="o">&gt;</span> | <span class="o">&lt;</span><span class="i">union</span><span class="o">-</span><span class="k">member</span><span class="o">&gt;</span> | <span class="o">&lt;</span><span class="i">union</span><span class="o">-</span><span class="k">member</span><span class="o">&gt;</span>;
+    }
+}
+</code></pre></td>
+</tr>
+</table>
+<h3><a name="namespace" class="anchor" href="#namespace">namespace</a></h3>
+<p>The outermost element must be a <em>single</em> <code>namespace</code> element with a valid (possibly fully-qualified) namespace-name.</p>
+<p>The classes generated will be placed into this namespace, and your C# code can simply reference the namespace with a normal <code>using</code>.abs</p>
+<h3><a name="using" class="anchor" href="#using">using</a></h3>
+<p>Any number of <code>using</code> statements can be present. Each should terminate with a <code>;</code> and be on a separate line.</p>
+<p>The generated file will include these <code>using</code> statements.</p>
+<p>Normally valid <code>using</code> statements are supported, but aliasing is not.</p>
+<p>This element is supported  so that the generated file can compile without further editing, so typically you will need to specify assemblies containing types referenced by the union type.abs</p>
+<p><em>The <code>System</code> and <code>System.Collections</code> namespaces are always included automatically even without explicit specification.</em></p>
+<h3><a name="union" class="anchor" href="#union">union</a></h3>
+<p>Any number of <code>union</code> statements can be present. Each may terminate with a <code>;</code> and must start on a separate line.</p>
+<p>This element specifies the Discriminated Union type.</p>
+<p>The structure of the <code>union</code> statement is:</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 <span class="l">2: </span>
 <span class="l">3: </span>
 <span class="l">4: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;BrightSword.CSharpExtensions.DiscriminatedUnion.dll&quot;</span>
-<span class="k">open</span> <span class="i">BrightSword</span><span class="o">.</span><span class="i">CSharpExtensions</span><span class="o">.</span><span class="i">DiscriminatedUnion</span>
-
-<span class="i">Library</span><span class="o">.</span><span class="i">hello</span> <span class="n">0</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">union</span> <span class="o">&lt;</span><span class="i">union</span><span class="o">-</span><span class="i">name</span><span class="o">&gt;</span>
+    {
+        <span class="o">&lt;</span><span class="i">union</span><span class="o">-</span><span class="k">member</span><span class="o">&gt;</span> | <span class="o">&lt;</span><span class="i">union</span><span class="o">-</span><span class="k">member</span><span class="o">&gt;</span> | <span class="o">&lt;</span><span class="i">union</span><span class="o">-</span><span class="k">member</span><span class="o">&gt;</span>;
+    }
 </code></pre></td>
 </tr>
 </table>
-<p>Some more info</p>
+<ul>
+<li>
+<p>union-name : This will be the name of the Union Type generated. It should be a valid class name, and can specify type arguments if the union type is to be generic.
+<em>You cannot specify generic type constraints in this file. Create a partial class with the same name and type arguments in another <code>.cs</code> file in the project and include the generic type constraints on that.</em></p>
+</li>
+<li>
+<p>union-member : There can be any number of members. Each member represents a choice in the union.
+A union members can either be:</p>
+<ul>
+<li>Singleton : In this case, the union-member has exactly one instance with the same name as the member.</li>
+<li>Value-Constructor : In this case, the union-member is parametrized by the type specified, and will be an instance of a class with the same name as the member associated with a value of the parametrizing type.</li>
+</ul>
+</li>
+</ul>
+<p>Example:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">union</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span> { <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">None</span> | <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Some</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span> }
+</code></pre></td>
+</tr>
+</table>
+<p>This specifies that <code>Maybe&lt;int&gt;</code> is either the value <code>None</code>, or <code>Some</code> with an associated <code>int</code>.</p>
+<p>Some illustrative examples are:</p>
+<h4><a name="Enumerations" class="anchor" href="#Enumerations">Enumerations</a></h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">union</span> <span class="i">TrafficLights</span> { <span class="i">Red</span> | <span class="i">Amber</span> | <span class="i">Green</span> }
+</code></pre></td>
+</tr>
+</table>
+<p>This discriminated union type is a union of singleton values. <em>i.e.</em> The <code>TrafficLights</code> type can have a value that is either <code>Red</code>, <code>Amber</code> or <code>Green</code>. These <em>enum</em>-like types are very useful in providing closed sets of values, and also with <em>constrained types</em>.</p>
+<h4><a name="Value-Constructors" class="anchor" href="#Value-Constructors">Value Constructors</a></h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">union</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span> { <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">None</span> | <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Some</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span> }
+</code></pre></td>
+</tr>
+</table>
+<p>This discriminated union type represents a choice between the singleton value <code>None</code>, and an instance of a class <code>Some</code> wrapping a value of type <code>T</code>. In this case, the discriminated union type is itself generic and takes <code>T</code> as a type argument.</p>
+<p><em>Note that this discriminated union shows the use of a choice between a singleton and a parametrized value. Such choices are perfectly legal</em></p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">union</span> <span class="i">Payment</span> { <span class="i">Cash</span><span class="o">&lt;</span><span class="i">Amount</span><span class="o">&gt;</span> | <span class="i">CreditCard</span><span class="o">&lt;</span><span class="i">CreditCardDetails</span><span class="o">&gt;</span> | <span class="i">Cheque</span><span class="o">&lt;</span><span class="i">ChequeDetails</span><span class="o">&gt;</span> }
+</code></pre></td>
+</tr>
+</table>
+<p>This discriminated union type is non generic and represents a choice between an instance of <code>Cash</code> (parameterized by <code>Amount</code>), <code>CreditCard</code> (parametrized by <code>CreditCardDetails</code>), and <code>Cheque</code> (parametrized by <code>ChequeDetails</code>).</p>
+<p><em>Note that in this case, one or more <code>using</code> directives including the assembly (or assemblies) containing the definitions of <code>Amount</code>, <code>CreditCardDetails</code>, and <code>ChequeDetails</code> will need to be specified for the generated file to compile.</em></p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">union</span> <span class="i">Either</span><span class="o">&lt;</span><span class="i">L</span>, <span class="i">R</span><span class="o">&gt;</span> { <span class="i">Left</span><span class="o">&lt;</span><span class="i">L</span><span class="o">&gt;</span> | <span class="i">Right</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span> }
+</code></pre></td>
+</tr>
+</table>
+<p>This discriminated union demonstrates multiple type parameters.</p>
+<h4><a name="Constrained-Types" class="anchor" href="#Constrained-Types">Constrained Types</a></h4>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">union</span> <span class="i">TrafficLightsToStopFor</span> <span class="i">constrains</span> <span class="i">TrafficLights</span> { <span class="i">Red</span> | <span class="i">Amber</span> }
+</code></pre></td>
+</tr>
+</table>
+<p>Typically, classes are specified with base functionality, which can be augmented by derived classes. With union types, however, there is often a benefit to defining a type that represents <em>a subset of</em> another type's members.</p>
+<p>The <code>constrains</code> keyword allows for such a specification.</p>
+<ul>
+<li><strong>It is illegal to specify a member in a constrained type that does not exist in the type it is constraining.</strong></li>
+</ul>
+<h2><a name="How-to-code-against-a-union-type" class="anchor" href="#How-to-code-against-a-union-type">How to code against a union type</a></h2>
+<p>Once the specification has been transformed into a C# class, it can be directly used in any C# code.</p>
+<h3><a name="Specifying-the-Choice" class="anchor" href="#Specifying-the-Choice">Specifying the Choice</a></h3>
+<p>Creating an instance of the union type does not involve <code>new</code>. Indeed, it is not possible to <code>new</code> up a Union Type because it is represented by an abstract class.</p>
+<p>Instead, one must use static members provided in the abstract class to construct instances as desired.</p>
+<h4><a name="Singleton-choices" class="anchor" href="#Singleton-choices">'Singleton' choices</a></h4>
+<p>For singleton choices, you can simply reference the readonly singleton member as follows:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">var</span> <span class="i">none</span> <span class="o">=</span> <span class="i">Maybe</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">string</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">None</span>;
+</code></pre></td>
+</tr>
+</table>
+<h4><a name="Value-Constructor-choices" class="anchor" href="#Value-Constructor-choices">'Value Constructor' choices</a></h4>
+<p>For value constructor choices, you will need to provide the value to the constructor member as follows:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">var</span> <span class="i">name</span> <span class="o">=</span> <span class="i">Maybe</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">string</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="i">Some</span>(<span class="s">&quot;John&quot;</span>);
+</code></pre></td>
+</tr>
+</table>
+<h3><a name="Pattern-Matching" class="anchor" href="#Pattern-Matching">Pattern Matching</a></h3>
+<p>Given an instance of the Union Type, one may wish to discriminate between the various choices and extract any wrapped values.</p>
+<p>One of the primary benefits of using Union Types is to provide safety - to always ensure that all possible options are handled, for example. Therefore, we do not provide a way to enumerate over the choices with <code>switch</code> or <code>if-then-else</code> statements.</p>
+<p>Instead, each Union Type defines a <code>Match</code> function, which takes lambdas for each of the choices and invokes the appropriate function. In this way, modifying the Union enforces the appropriate updates in <em>all</em> the places where the Union is used.</p>
+<p>Given the <code>name</code> definition above, we can get the wrapped value (or <code>String.Empty</code> if it isn't available) by:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="i">var</span> <span class="i">value</span> <span class="o">=</span> <span class="i">name</span><span class="o">.</span><span class="i">Match</span>(() <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">String</span><span class="o">.</span><span class="i">Empty</span>, <span class="i">v</span> <span class="o">=&gt;</span> <span class="i">v</span>);
+</code></pre></td>
+</tr>
+</table>
+<h3><a name="Augmenting-the-partial-class" class="anchor" href="#Augmenting-the-partial-class">Augmenting the partial class</a></h3>
+<p>All the generated code is in the form of partial classes, which allows methods to be attached to the Union Type from within the C# project.</p>
+<p>For example, we can extend the <code>Maybe&lt;T&gt;</code> class with functional typeclasses by providing an associate C# file defining another partial class of it.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">public</span> <span class="i">partial</span> <span class="k">class</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span>
+{
+    <span class="c">// Functor</span>
+    <span class="k">public</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="i">Map</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span>(<span class="i">Func</span><span class="o">&lt;</span><span class="i">T</span>, <span class="i">R</span><span class="o">&gt;</span> <span class="i">f</span>) <span class="o">=&gt;</span> <span class="i">Match</span>(() <span class="o">=&gt;</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 12)" onmouseover="showTip(event, 'fs2', 12)" class="i">None</span>, _ <span class="o">=&gt;</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 13)" onmouseover="showTip(event, 'fs3', 13)" class="i">Some</span>(<span class="i">f</span>(_)));
 
+    <span class="c">// Applicative</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">Y</span><span class="o">&gt;</span> <span class="i">Apply</span><span class="o">&lt;</span><span class="i">X</span>, <span class="i">Y</span><span class="o">&gt;</span>(<span class="i">Maybe</span><span class="o">&lt;</span><span class="i">Func</span><span class="o">&lt;</span><span class="i">X</span>, <span class="i">Y</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="i">f</span>, <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">X</span><span class="o">&gt;</span> <span class="i">x</span>) <span class="o">=&gt;</span> <span class="i">f</span><span class="o">.</span><span class="i">Match</span>(() <span class="o">=&gt;</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">Y</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="i">None</span>, <span class="i">_f</span> <span class="o">=&gt;</span> <span class="i">x</span><span class="o">.</span><span class="i">Match</span>(() <span class="o">=&gt;</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">Y</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 15)" onmouseover="showTip(event, 'fs2', 15)" class="i">None</span>, <span class="i">_x</span> <span class="o">=&gt;</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">Y</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 16)" onmouseover="showTip(event, 'fs3', 16)" class="i">Some</span>(<span class="i">_f</span>(<span class="i">_x</span>))));
+
+    <span class="c">// Foldable</span>
+    <span class="k">public</span> <span class="i">R</span> <span class="i">Fold</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span>(<span class="i">R</span> <span class="i">z</span>, <span class="i">Func</span><span class="o">&lt;</span><span class="i">R</span>, <span class="i">T</span>, <span class="i">R</span><span class="o">&gt;</span> <span class="i">f</span>) <span class="o">=&gt;</span> <span class="i">Match</span>(() <span class="o">=&gt;</span> <span class="i">z</span>, _ <span class="o">=&gt;</span> <span class="i">f</span>(<span class="i">z</span>, _));
+
+    <span class="c">// Monad</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span> <span class="i">Unit</span>(<span class="i">T</span> <span class="i">value</span>) <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="i">Some</span>(<span class="i">value</span>);
+    <span class="k">public</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span> <span class="i">Bind</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span>(<span class="i">Func</span><span class="o">&lt;</span><span class="i">T</span>, <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="i">f</span>) <span class="o">=&gt;</span> <span class="i">Match</span>(() <span class="o">=&gt;</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">R</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 18)" onmouseover="showTip(event, 'fs2', 18)" class="i">None</span>, <span class="i">f</span>);
+
+    <span class="k">public</span> <span class="i">T</span> <span class="i">GetOrElse</span>(<span class="i">T</span> <span class="i">defaultValue</span>) <span class="o">=&gt;</span> <span class="i">Fold</span>(<span class="i">defaultValue</span>, (_, <span class="i">v</span>) <span class="o">=&gt;</span> <span class="i">v</span>);
+}
+
+<span class="c">// LINQ extensions</span>
+<span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="i">MaybeLinqExtensions</span>
+{
+    <span class="k">public</span> <span class="k">static</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span> <span class="i">Lift</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span>(<span class="i">this</span> <span class="i">T</span> <span class="i">value</span>) <span class="o">=&gt;</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">.</span><span class="i">Unit</span>(<span class="i">value</span>);
+
+    <span class="k">public</span> <span class="k">static</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">TR</span><span class="o">&gt;</span> <span class="i">Select</span><span class="o">&lt;</span><span class="i">T</span>, <span class="i">TR</span><span class="o">&gt;</span>(<span class="i">this</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span> <span class="i">m</span>, <span class="i">Func</span><span class="o">&lt;</span><span class="i">T</span>, <span class="i">TR</span><span class="o">&gt;</span> <span class="i">f</span>) <span class="o">=&gt;</span> <span class="i">m</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="i">Map</span>(<span class="i">f</span>);
+
+    <span class="k">public</span> <span class="k">static</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">TR</span><span class="o">&gt;</span> <span class="i">SelectMany</span><span class="o">&lt;</span><span class="i">T</span>, <span class="i">TR</span><span class="o">&gt;</span>(<span class="i">this</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span> <span class="i">m</span>, <span class="i">Func</span><span class="o">&lt;</span><span class="i">T</span>, <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">TR</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="i">f</span>) <span class="o">=&gt;</span> <span class="i">m</span><span class="o">.</span><span class="i">Bind</span>(<span class="i">f</span>);
+
+    <span class="k">public</span> <span class="k">static</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">TV</span><span class="o">&gt;</span> <span class="i">SelectMany</span><span class="o">&lt;</span><span class="i">T</span>, <span class="i">TU</span>, <span class="i">TV</span><span class="o">&gt;</span>(<span class="i">this</span> <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">T</span><span class="o">&gt;</span> <span class="i">m</span>, <span class="i">Func</span><span class="o">&lt;</span><span class="i">T</span>, <span class="i">Maybe</span><span class="o">&lt;</span><span class="i">TU</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="i">f</span>, <span class="i">Func</span><span class="o">&lt;</span><span class="i">T</span>, <span class="i">TU</span>, <span class="i">TV</span><span class="o">&gt;</span> <span class="i">s</span>)
+        <span class="o">=&gt;</span> <span class="i">m</span><span class="o">.</span><span class="i">SelectMany</span>(<span class="i">x</span> <span class="o">=&gt;</span> <span class="i">f</span>(<span class="i">x</span>)<span class="o">.</span><span class="i">SelectMany</span>(<span class="i">y</span> <span class="o">=&gt;</span> (<span class="i">Maybe</span><span class="o">&lt;</span><span class="i">TV</span><span class="o">&gt;</span><span class="o">.</span><span class="i">Unit</span>(<span class="i">s</span>(<span class="i">x</span>, <span class="i">y</span>)))));
+}
+</code></pre></td>
+</tr>
+</table>
+<p>which allows us to use the class in fully augmented form in our code as follows:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="i">var</span> <span class="i">lenOpt</span> <span class="o">=</span> <span class="i">from</span> <span class="i">s</span> <span class="k">in</span> <span class="i">Maybe</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="i">string</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 21)" onmouseover="showTip(event, 'fs3', 21)" class="i">Some</span>(<span class="s">&quot;Hello, World&quot;</span>)
+                <span class="i">select</span> <span class="i">s</span><span class="o">.</span><span class="i">Length</span>;
+<span class="i">Console</span><span class="o">.</span><span class="i">WriteLine</span>($&quot;<span class="i">The</span> <span class="i">length</span> <span class="k">of</span> <span class="i">the</span> <span class="i">given</span> <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="i">string</span> <span class="i">is</span> {<span class="i">lenOpt</span><span class="o">.</span><span class="i">GetOrElse</span>(<span class="n">0</span>)}<span class="s">&quot;);</span>
+</code></pre></td>
+</tr>
+</table>
+<h3><a name="Value-Semantics" class="anchor" href="#Value-Semantics">Value Semantics</a></h3>
+<p>The union type implementation uses classes, which means that simply comparing two instances for equality within C# code will result in reference comparision.</p>
+<p>However, we want to make sure that <code>Maybe&lt;String&gt;.Some("A")</code> will always be equal to <code>Maybe&lt;String&gt;.Some("A")</code> - regardless of whether they were instantiated separately or are both the same object.</p>
+<p>The generated code for union types implement <code>IEquatable&lt;T&gt;</code> and <code>IStructuralEquatable</code> for each union, and override the appropriate types to provide value semantics for equality.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="s">public void Some_equals_Some()</span>
+<span class="s">{</span>
+<span class="s">    Assert.True(Maybe&lt;int&gt;.Some(10).Equals(Maybe&lt;int&gt;.Some(10)));</span>
+<span class="s">    Assert.True(Maybe&lt;int&gt;.Some(10) == Maybe&lt;int&gt;.Some(10));</span>
+<span class="s">    Assert.False(Maybe&lt;int&gt;.Some(10) != Maybe&lt;int&gt;.Some(10));</span>
+<span class="s">}</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Background-Algebraic-Data-Types" class="anchor" href="#Background-Algebraic-Data-Types">Background : Algebraic Data Types</a></h2>
+<p><a href="https://en.wikipedia.org/wiki/Algebraic_data_type">Algebraic Data Types</a> are composite data types - types that are made up of other types.</p>
+<h3><a name="Product-Types" class="anchor" href="#Product-Types">Product Types</a></h3>
+<p>In C#, we have only one way of combining types - creating "named tuples" (structs and classes with named properties) and "anonymous tuples" (instances of <code>Tuple&lt;&gt;</code>).</p>
+<p>In type algebraic terms, these are called <em>Product Types</em> because the number of valid values of the composite type is the product of the number of valid values of the property types).
+For example, the following struct has 512 possible values because the constituent components have 256 and 2 possible values respectively</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="s">struct F</span>
+<span class="s">{</span>
+<span class="s">    char CharacterValue { get; } // 256 possible values</span>
+<span class="s">    bool BooleanFlag { get; } // 2 possible values</span>
+<span class="s">    ...</span>
+<span class="s">} // 256 * 2 = 512 possible values</span>
+</code></pre></td>
+</tr>
+</table>
+<p>Such types are commonly used as encapsulation mechanisms, and for keeping related items together.</p>
+<h3><a name="Sum-Types" class="anchor" href="#Sum-Types">Sum Types</a></h3>
+<p>However, languages like F# and Scala have another way of combining types which proves to be very useful in Domain Design. They can be used to specify states very precisely and help make <a href="http://www.slideshare.net/ScottWlaschin/domain-driven-design-with-the-f-type-system-functional-londoners-2014">illegal states unrepresentable</a>.</p>
+<p>These types are variously known as <em>Choice Types</em>, <em>Discriminated Union Types</em> or <em>Sum Types</em>. The valid values of a such a composite type is the <em>sum</em> of the constituent types.</p>
+<p>C# programmers can think of these types as "Enums on Steroids", because they represent a choice between values of disparate types.</p>
+<p>Consider a domain requirement that stipulates that a payment is recorded as exactly one of the following:</p>
+<ul>
+<li>Cash, where we capture a fixed precision number and an associated currency</li>
+<li>Cheque, where we capture information pertinent to the cheque</li>
+<li>Credit Card, where we capture information pertinent to the credit card</li>
+</ul>
+<p>In other words, we require to model a <em>choice</em> between disparate things. Without a formal composite type to model choices, we are generally left to rolling our own mechanisms involving enums and structs.</p>
+<p>However, in F#, we may succintly represent a valid payment as follows:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="s">type Payment =</span>
+<span class="s">| Cash of Amount // the currency and amount paid</span>
+<span class="s">| Cheque of ChequeDetails // the amount, bank id, cheque number, date ...</span>
+<span class="s">| CreditCard of CardDetails // the amount, credit-card type, credit-card expiry date ...</span>
+</code></pre></td>
+</tr>
+</table>
+<p>This is far more precise than a record which may introduce illegal states where more than one payment method could be set.</p>
+<p>Indeed, if one was willing to include a F# project in their solution and express the domain model in F#, they could simply use the F# types in C# without any further work.</p>
+<p>Alternately, one could use this project to model union-types without switching languages.</p>
+
+<div class="tip" id="fs1">val using : resource:&#39;T -&gt; action:(&#39;T -&gt; &#39;U) -&gt; &#39;U (requires &#39;T :&gt; System.IDisposable)<br /><br />Full name: Microsoft.FSharp.Core.Operators.using</div>
+<div class="tip" id="fs2">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs3">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs4">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs5">module String<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs6">Multiple items<br />module Map<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Map&lt;&#39;Key,&#39;Value (requires comparison)&gt; =<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface ICollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member Add : key:&#39;Key * value:&#39;Value -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member ContainsKey : key:&#39;Key -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member Remove : key:&#39;Key -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Map&lt;_,_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;</div>
 
         </div>
         <div class="span3">
           <img src="/csharp-sumtypes/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
           <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
-            <li class="nav-header">BrightSword.CSharpExtensions.DiscriminatedUnion</li>
+            <li class="nav-header">CSharp.UnionTypes</li>
             <li><a href="/csharp-sumtypes/index.html">Home page</a></li>
             <li class="divider"></li>
-            <li><a href="http://nuget.org/packages/BrightSword.CSharpExtensions.DiscriminatedUnion">Get Library via NuGet</a></li>
+            <li><a href="http://nuget.org/packages/CSharp.UnionTypes">Get Library via NuGet</a></li>
             <li><a href="https://github.com/johnazariah/csharp-sumtypes">Source Code on GitHub</a></li>
             <li><a href="/csharp-sumtypes/license.html">License</a></li>
             <li><a href="/csharp-sumtypes/release-notes.html">Release Notes</a></li>

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>MaybeBuilder - CSharp.UnionTypes</title>
+    <title>CodeGenerator - CSharp.UnionTypes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="John Azariah"/>
@@ -35,58 +35,33 @@
 
 
 
-<h1>MaybeBuilder</h1>
+<h1>CodeGenerator</h1>
 <p>
-  <span>Namespace: Utility.Monads</span><br />
-  <span>Parent Module: <a href="utility-monads-maybemonad.html">MaybeMonad</a></span>
+  <span>Namespace: CSharp.UnionTypes</span><br />
 </p>
 <div class="xmldoc">
 </div>
-  <h3>Constructors</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Constructor</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '100', 100)" onmouseover="showTip(event, '100', 100)">
-            new()
+          <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
+            ensure_input_file input_file
           </code>
-          <div class="tip" id="100">
-            <strong>Signature:</strong> unit -&gt; MaybeBuilder<br />
+          <div class="tip" id="2">
+            <strong>Signature:</strong> input_file:string option -&gt; FileInfo option<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L5-5" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-              <p>CompiledName: <code>.ctor</code></p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <h3>Instance members</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '101', 101)" onmouseover="showTip(event, '101', 101)">
-            Bind(m, f)
-          </code>
-          <div class="tip" id="101">
-            <strong>Signature:</strong> (m:&#39;a option * f:(&#39;a -&gt; &#39;b option)) -&gt; &#39;b option<br />
-                          <strong>Type parameters:</strong> 'a, 'b          </div>
-        </td>
-        <td class="xmldoc">
-            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L7-7" class="github-link">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/src/CSharp.UnionTypes/CodeGenerator.fs#L17-17" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -96,15 +71,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '102', 102)" onmouseover="showTip(event, '102', 102)">
-            Return(x)
+          <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
+            ensure_output_directory output_file
           </code>
-          <div class="tip" id="102">
-            <strong>Signature:</strong> x:unit -&gt; unit option<br />
+          <div class="tip" id="3">
+            <strong>Signature:</strong> output_file:string option -&gt; FileInfo option<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L8-8" class="github-link">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/src/CSharp.UnionTypes/CodeGenerator.fs#L20-20" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -114,69 +89,87 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '103', 103)" onmouseover="showTip(event, '103', 103)">
-            ReturnFrom(x)
+          <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
+            fixupNL t
           </code>
-          <div class="tip" id="103">
-            <strong>Signature:</strong> x:&#39;?7150 -&gt; &#39;?7150<br />
-                          <strong>Type parameters:</strong> '?7150          </div>
-        </td>
-        <td class="xmldoc">
-            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L9-9" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '104', 104)" onmouseover="showTip(event, '104', 104)">
-            Yield(x)
-          </code>
-          <div class="tip" id="104">
-            <strong>Signature:</strong> x:&#39;?7152 -&gt; &#39;?7152 option<br />
-                          <strong>Type parameters:</strong> '?7152          </div>
-        </td>
-        <td class="xmldoc">
-            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L10-10" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '105', 105)" onmouseover="showTip(event, '105', 105)">
-            YieldFrom(x)
-          </code>
-          <div class="tip" id="105">
-            <strong>Signature:</strong> x:&#39;?7154 -&gt; &#39;?7154<br />
-                          <strong>Type parameters:</strong> '?7154          </div>
-        </td>
-        <td class="xmldoc">
-            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L11-11" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '106', 106)" onmouseover="showTip(event, '106', 106)">
-            Zero()
-          </code>
-          <div class="tip" id="106">
-            <strong>Signature:</strong> unit -&gt; unit option<br />
+          <div class="tip" id="4">
+            <strong>Signature:</strong> t:string -&gt; string<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/paket-files/johnazariah/b155cb600213d2d7971fd224531ebdb9/maybe.fs#L6-6" class="github-link">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/src/CSharp.UnionTypes/CodeGenerator.fs#L15-15" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '5', 5)" onmouseover="showTip(event, '5', 5)">
+            generate_code_for_csunion_file (...)
+          </code>
+          <div class="tip" id="5">
+            <strong>Signature:</strong> (input_file:string option * output_file:string option) -&gt; unit option<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/src/CSharp.UnionTypes/CodeGenerator.fs#L23-23" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '6', 6)" onmouseover="showTip(event, '6', 6)">
+            generate_code_for_text text
+          </code>
+          <div class="tip" id="6">
+            <strong>Signature:</strong> text:string -&gt; string<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/src/CSharp.UnionTypes/CodeGenerator.fs#L10-10" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '7', 7)" onmouseover="showTip(event, '7', 7)">
+            mapTuple2 f (a, b)
+          </code>
+          <div class="tip" id="7">
+            <strong>Signature:</strong> f:(&#39;?7253 -&gt; &#39;?7254) -&gt; (a:&#39;?7253 * b:&#39;?7253) -&gt; &#39;?7254 * &#39;?7254<br />
+                          <strong>Type parameters:</strong> '?7253, '?7254          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/src/CSharp.UnionTypes/CodeGenerator.fs#L13-13" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '8', 8)" onmouseover="showTip(event, '8', 8)">
+            trimWS s
+          </code>
+          <div class="tip" id="8">
+            <strong>Signature:</strong> s:String -&gt; string<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="https://github.com/johnazariah/csharp-sumtypes/tree/master/src/CSharp.UnionTypes/CodeGenerator.fs#L14-14" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

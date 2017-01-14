@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>BrightSword.CSharpExtensions.DiscriminatedUnion
+    <title>CSharp.UnionTypes
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#"/>
@@ -27,20 +27,20 @@
           <li><a href="http://fsharp.org">fsharp.org</a></li>
           <li><a href="https://github.com/johnazariah/csharp-sumtypes">github page</a></li>
         </ul>
-        <h3 class="muted"><a href="/csharp-sumtypes/index.html">BrightSword.CSharpExtensions.DiscriminatedUnion</a></h3>
+        <h3 class="muted"><a href="/csharp-sumtypes/index.html">CSharp.UnionTypes</a></h3>
       </div>
       <hr />
       <div class="row">
         <div class="span9" id="main">
           
-<h1><a name="BrightSword-CSharpExtensions-DiscriminatedUnion" class="anchor" href="#BrightSword-CSharpExtensions-DiscriminatedUnion">BrightSword.CSharpExtensions.DiscriminatedUnion</a></h1>
+<h1><a name="CSharp-UnionTypes" class="anchor" href="#CSharp-UnionTypes">CSharp.UnionTypes</a></h1>
 <p>Documentation</p>
 <div class="row">
   <div class="span1"></div>
   <div class="span6">
     <div class="well well-small" id="nuget">
-      The BrightSword.CSharpExtensions.DiscriminatedUnion library can be <a href="https://nuget.org/packages/BrightSword.CSharpExtensions.DiscriminatedUnion">installed from NuGet</a>:
-      <pre>PM> Install-Package BrightSword.CSharpExtensions.DiscriminatedUnion</pre>
+      The CSharp.UnionTypes library can be <a href="https://nuget.org/packages/CSharp.UnionTypes">installed from NuGet</a>:
+      <pre>PM> Install-Package CSharp.UnionTypes</pre>
     </div>
   </div>
   <div class="span1"></div>
@@ -52,8 +52,8 @@
 <span class="l">3: </span>
 <span class="l">4: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;BrightSword.CSharpExtensions.DiscriminatedUnion.dll&quot;</span>
-<span class="k">open</span> <span class="i">BrightSword</span><span class="o">.</span><span class="i">CSharpExtensions</span><span class="o">.</span><span class="i">DiscriminatedUnion</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;CSharp.UnionTypes.dll&quot;</span>
+<span class="k">open</span> <span class="i">CSharp</span><span class="o">.</span><span class="i">UnionTypes</span>
 
 <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">printfn</span> <span class="s">&quot;hello = </span><span class="pf">%i</span><span class="s">&quot;</span> <span class="o">&lt;|</span> <span class="i">Library</span><span class="o">.</span><span class="i">hello</span> <span class="n">0</span>
 </code></pre></td>
@@ -62,7 +62,7 @@
 <p>Some more info</p>
 <h2><a name="Samples-amp-documentation" class="anchor" href="#Samples-amp-documentation">Samples &amp; documentation</a></h2>
 <p>The library comes with comprehensible documentation.
-It can include tutorials automatically generated from <code>*.fsx</code> files in <a href="https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion/tree/master/docs/content">the content folder</a>.
+It can include tutorials automatically generated from <code>*.fsx</code> files in <a href="https://github.com/fsprojects/CSharp.UnionTypes/tree/master/docs/content">the content folder</a>.
 The API reference is automatically generated from Markdown comments in the library implementation.</p>
 <ul>
 <li><p><a href="tutorial.html">Tutorial</a> contains a further explanation of this sample library.</p></li>
@@ -73,13 +73,13 @@ functions.</p>
 </li>
 </ul>
 <h2><a name="Contributing-and-copyright" class="anchor" href="#Contributing-and-copyright">Contributing and copyright</a></h2>
-<p>The project is hosted on <a href="https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion">GitHub</a> where you can <a href="https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion/issues">report issues</a>, fork
+<p>The project is hosted on <a href="https://github.com/fsprojects/CSharp.UnionTypes">GitHub</a> where you can <a href="https://github.com/fsprojects/CSharp.UnionTypes/issues">report issues</a>, fork
 the project and submit pull requests. If you're adding a new public API, please also
-consider adding <a href="https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion/tree/master/docs/content">samples</a> that can be turned into a documentation. You might
-also want to read the <a href="https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion/blob/master/README.md">library design notes</a> to understand how it works.</p>
+consider adding <a href="https://github.com/fsprojects/CSharp.UnionTypes/tree/master/docs/content">samples</a> that can be turned into a documentation. You might
+also want to read the <a href="https://github.com/fsprojects/CSharp.UnionTypes/blob/master/README.md">library design notes</a> to understand how it works.</p>
 <p>The library is available under Public Domain license, which allows modification and
 redistribution for both commercial and non-commercial purposes. For more information see the
-<a href="https://github.com/fsprojects/BrightSword.CSharpExtensions.DiscriminatedUnion/blob/master/LICENSE.txt">License file</a> in the GitHub repository.</p>
+<a href="https://github.com/fsprojects/CSharp.UnionTypes/blob/master/LICENSE.txt">License file</a> in the GitHub repository.</p>
 
 <div class="tip" id="fs1">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
 
@@ -87,10 +87,10 @@ redistribution for both commercial and non-commercial purposes. For more informa
         <div class="span3">
           <img src="/csharp-sumtypes/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
           <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
-            <li class="nav-header">BrightSword.CSharpExtensions.DiscriminatedUnion</li>
+            <li class="nav-header">CSharp.UnionTypes</li>
             <li><a href="/csharp-sumtypes/index.html">Home page</a></li>
             <li class="divider"></li>
-            <li><a href="http://nuget.org/packages/BrightSword.CSharpExtensions.DiscriminatedUnion">Get Library via NuGet</a></li>
+            <li><a href="http://nuget.org/packages/CSharp.UnionTypes">Get Library via NuGet</a></li>
             <li><a href="https://github.com/johnazariah/csharp-sumtypes">Source Code on GitHub</a></li>
             <li><a href="/csharp-sumtypes/license.html">License</a></li>
             <li><a href="/csharp-sumtypes/release-notes.html">Release Notes</a></li>
