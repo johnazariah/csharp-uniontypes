@@ -52,7 +52,7 @@ The command-line executable will generate a `.cs` file with the same name at the
 * Write more C# code (in traditional `.cs` files) using the union types.
 * Compile the project as usual
 
-## Structure of a `.csunion` file
+## Structure of a .csunion file
 
 The `.csunion` file should have the following structure:
 
@@ -194,7 +194,7 @@ Given the `name` definition above, we can get the wrapped value (or `String.Empt
     var value = name.Match(() => String.Empty, v => v);
 ```
 
-### Augmenting the `partial` class
+### Augmenting the partial class
 
 All the generated code is in the form of partial classes, which allows methods to be attached to the Union Type from within the C# project.
 
@@ -309,11 +309,4 @@ Indeed, if one was willing to include a F# project in their solution and express
 
 Alternately, one could use this project to model union-types without switching languages.
 
-*)
-
-#r "CSharp.UnionTypes.dll"
-open CSharp.UnionTypes
-
-(**
-Some more info
 *)
