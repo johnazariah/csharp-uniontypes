@@ -58,7 +58,7 @@ let gitOwner = "johnazariah"
 let gitHome = sprintf "%s/%s" "https://github.com" gitOwner
 
 // The name of the project on GitHub
-let gitName = "csharp-sumtypes"
+let gitName = "csharp-uniontypes"
 
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" "https://raw.githubusercontent.com/johnazariah"

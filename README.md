@@ -18,7 +18,7 @@ Follow the [tutorial](https://johnazariah.github.io/csharp-uniontypes/tutorial.h
 
 Mono | .NET
 ---- | ----
-[![Mono CI Build Status](https://img.shields.io/travis/johnazariah/csharp-sumtypes/master.svg)](https://travis-ci.org/johnazariah/csharp-sumtypes) | [![.NET Build Status](https://img.shields.io/appveyor/ci/johnazariah/csharp-sumtypes/master.svg)](https://ci.appveyor.com/project/johnazariah/csharp-sumtypes)
+[![Mono CI Build Status](https://img.shields.io/travis/johnazariah/csharp-uniontypes/master.svg)](https://travis-ci.org/johnazariah/csharp-uniontypes) | [![.NET Build Status](https://img.shields.io/appveyor/ci/johnazariah/csharp-uniontypes/master.svg)](https://ci.appveyor.com/project/johnazariah/csharp-uniontypes)
 
 ## Maintainer(s)
 

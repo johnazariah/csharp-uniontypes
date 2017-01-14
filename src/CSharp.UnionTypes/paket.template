@@ -10,9 +10,9 @@ authors
 projectUrl
     https://github.com/johnazariah/csharp-uniontypes
 iconUrl
-    https://raw.githubusercontent.com/johnazariah/csharp-sumtypes/master/docs/files/img/logo.png
+    https://raw.githubusercontent.com/johnazariah/csharp-uniontypes/master/docs/files/img/logo.png
 licenseUrl
-    https://github.com/johnazariah/csharp-sumtypes/blob/master/LICENSE.txt
+    https://github.com/johnazariah/csharp-uniontypes/blob/master/LICENSE.txt
 requireLicenseAcceptance
     false
 copyright

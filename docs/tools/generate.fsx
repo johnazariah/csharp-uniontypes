@@ -11,9 +11,9 @@
 // (This is the original behaviour of ProjectScaffold prior to multi project support)
 let referenceBinaries = [ "CSharp.UnionTypes.dll" ]
 // Web site location for the generated documentation
-let website = "/csharp-sumtypes"
+let website = "/csharp-uniontypes"
 
-let githubLink = "https://github.com/johnazariah/csharp-sumtypes"
+let githubLink = "https://github.com/johnazariah/csharp-uniontypes"
 
 // Specify more information about your project
 let info =
