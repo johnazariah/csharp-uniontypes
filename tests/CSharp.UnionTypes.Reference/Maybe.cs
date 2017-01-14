@@ -75,7 +75,7 @@ namespace BrightSword.CSharpExtensions.Reference
         #region Access Members
 
         public static readonly Maybe<T> None = new ChoiceTypes.None();
-        public static Maybe<T> NewSome(T value) => new ChoiceTypes.Some(value);
+        public static Maybe<T> Some(T value) => new ChoiceTypes.Some(value);
 
         #endregion
     }

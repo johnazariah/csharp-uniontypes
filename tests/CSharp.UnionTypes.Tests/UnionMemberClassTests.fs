@@ -100,7 +100,7 @@ namespace DU.Tests
 
     public partial class Some : SingleValue<T>
     {
-        public Some(T value) : base(Maybe<T>.NewSome(value))
+        public Some(T value) : base(Maybe<T>.Some(value))
         {
             Value = value;
         }

@@ -12,19 +12,19 @@ module UnionMemberClassDeclarationBuilder =
 
     let ctor du um =
         let member_name = um.MemberName.unapply
-        let args_and_assignments =
+        let (args, assignments) =
             match um.MemberArgumentType with
             | Some t ->
                 let arg_type_name = t.CSharpTypeName
                 ([("value", ``type`` arg_type_name)], [statement (ident "Value" <-- ident "value")])
             | None -> ([], [])
 
-        let ((args, assignments), baseargs) =
-            let (_args, _assignments) = args_and_assignments
-            match du.BaseType, um.MemberArgumentType with
-            | None, _ -> (args_and_assignments, [])
-            | Some b, None -> (args_and_assignments, [ sprintf "%s.%s" b.CSharpTypeName member_name ])
-            | Some b, Some _ -> (args_and_assignments, [sprintf "%s.New%s(value)" b.CSharpTypeName member_name])
+        let baseargs =
+            du.BaseType
+            |> Option.map (fun b ->
+                um.MemberArgumentType
+                |> Option.fold (fun seed _ -> sprintf "%s(value)" seed) (sprintf "%s.%s" b.CSharpTypeName member_name))
+            |> Option.fold (fun _ b -> [b]) []
 
         match (args, assignments, baseargs) with
         | ([], [], []) -> []

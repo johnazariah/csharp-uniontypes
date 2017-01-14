@@ -1,7 +1,9 @@
-﻿using System;
+﻿#pragma warning disable CS1718
+
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-
+// ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable EqualExpressionComparison
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -12,6 +14,7 @@ namespace BrightSword.CSharpExtensions.Reference
         [Test]
         public void None_equals_None()
         {
+            // disable CS1718
             Assert.True(Maybe<int>.None == Maybe<int>.None);
             Assert.False(Maybe<int>.None != Maybe<int>.None);
             Assert.True(Maybe<int>.None.Equals(Maybe<int>.None));
@@ -20,18 +23,18 @@ namespace BrightSword.CSharpExtensions.Reference
         [Test]
         public void Some_equals_Some()
         {
-            Assert.True(Maybe<int>.NewSome(10)
-                                  .Equals(Maybe<int>.NewSome(10)));
-            Assert.True(Maybe<int>.NewSome(10) == Maybe<int>.NewSome(10));
-            Assert.False(Maybe<int>.NewSome(10) != Maybe<int>.NewSome(10));
+            Assert.True(Maybe<int>.Some(10).Equals(Maybe<int>.Some(10)));
+            Assert.True(Maybe<int>.Some(10) == Maybe<int>.Some(10));
+            Assert.False(Maybe<int>.Some(10) != Maybe<int>.Some(10));
         }
 
         [Test]
         public void Some_null_Hashes_safely()
         {
-            Assert.DoesNotThrow(() => Maybe<string>.NewSome(null).GetHashCode());
+            Assert.DoesNotThrow(() => Maybe<string>.Some(null).GetHashCode());
+
             // should not compile
-            //Assert.DoesNotThrow(() => Maybe<int>.NewSome(null).GetHashCode());
+            //Assert.DoesNotThrow(() => Maybe<int>.Some(null).GetHashCode());
         }
 
         [Test]
@@ -52,32 +55,32 @@ namespace BrightSword.CSharpExtensions.Reference
         {
             var set = new HashSet<Maybe<int>>();
             Assert.AreEqual(0, set.Count);
-            set.Add(Maybe<int>.NewSome(10));
+            set.Add(Maybe<int>.Some(10));
             Assert.AreEqual(1, set.Count);
-            set.Add(Maybe<int>.NewSome(10));
+            set.Add(Maybe<int>.Some(10));
             Assert.AreEqual(1, set.Count);
-            set.Add(Maybe<int>.NewSome(20));
+            set.Add(Maybe<int>.Some(20));
             Assert.AreEqual(2, set.Count);
         }
 
         [Test]
         public void Some_does_not_equal_OtherGenericType()
         {
-            Assert.False(Maybe<int>.NewSome(10)
+            Assert.False(Maybe<int>.Some(10)
                                    .Equals(Foo<int>.NewSome(10)));
         }
 
         [Test]
         public void Some_does_not_equal_null()
         {
-            Assert.False(Maybe<int>.NewSome(10)
+            Assert.False(Maybe<int>.Some(10)
                                    .Equals(null));
         }
 
         [Test]
         public void Some_ToString_works()
         {
-            Assert.AreEqual("Some 10", Maybe<int>.NewSome(10).ToString());
+            Assert.AreEqual("Some 10", Maybe<int>.Some(10).ToString());
         }
 
         [Test]
