@@ -53,13 +53,12 @@ module UnionTypeClassDeclarationBuilder =
             let member_name = um.MemberName.unapply
 
             let to_access_member_method _ (t : FullTypeName) =
-                let method_name = member_name |> sprintf "New%s"
                 let method_arg_name = "value"
                 let method_arg_type = t.CSharpTypeName
                 let initialization_expression =
                     ``=>``(``new`` (``type`` [ "ChoiceTypes"; member_name ]) ``(`` [ ident method_arg_name ] ``)``)
 
-                ``arrow_method`` union_name method_name ``<<`` [] ``>>`` ``(`` [ (method_arg_name, ``type`` method_arg_type) ] ``)``
+                ``arrow_method`` union_name member_name ``<<`` [] ``>>`` ``(`` [ (method_arg_name, ``type`` method_arg_type) ] ``)``
                     [ ``public``; ``static`` ]
                     (Some initialization_expression)
                     :> MemberDeclarationSyntax

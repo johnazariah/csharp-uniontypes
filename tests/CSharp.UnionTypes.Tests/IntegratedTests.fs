@@ -63,7 +63,7 @@ module IntegratedTests =
 
         public abstract TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc);
         public static readonly Maybe<T> None = new ChoiceTypes.None();
-        public static Maybe<T> NewSome(T value) => new ChoiceTypes.Some(value);
+        public static Maybe<T> Some(T value) => new ChoiceTypes.Some(value);
         private static partial class ChoiceTypes
         {
             public partial class None : Maybe<T>
@@ -199,12 +199,12 @@ module IntegratedTests =
         }
 
         public abstract TResult Match<TResult>(Func<T, TResult> someFunc);
-        public static SingleValue<T> NewSome(T value) => new ChoiceTypes.Some(value);
+        public static SingleValue<T> Some(T value) => new ChoiceTypes.Some(value);
         private static partial class ChoiceTypes
         {
             public partial class Some : SingleValue<T>
             {
-                public Some(T value) : base(Maybe<T>.NewSome(value))
+                public Some(T value) : base(Maybe<T>.Some(value))
                 {
                     Value = value;
                 }
