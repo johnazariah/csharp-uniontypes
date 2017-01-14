@@ -73,7 +73,7 @@ let printUsage errors cp =
 
 let generateCode cp =
     let input_file = cp.InputFile
-    let output_file = (Some (cp.OutputFile |> Option.fold (fun _ f -> f) (Path.ChangeExtension (cp.InputFile.Value, ".cs"))))
+    let output_file = (Some (cp.OutputFile |> Option.fold (fun _ f -> f) (Path.ChangeExtension (cp.InputFile.Value, ".g.cs"))))
     generate_code_for_csunion_file (input_file, output_file)
     |> ignore
 

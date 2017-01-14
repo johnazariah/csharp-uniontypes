@@ -82,6 +82,7 @@
     <Compile Include="CompilationUnitDeclarationBuilder.fs" />
     <Compile Include="CodeGenerator.fs" />
     <None Include="paket.references" />
+    <None Include="paket.template" />
     <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
