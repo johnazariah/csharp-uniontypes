@@ -1,5 +1,6 @@
 #### 1.0.1 - Jan 10 2017
 * SingleFileGenerator and VSIX also published
+* Support for constrained types
 
 #### 1.0.0 - Dec 31 2016
 * Initial release of C# Discriminated Union types
