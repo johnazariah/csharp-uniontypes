@@ -128,8 +128,8 @@ module UnionTypeClassTests =
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
-        public static readonly Maybe<T> None = new ChoiceTypes.None();
-        public static Maybe<T> Some(T value) => new ChoiceTypes.Some(value);
+        public static readonly Maybe<T> None = new ChoiceTypes.NoneClass();
+        public static Maybe<T> NewSome(T value) => new ChoiceTypes.SomeClass(value);
     }
 }"
         test_codegen Maybe_T to_access_members expected

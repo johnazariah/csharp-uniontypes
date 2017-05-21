@@ -12,7 +12,7 @@ module UnionMemberClassTests =
     using System;
     using System.Collections;
 
-    public partial class Red : TrafficLights
+    public partial class RedClass : TrafficLights
     {
     }
 }
@@ -21,7 +21,7 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Amber : TrafficLights
+    public partial class AmberClass : TrafficLights
     {
     }
 }
@@ -30,7 +30,7 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Green : TrafficLights
+    public partial class GreenClass : TrafficLights
     {
     }
 }"
@@ -43,9 +43,9 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Red : TrafficLightsToStopFor
+    public partial class RedClass : TrafficLightsToStopFor
     {
-        public Red() : base(TrafficLights.Red)
+        public RedClass() : base(TrafficLights.Red)
         {
         }
     }
@@ -55,9 +55,9 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Amber : TrafficLightsToStopFor
+    public partial class AmberClass : TrafficLightsToStopFor
     {
-        public Amber() : base(TrafficLights.Amber)
+        public AmberClass() : base(TrafficLights.Amber)
         {
         }
     }
@@ -72,7 +72,7 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class None : Maybe<T>
+    public partial class NoneClass : Maybe<T>
     {
     }
 }
@@ -81,9 +81,9 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Some : Maybe<T>
+    public partial class SomeClass : Maybe<T>
     {
-        public Some(T value)
+        public SomeClass(T value)
         {
             Value = value;
         }
@@ -98,9 +98,9 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Some : SingleValue<T>
+    public partial class SomeClass : SingleValue<T>
     {
-        public Some(T value) : base(Maybe<T>.Some(value))
+        public SomeClass(T value) : base(Maybe<T>.NewSome(value))
         {
             Value = value;
         }
@@ -115,7 +115,7 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class None : Maybe<T>
+    public partial class NoneClass : Maybe<T>
     {
         public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
     }
@@ -125,7 +125,7 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Some : Maybe<T>
+    public partial class SomeClass : Maybe<T>
     {
         public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
     }
@@ -139,7 +139,7 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class None : Maybe<T>
+    public partial class NoneClass : Maybe<T>
     {
         public override string ToString() => ""None"";
     }
@@ -149,7 +149,7 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Some : Maybe<T>
+    public partial class SomeClass : Maybe<T>
     {
         public override string ToString() => String.Format(""Some {0}"", Value);
     }
@@ -163,9 +163,9 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class None : Maybe<T>
+    public partial class NoneClass : Maybe<T>
     {
-        public override bool Equals(object other) => other is None;
+        public override bool Equals(object other) => other is NoneClass;
     }
 }
 namespace DU.Tests
@@ -173,9 +173,9 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Some : Maybe<T>
+    public partial class SomeClass : Maybe<T>
     {
-        public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+        public override bool Equals(object other) => other is SomeClass && Value.Equals(((SomeClass)other).Value);
     }
 }"
         test_codegen_choice Maybe_T equals_override expected
@@ -187,7 +187,7 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class None : Maybe<T>
+    public partial class NoneClass : Maybe<T>
     {
         public override int GetHashCode() => GetType().FullName.GetHashCode();
     }
@@ -197,7 +197,7 @@ namespace DU.Tests
     using System;
     using System.Collections;
 
-    public partial class Some : Maybe<T>
+    public partial class SomeClass : Maybe<T>
     {
         public override int GetHashCode() => GetType().FullName.GetHashCode() ^ (Value?.GetHashCode() ?? ""null"".GetHashCode());
     }

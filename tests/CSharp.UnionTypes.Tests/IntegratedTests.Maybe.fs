@@ -7,7 +7,7 @@ open CSharp.UnionTypes
 
 open NUnit.Framework
 
-module IntegratedTests =
+module IntegratedTestsMaybe =
 
     [<Test>]
     let ``code-gen: wrapper type``() =
@@ -20,17 +20,17 @@ module IntegratedTests =
     {
         private static partial class ChoiceTypes
         {
-            public partial class None : Maybe<T>
+            public partial class NoneClass : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
-                public override bool Equals(object other) => other is None;
+                public override bool Equals(object other) => other is NoneClass;
                 public override int GetHashCode() => GetType().FullName.GetHashCode();
                 public override string ToString() => ""None"";
             }
 
-            public partial class Some : Maybe<T>
+            public partial class SomeClass : Maybe<T>
             {
-                public Some(T value)
+                public SomeClass(T value)
                 {
                     Value = value;
                 }
@@ -41,7 +41,7 @@ module IntegratedTests =
                 }
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
-                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override bool Equals(object other) => other is SomeClass && Value.Equals(((SomeClass)other).Value);
                 public override int GetHashCode() => GetType().FullName.GetHashCode() ^ (Value?.GetHashCode() ?? ""null"".GetHashCode());
                 public override string ToString() => String.Format(""Some {0}"", Value);
             }
@@ -62,21 +62,21 @@ module IntegratedTests =
         }
 
         public abstract TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc);
-        public static readonly Maybe<T> None = new ChoiceTypes.None();
-        public static Maybe<T> Some(T value) => new ChoiceTypes.Some(value);
+        public static readonly Maybe<T> None = new ChoiceTypes.NoneClass();
+        public static Maybe<T> NewSome(T value) => new ChoiceTypes.SomeClass(value);
         private static partial class ChoiceTypes
         {
-            public partial class None : Maybe<T>
+            public partial class NoneClass : Maybe<T>
             {
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => noneFunc();
-                public override bool Equals(object other) => other is None;
+                public override bool Equals(object other) => other is NoneClass;
                 public override int GetHashCode() => GetType().FullName.GetHashCode();
                 public override string ToString() => ""None"";
             }
 
-            public partial class Some : Maybe<T>
+            public partial class SomeClass : Maybe<T>
             {
-                public Some(T value)
+                public SomeClass(T value)
                 {
                     Value = value;
                 }
@@ -87,7 +87,7 @@ module IntegratedTests =
                 }
 
                 public override TResult Match<TResult>(Func<TResult> noneFunc, Func<T, TResult> someFunc) => someFunc(Value);
-                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override bool Equals(object other) => other is SomeClass && Value.Equals(((SomeClass)other).Value);
                 public override int GetHashCode() => GetType().FullName.GetHashCode() ^ (Value?.GetHashCode() ?? ""null"".GetHashCode());
                 public override string ToString() => String.Format(""Some {0}"", Value);
             }
@@ -107,31 +107,31 @@ module IntegratedTests =
         }
 
         public abstract TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc, Func<TResult> greenFunc);
-        public static readonly TrafficLights Red = new ChoiceTypes.Red();
-        public static readonly TrafficLights Amber = new ChoiceTypes.Amber();
-        public static readonly TrafficLights Green = new ChoiceTypes.Green();
+        public static readonly TrafficLights Red = new ChoiceTypes.RedClass();
+        public static readonly TrafficLights Amber = new ChoiceTypes.AmberClass();
+        public static readonly TrafficLights Green = new ChoiceTypes.GreenClass();
         private static partial class ChoiceTypes
         {
-            public partial class Red : TrafficLights
+            public partial class RedClass : TrafficLights
             {
                 public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc, Func<TResult> greenFunc) => redFunc();
-                public override bool Equals(object other) => other is Red;
+                public override bool Equals(object other) => other is RedClass;
                 public override int GetHashCode() => GetType().FullName.GetHashCode();
                 public override string ToString() => ""Red"";
             }
 
-            public partial class Amber : TrafficLights
+            public partial class AmberClass : TrafficLights
             {
                 public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc, Func<TResult> greenFunc) => amberFunc();
-                public override bool Equals(object other) => other is Amber;
+                public override bool Equals(object other) => other is AmberClass;
                 public override int GetHashCode() => GetType().FullName.GetHashCode();
                 public override string ToString() => ""Amber"";
             }
 
-            public partial class Green : TrafficLights
+            public partial class GreenClass : TrafficLights
             {
                 public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc, Func<TResult> greenFunc) => greenFunc();
-                public override bool Equals(object other) => other is Green;
+                public override bool Equals(object other) => other is GreenClass;
                 public override int GetHashCode() => GetType().FullName.GetHashCode();
                 public override string ToString() => ""Green"";
             }
@@ -153,30 +153,30 @@ module IntegratedTests =
         }
 
         public abstract TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc);
-        public static readonly TrafficLightsToStopFor Red = new ChoiceTypes.Red();
-        public static readonly TrafficLightsToStopFor Amber = new ChoiceTypes.Amber();
+        public static readonly TrafficLightsToStopFor Red = new ChoiceTypes.RedClass();
+        public static readonly TrafficLightsToStopFor Amber = new ChoiceTypes.AmberClass();
         private static partial class ChoiceTypes
         {
-            public partial class Red : TrafficLightsToStopFor
+            public partial class RedClass : TrafficLightsToStopFor
             {
-                public Red() : base(TrafficLights.Red)
+                public RedClass() : base(TrafficLights.Red)
                 {
                 }
 
                 public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc) => redFunc();
-                public override bool Equals(object other) => other is Red;
+                public override bool Equals(object other) => other is RedClass;
                 public override int GetHashCode() => GetType().FullName.GetHashCode();
                 public override string ToString() => ""Red"";
             }
 
-            public partial class Amber : TrafficLightsToStopFor
+            public partial class AmberClass : TrafficLightsToStopFor
             {
-                public Amber() : base(TrafficLights.Amber)
+                public AmberClass() : base(TrafficLights.Amber)
                 {
                 }
 
                 public override TResult Match<TResult>(Func<TResult> redFunc, Func<TResult> amberFunc) => amberFunc();
-                public override bool Equals(object other) => other is Amber;
+                public override bool Equals(object other) => other is AmberClass;
                 public override int GetHashCode() => GetType().FullName.GetHashCode();
                 public override string ToString() => ""Amber"";
             }
@@ -199,12 +199,12 @@ module IntegratedTests =
         }
 
         public abstract TResult Match<TResult>(Func<T, TResult> someFunc);
-        public static SingleValue<T> Some(T value) => new ChoiceTypes.Some(value);
+        public static SingleValue<T> NewSome(T value) => new ChoiceTypes.SomeClass(value);
         private static partial class ChoiceTypes
         {
-            public partial class Some : SingleValue<T>
+            public partial class SomeClass : SingleValue<T>
             {
-                public Some(T value) : base(Maybe<T>.Some(value))
+                public SomeClass(T value) : base(Maybe<T>.NewSome(value))
                 {
                     Value = value;
                 }
@@ -215,7 +215,7 @@ module IntegratedTests =
                 }
 
                 public override TResult Match<TResult>(Func<T, TResult> someFunc) => someFunc(Value);
-                public override bool Equals(object other) => other is Some && Value.Equals(((Some)other).Value);
+                public override bool Equals(object other) => other is SomeClass && Value.Equals(((SomeClass)other).Value);
                 public override int GetHashCode() => GetType().FullName.GetHashCode() ^ (Value?.GetHashCode() ?? ""null"".GetHashCode());
                 public override string ToString() => String.Format(""Some {0}"", Value);
             }
@@ -231,7 +231,7 @@ module IntegratedTests =
 }"
 
     [<Test>]
-    let ``code-gen: complete``() =
+    let ``code-gen: complete - maybe``() =
         let actual =
             [ Maybe_T; TrafficLights; TrafficLightsToStopFor; SingleValue_T ]
             |> List.map (to_class_declaration)
@@ -239,7 +239,7 @@ module IntegratedTests =
 
         text_matches (COMPLETE_EXPECTED, actual)
 
-    let csunion = @"
+    let ``maybe.csunion`` = @"
 namespace DU.Tests
 {
     union Maybe<T> { None | Some<T> }
@@ -253,7 +253,7 @@ namespace DU.Tests
 
     [<Test>]
     let ``code-gen from text: maybe``() =
-        let actual = generate_code_for_text csunion
+        let actual = generate_code_for_text ``maybe.csunion``
         UnitTestUtilities.text_matches (complete_expected_with_pragma, actual)
 
     [<Test>]
@@ -262,7 +262,7 @@ namespace DU.Tests
         Assert.IsTrue <| File.Exists (input_file.FullName)
 
         let input = File.ReadAllText input_file.FullName
-        UnitTestUtilities.text_matches (csunion, input)
+        UnitTestUtilities.text_matches (``maybe.csunion``, input)
 
         let output_file = Path.Combine(input_file.Directory.FullName, "maybe.g.cs") |> FileInfo
         Assert.IsTrue <| Directory.Exists output_file.Directory.FullName

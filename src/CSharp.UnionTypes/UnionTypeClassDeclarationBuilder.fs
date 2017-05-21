@@ -47,16 +47,17 @@ module UnionTypeClassDeclarationBuilder =
         ]
 
     let to_access_members (du : UnionType) =
-        let union_name = du.CSharpTypeName
+        let union_name = du.UnionClassNameWithTypeArgs
 
-        let to_access_member um =
-            let member_name = um.MemberName.unapply
+        let to_access_member (um : UnionMember) =
+            let member_name = um.UnionMemberAccessName
+            let class_name = um.ChoiceClassName
 
             let to_access_member_method _ (t : FullTypeName) =
                 let method_arg_name = "value"
                 let method_arg_type = t.CSharpTypeName
                 let initialization_expression =
-                    ``=>``(``new`` (``type`` [ "ChoiceTypes"; member_name ]) ``(`` [ ident method_arg_name ] ``)``)
+                    ``=>``(``new`` (``type`` [ "ChoiceTypes"; class_name ]) ``(`` [ ident method_arg_name ] ``)``)
 
                 ``arrow_method`` union_name member_name ``<<`` [] ``>>`` ``(`` [ (method_arg_name, ``type`` method_arg_type) ] ``)``
                     [ ``public``; ``static`` ]
@@ -64,7 +65,7 @@ module UnionTypeClassDeclarationBuilder =
                     :> MemberDeclarationSyntax
 
             let to_access_member_field =
-                let field_initializer = ``:=`` (``new`` (``type`` [ "ChoiceTypes"; member_name ]) ``(`` [] ``)``)
+                let field_initializer = ``:=`` (``new`` (``type`` [ "ChoiceTypes"; class_name ]) ``(`` [] ``)``)
                 field union_name member_name
                     [ ``public``; ``static``; readonly ]
                     (Some field_initializer)
@@ -135,7 +136,7 @@ module UnionTypeClassDeclarationBuilder =
     let to_base_cast du =
         du.BaseType
         |> Option.map (fun b ->
-            ``explicit operator`` b.CSharpTypeName ``(`` (``type`` du.CSharpTypeName) ``)``
+            ``explicit operator`` b.CSharpTypeName ``(`` (``type`` du.UnionClassNameWithTypeArgs) ``)``
                 (``=>`` (ident "value" <|.|> "_base"))
                 :> MemberDeclarationSyntax)
         |> Option.fold (fun _ m -> [m]) []

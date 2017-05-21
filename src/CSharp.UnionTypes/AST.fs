@@ -36,7 +36,7 @@ module AST =
             let members =
                 seq {
                     yield! this.Usings |> List.map (fun u -> u.unapply)
-                    yield! this.Unions |> List.map (fun u -> u.CSharpTypeName)
+                    yield! this.Unions |> List.map (fun u -> u.UnionClassNameWithTypeArgs)
                 }
                 |> String.concat ("; ")
             sprintf @"namespace %s{%s}" this.NamespaceName.unapply members
@@ -81,7 +81,10 @@ module AST =
               UnionTypeParameters = typeArgumentListOption |> Option.fold (fun _ s -> s) []
               BaseType = baseType }
 
-        member this.CSharpTypeName =
+        member this.UnionClassName = 
+            this.UnionTypeName.unapply
+
+        member this.UnionClassNameWithTypeArgs =
             let typeParameters =
                 this.UnionTypeParameters
                 |> Seq.map (fun a -> a.ToString())
@@ -99,7 +102,7 @@ module AST =
                 this.UnionMembers
                 |> Seq.map (fun m -> m.ToString())
                 |> String.concat " | "
-            sprintf "union %s ::= [ %s ]" this.CSharpTypeName members
+            sprintf "union %s ::= [ %s ]" this.UnionClassNameWithTypeArgs members
 
     and UnionTypeName =
         | UnionTypeName of string
@@ -126,6 +129,15 @@ module AST =
         static member apply(memberName, typeArgument) =
             { MemberName = memberName
               MemberArgumentType = typeArgument }
+
+        member this.ChoiceClassName = 
+            sprintf "%sClass" this.MemberName.unapply
+
+        member this.UnionMemberAccessName = 
+            this.MemberArgumentType 
+            |> Option.fold (fun c _ -> sprintf "New%s" c) this.MemberName.unapply
+
+        member this.ValueConstructor = this.UnionMemberAccessName
 
         override this.ToString() =
             this.MemberArgumentType

@@ -68,12 +68,13 @@
     <Compile Include="UnitTestUtilities.fs" />
     <Compile Include="UnionTypeClassTests.fs" />
     <Compile Include="UnionMemberClassTests.fs" />
-    <Compile Include="IntegratedTests.fs" />
+    <Compile Include="IntegratedTests.UserName.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
     <None Include="maybe.csunion">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="IntegratedTests.Maybe.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

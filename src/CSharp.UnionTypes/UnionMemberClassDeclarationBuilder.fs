@@ -10,8 +10,8 @@ module UnionMemberClassDeclarationBuilder =
     let private pick_value_or_singleton fv fs um =
        um.MemberArgumentType |> Option.fold fv fs
 
-    let ctor du um =
-        let member_name = um.MemberName.unapply
+    let ctor du (um : UnionMember) =
+        let member_name = um.ChoiceClassName
         let (args, assignments) =
             match um.MemberArgumentType with
             | Some t ->
@@ -23,7 +23,7 @@ module UnionMemberClassDeclarationBuilder =
             du.BaseType
             |> Option.map (fun b ->
                 um.MemberArgumentType
-                |> Option.fold (fun seed _ -> sprintf "%s(value)" seed) (sprintf "%s.%s" b.CSharpTypeName member_name))
+                |> Option.fold (fun seed _ -> sprintf "%s(value)" seed) (sprintf "%s.%s" b.CSharpTypeName um.ValueConstructor))
             |> Option.fold (fun _ b -> [b]) []
 
         match (args, assignments, baseargs) with
@@ -61,8 +61,8 @@ module UnionMemberClassDeclarationBuilder =
         du
         |> to_match_function (Some invocation)
 
-    let equals_override _ um =
-        let member_name = um.MemberName.unapply
+    let equals_override _ (um : UnionMember) =
+        let member_name = um.ChoiceClassName
 
         let equality_expression_builder base_expression _ =
             let other_value_is_same = ``invoke`` (ident "Value.Equals") ``(`` [ ``((`` (``cast`` member_name (ident "other")) ``))`` <|.|> "Value" ] ``)``
@@ -114,15 +114,15 @@ module UnionMemberClassDeclarationBuilder =
                 :> MemberDeclarationSyntax
         ]
 
-    let to_choice_class_internal fns (du: UnionType) um =
-        let union_name = du.CSharpTypeName
-        let member_name = um.MemberName.unapply
+    let to_choice_class_internal fns (du: UnionType) (um: UnionMember) =
+        let union_name = du.UnionClassNameWithTypeArgs
+        let class_name = um.ChoiceClassName
 
         let members =
             fns
             |> Seq.collect (fun f -> f du um)
 
-        ``class`` member_name ``<<`` [] ``>>``
+        ``class`` class_name ``<<`` [] ``>>``
             ``:`` (Some union_name) ``,`` [ ]
             [ ``public``; ``partial`` ]
             ``{``
