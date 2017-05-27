@@ -12,9 +12,9 @@ namespace CSharp.UnionTypes.VSIX
 {
     [ComVisible(true)]
     [Guid("F15F1915-CDBD-46B1-9B35-72E3C04D9D0E")]
-    [CodeGeneratorRegistration(typeof(CSharpUnionTypeGenerator), "CSharpUnionTypeGenerator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
-    [ProvideObject(typeof(CSharpUnionTypeGenerator))]
-    internal class CSharpUnionTypeGenerator : IVsSingleFileGenerator, IObjectWithSite
+    [CodeGeneratorRegistration(typeof(CSharpADTGenerator), "CSharpADTGenerator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
+    [ProvideObject(typeof(CSharpADTGenerator))]
+    internal class CSharpADTGenerator : IVsSingleFileGenerator, IObjectWithSite
     {
         private object _site;
 

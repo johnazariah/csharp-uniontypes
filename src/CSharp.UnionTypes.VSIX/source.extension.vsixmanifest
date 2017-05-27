@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="CSharp.UnionTypes.John Azariah.e05b48d8-aca6-442b-9ef9-a01938a0ebb9" Version="1.0" Language="en-US" Publisher="John Azariah" />
-    <DisplayName>C# Union Types</DisplayName>
-    <Description xml:space="preserve">Parser and Code-Generator for DU types in C#</Description>
-    <MoreInfo>https://www.github.com/johnazariah/csharp-uniontypes</MoreInfo>
+    <Identity Id="CSharp.AlgebraicTypes.John Azariah.e05b48d8-aca6-442b-9ef9-a01938a0ebb9" Version="1.0" Language="en-US" Publisher="John Azariah" />
+    <DisplayName>C# Algebraic Data Types</DisplayName>
+    <Description xml:space="preserve">Parser and Code-Generator for Immutable Algebraic Data Types in C#</Description>
+    <MoreInfo>https://www.github.com/johnazariah/csharp-algebraictypes</MoreInfo>
     <License>Resources/LICENSE.txt</License>
     <Icon>Resources/johnazariah.ico</Icon>
     <PreviewImage>Resources/preview.png</PreviewImage>
-    <Tags>C#, DU Types, Union Types, Sum Types</Tags>
+    <Tags>C#, Union Types, Sum Types, Algebraic Data Types, Immutable Data Types</Tags>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
