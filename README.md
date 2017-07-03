@@ -14,7 +14,7 @@ This library presents a language extension to C# to specify Records and Discrimi
 
 The Visual Studio 2015 extension [is available from the marketplace](https://marketplace.visualstudio.com/items?itemName=JohnAzariah.CUnionTypes).
 
-Follow the [tutorial](https://johnazariah.github.io/csharp-uniontypes/tutorial.html) for more detailed instructions.
+Follow the [tutorial](https://johnazariah.github.io/csharp-algebraictypes/tutorial.html) for more detailed instructions.
 
 ## Build Status
 
