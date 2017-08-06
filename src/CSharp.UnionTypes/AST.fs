@@ -32,6 +32,13 @@ module AST =
                 | _ -> None
             this.NamespaceMembers |> List.choose isUnion
 
+        member this.Records =
+            let isRecord =
+                function
+                | RecordType x -> Some x
+                | _ -> None
+            this.NamespaceMembers |> List.choose isRecord
+
         override this.ToString() =
             let members =
                 seq {
@@ -54,10 +61,12 @@ module AST =
     and NamespaceMember =
         | Using of UsingName
         | UnionType of UnionType
+        | RecordType of RecordType
         override this.ToString() =
             match this with
             | Using x -> x.ToString()
             | UnionType x -> x.ToString()
+            | RecordType x -> x.ToString()
 
     and UsingName =
         | UsingName of string
@@ -66,6 +75,51 @@ module AST =
         member this.unapply =
             match this with
             | UsingName x -> x
+
+        override this.ToString() = this.unapply
+
+    and RecordType = 
+        { RecordTypeName : RecordTypeName
+          RecordTypeParameters : TypeParameter list
+          RecordMembers : RecordMember list }
+
+    and RecordTypeName =
+        | RecordTypeName of string
+
+        member this.unapply =
+            match this with
+            | RecordTypeName x -> x
+
+        override this.ToString() = this.unapply
+    
+    and RecordMember =
+        { MemberName : RecordMemberName
+          MemberArgumentType : FullTypeName option }
+
+        static member apply(memberName, typeArgument) =
+            { MemberName = memberName
+              MemberArgumentType = typeArgument }
+
+        member this.ChoiceClassName = 
+            sprintf "%sClass" this.MemberName.unapply
+
+        member this.RecordMemberAccessName = 
+            this.MemberArgumentType 
+            |> Option.fold (fun c _ -> sprintf "New%s" c) this.MemberName.unapply
+
+        member this.ValueConstructor = this.RecordMemberAccessName
+
+        override this.ToString() =
+            this.MemberArgumentType
+            |> Option.fold (fun _ s -> sprintf "%s of %s" this.MemberName.unapply (s.ToString()))
+                   (sprintf "%s" this.MemberName.unapply)
+
+    and RecordMemberName =
+        | RecordMemberName of string
+
+        member this.unapply =
+            match this with
+            | RecordMemberName x -> x
 
         override this.ToString() = this.unapply
 
