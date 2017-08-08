@@ -30,24 +30,24 @@ verbose <- true
 
 // The name of the project
 // (used by attributes in AssemblyInfo, name of a NuGet package and directory in 'src')
-let project = "CSharp.UnionTypes"
+let project = "CSharp.AlgebraicTypes"
 
 // Short summary of the project
 // (used as description in AssemblyInfo and as a short summary for NuGet package)
-let summary = "DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#"
+let summary = "DSL, Parser & Code Generator for Algebraic Data Types (Sum & Product Types) in C#"
 
 // Longer description of the project
 // (used as a description for NuGet package; line breaks are automatically cleaned up)
-let description = "DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#"
+let description = "DSL, Parser & Code Generator for Algebraic Data Types (Sum & Product Types) in C#"
 
 // List of author names (for NuGet package)
 let authors = [ "John Azariah" ]
 
 // Tags for your project (for NuGet package)
-let tags = "C# \"Type Theory\" \"Union Types\" \"Discriminated Union Types\" \"Sum Types\""
+let tags = "C# \"Type Theory\" \"Record Types\" \"Union Types\" \"Discriminated Union Types\" \"Sum Types\" \"Product Types\""
 
 // File system information
-let solutionFile  = "CSharp.UnionTypes.sln"
+let solutionFile  = "CSharp.AlgebraicTypes.sln"
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
@@ -58,7 +58,7 @@ let gitOwner = "johnazariah"
 let gitHome = sprintf "%s/%s" "https://github.com" gitOwner
 
 // The name of the project on GitHub
-let gitName = "csharp-uniontypes"
+let gitName = "csharp-algebraictypes"
 
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" "https://raw.githubusercontent.com/johnazariah"

@@ -1,7 +1,5 @@
 ﻿namespace CSharp.UnionTypes
 
-open Microsoft.CodeAnalysis
-open Microsoft.CodeAnalysis.CSharp
 open Microsoft.CodeAnalysis.CSharp.Syntax
 open BrightSword.RoslynWrapper
 
