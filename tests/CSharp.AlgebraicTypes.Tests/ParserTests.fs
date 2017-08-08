@@ -33,13 +33,13 @@ module public ParserTests =
     [<Test>]
     let ``parser: case class parses``() =
         let input = "Result<T>"
-        let parser = caseMember
+        let parser = unionMember
         AssertParsesTo parser input "Result of T"
 
     [<Test>]
     let ``parser: case object parses``() =
         let input = "Exception;"
-        let parser = caseMember
+        let parser = unionMember
         AssertParsesTo parser input "Exception"
 
     [<Test>]

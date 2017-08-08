@@ -42,8 +42,9 @@ module AST =
         override this.ToString() =
             let members =
                 seq {
-                    yield! this.Usings |> List.map (fun u -> u.unapply)
-                    yield! this.Unions |> List.map (fun u -> u.UnionClassNameWithTypeArgs)
+                    yield! this.Usings  |> List.map (fun u -> u.unapply)
+                    yield! this.Unions  |> List.map (fun u -> u.UnionClassNameWithTypeArgs)
+                    yield! this.Records |> List.map (fun u -> u.RecordClassNameWithTypeArgs)
                 }
                 |> String.concat ("; ")
             sprintf @"namespace %s{%s}" this.NamespaceName.unapply members
@@ -82,6 +83,34 @@ module AST =
         { RecordTypeName : RecordTypeName
           RecordTypeParameters : TypeParameter list
           RecordMembers : RecordMember list }
+
+        static member apply ((recordTypeName, typeArgumentListOption), recordMemberList) =
+            { RecordTypeName = recordTypeName
+              RecordMembers = recordMemberList
+              RecordTypeParameters = typeArgumentListOption |> Option.fold (fun _ s -> s) [] }
+
+        member this.RecordClassName = 
+            this.RecordTypeName.unapply
+
+        member this.RecordClassNameWithTypeArgs =
+            let typeParameters =
+                this.RecordTypeParameters
+                |> Seq.map (fun a -> a.ToString())
+                |> String.concat ", "
+                |> (fun a ->
+                if a <> "" then sprintf "<%s>" a
+                else "")
+
+            let bareTypeName = this.RecordTypeName.unapply
+            in
+            sprintf "%s%s" bareTypeName typeParameters
+
+        override this.ToString() =
+            let members =
+                this.RecordMembers
+                |> Seq.map (fun m -> m.ToString())
+                |> String.concat "; "
+            sprintf "record %s ::= [ %s ]" this.RecordClassNameWithTypeArgs members
 
     and RecordTypeName =
         | RecordTypeName of string

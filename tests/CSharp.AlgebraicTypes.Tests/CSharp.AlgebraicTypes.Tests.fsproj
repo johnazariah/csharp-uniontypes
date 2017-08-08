@@ -1450,7 +1450,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CSharp.UnionTypes\CSharp.AlgebraicTypes.fsproj">
+    <ProjectReference Include="..\..\src\CSharp.AlgebraicTypes\CSharp.AlgebraicTypes.fsproj">
       <Name>CSharp.AlgebraicTypes</Name>
       <Project>{badd2e7c-35a6-413b-a4c8-f291a8ffcb94}</Project>
       <Private>True</Private>

@@ -21,31 +21,42 @@ module Parser =
     let braced p = wstr "{" >>. p .>> wstr "}"
     let pointed p = wstr "<" >>. p .>> wstr ">"
     let comma = wstr ","
-    let pipe = wstr "|"
-    let identifier =
-        spaces >>. regex "[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}_][\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\d_]*[?]?" .>> spaces
+    let identifier = ws (regex "[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}_][\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\d_]*[?]?")
     let dotComponent : Parser<string, unit> = (pchar '.') >>. identifier .>> spaces
     let fullTypeName, fullTypeNameImpl = createParserForwardedToRef()
     let typeArguments = pointed (sepBy1 fullTypeName comma)
     let dottedName = spaces >>. identifier .>>. many dotComponent
 
     do fullTypeNameImpl := dottedName .>>. opt typeArguments |>> FullTypeName.apply
-
-    let memberName = word |>> UnionMemberName
-    let caseMemberArgOpt = pointed fullTypeName |> opt
-    let caseMember = ((memberName .>>. caseMemberArgOpt) |> ws) |>> UnionMember.apply
-    let caseMembers = sepBy1 caseMember pipe
-    let caseMembersBlock = braced caseMembers
+    
     let typeParameters = (sepBy1 word comma |> pointed) |>> List.map TypeArgument
     let constrainsOpt = ((wstr "constrains") >>. fullTypeName) |> opt
+
+    let unionMemberName = word |>> UnionMemberName
+    let unionMemberArgOpt = pointed fullTypeName |> opt
+    let unionMember = ((unionMemberName .>>. unionMemberArgOpt) |> ws) |>> UnionMember.apply
+    let unionMembers = sepBy1 unionMember (wstr "|")
+    let unionMembersBlock = braced unionMembers
     let unionTypeName = word |>> UnionTypeName
     let unionType =
-        (wstr "union" >>. unionTypeName) .>>. (opt typeParameters) .>>. constrainsOpt .>>. caseMembersBlock
+        (wstr "union" >>. unionTypeName) .>>. (opt typeParameters) .>>. constrainsOpt .>>. unionMembersBlock
         .>> opt (wstr ";") |>> (UnionType.apply >> UnionType) <?> "Union"
+    
+    let recordMemberName = word |>> RecordMemberName
+    let recordMemberArgOpt = pointed fullTypeName |> opt
+    let recordMember = ((recordMemberName .>>. recordMemberArgOpt) |> ws) |>> RecordMember.apply
+    let recordMembers = sepBy1 recordMember (wstr ";")
+    let recordMembersBlock = braced recordMembers
+    let recordTypeName = word |>> RecordTypeName
+    let recordType =
+        (wstr "record" >>. recordTypeName) .>>. (opt typeParameters) .>>. recordMembersBlock
+        .>> opt (wstr ";") |>> (RecordType.apply >> RecordType) <?> "Record"
+
     let usingName = dottedName |>> UsingName.apply
     let using = wstr "using" >>. usingName .>> wstr ";" |>> Using <?> "Using"
+ 
     let namespaceName = dottedName |>> NamespaceName.apply
-    let namespaceMember = using <|> unionType
+    let namespaceMember = using <|> unionType <|> recordType
     let ``namespace`` =
         wstr "namespace" >>. namespaceName .>>. (namespaceMember |> (many >> braced)) |>> Namespace.apply
         <?> "Namespace"
