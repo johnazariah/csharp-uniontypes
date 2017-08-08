@@ -55,7 +55,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CSharpUnionTypeGenerator.cs" />
+    <Compile Include="CSharpADTGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Key.snk" />
@@ -88,9 +88,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSharp.UnionTypes\CSharp.UnionTypes.fsproj">
+    <ProjectReference Include="..\CSharp.AlgebraicTypes\CSharp.AlgebraicTypes.fsproj">
       <Project>{badd2e7c-35a6-413b-a4c8-f291a8ffcb94}</Project>
-      <Name>CSharp.UnionTypes</Name>
+      <Name>CSharp.AlgebraicTypes</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
