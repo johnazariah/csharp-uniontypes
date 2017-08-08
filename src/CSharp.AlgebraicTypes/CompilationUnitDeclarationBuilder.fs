@@ -1,4 +1,4 @@
-﻿namespace CSharp.UnionTypes
+﻿namespace CSharp.AlgebraicTypes
 
 open BrightSword.RoslynWrapper
 

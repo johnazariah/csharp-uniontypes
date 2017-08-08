@@ -9,19 +9,19 @@
 // for binaries output to root bin folder please add the filename only to the
 // referenceBinaries list below in order to generate documentation for the binaries.
 // (This is the original behaviour of ProjectScaffold prior to multi project support)
-let referenceBinaries = [ "CSharp.UnionTypes.dll" ]
+let referenceBinaries = [ "CSharp.AlgebraicTypes.dll" ]
 // Web site location for the generated documentation
-let website = "/csharp-uniontypes"
+let website = "/csharp-algebraictypes"
 
-let githubLink = "https://github.com/johnazariah/csharp-uniontypes"
+let githubLink = "https://github.com/johnazariah/csharp-algebraictypes"
 
 // Specify more information about your project
 let info =
-  [ "project-name", "CSharp.UnionTypes"
+  [ "project-name", "CSharp.AlgebraicTypes"
     "project-author", "John Azariah"
-    "project-summary", "DSL, Parser & Code Generator for Discriminated Union Types (Sum Types) in C#"
+    "project-summary", "DSL, Parser & Code Generator for Algebraic Data Types (Sum and Product Types) in C#"
     "project-github", githubLink
-    "project-nuget", "http://nuget.org/packages/CSharp.UnionTypes" ]
+    "project-nuget", "http://nuget.org/packages/CSharp.AlgebraicTypes" ]
 
 // --------------------------------------------------------------------------------------
 // For typical project, no changes are needed below

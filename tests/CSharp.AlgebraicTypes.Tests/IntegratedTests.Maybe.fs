@@ -1,9 +1,9 @@
-﻿namespace CSharp.UnionTypes.Tests
+﻿namespace CSharp.AlgebraicTypes.Tests
 
 open System.IO
 open System.Text.RegularExpressions
 
-open CSharp.UnionTypes
+open CSharp.AlgebraicTypes
 
 open NUnit.Framework
 
@@ -234,7 +234,7 @@ module IntegratedTestsMaybe =
     let ``code-gen: complete - maybe``() =
         let actual =
             [ Maybe_T; TrafficLights; TrafficLightsToStopFor; SingleValue_T ]
-            |> List.map (to_class_declaration)
+            |> List.map (to_union_class_declaration)
             |> classes_to_code
 
         text_matches (COMPLETE_EXPECTED, actual)

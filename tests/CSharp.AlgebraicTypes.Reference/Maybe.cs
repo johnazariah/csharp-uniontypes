@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 
+// ReSharper disable InconsistentNaming
+
 #pragma warning disable 660,661
 
 // ReSharper disable MemberHidesStaticFromOuterClass
 
-namespace BrightSword.CSharpExtensions.Reference
+namespace CSharp.AlgebraicTypes.Reference
 {
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>,
         IStructuralEquatable

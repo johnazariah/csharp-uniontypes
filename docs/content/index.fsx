@@ -4,7 +4,7 @@
 #I "../../bin"
 
 (**
-CSharp.UnionTypes
+CSharp.AlgebraicTypes
 ======================
 
 Documentation
@@ -13,8 +13,8 @@ Documentation
   <div class="span1"></div>
   <div class="span6">
     <div class="well well-small" id="nuget">
-      The CSharp.UnionTypes library can be <a href="https://nuget.org/packages/CSharp.UnionTypes">installed from NuGet</a>:
-      <pre>PM> Install-Package CSharp.UnionTypes</pre>
+      The CSharp.AlgebraicTypes library can be <a href="https://nuget.org/packages/CSharp.AlgebraicTypes">installed from NuGet</a>:
+      <pre>PM> Install-Package CSharp.AlgebraicTypes</pre>
     </div>
   </div>
   <div class="span1"></div>
@@ -26,8 +26,8 @@ Example
 This example demonstrates using a function defined in this sample library.
 
 *)
-#r "CSharp.UnionTypes.dll"
-open CSharp.UnionTypes
+#r "CSharp.AlgebraicTypes.dll"
+open CSharp.AlgebraicTypes
 
 printfn "hello = %i" <| Library.hello 0
 
@@ -59,9 +59,9 @@ The library is available under Public Domain license, which allows modification 
 redistribution for both commercial and non-commercial purposes. For more information see the
 [License file][license] in the GitHub repository.
 
-  [content]: https://github.com/fsprojects/CSharp.UnionTypes/tree/master/docs/content
-  [gh]: https://github.com/fsprojects/CSharp.UnionTypes
-  [issues]: https://github.com/fsprojects/CSharp.UnionTypes/issues
-  [readme]: https://github.com/fsprojects/CSharp.UnionTypes/blob/master/README.md
-  [license]: https://github.com/fsprojects/CSharp.UnionTypes/blob/master/LICENSE.txt
+  [content]: https://github.com/fsprojects/CSharp.AlgebraicTypes/tree/master/docs/content
+  [gh]: https://github.com/fsprojects/CSharp.AlgebraicTypes
+  [issues]: https://github.com/fsprojects/CSharp.AlgebraicTypes/issues
+  [readme]: https://github.com/fsprojects/CSharp.AlgebraicTypes/blob/master/README.md
+  [license]: https://github.com/fsprojects/CSharp.AlgebraicTypes/blob/master/LICENSE.txt
 *)

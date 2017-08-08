@@ -1,11 +1,9 @@
-﻿namespace CSharp.UnionTypes.Tests
+﻿namespace CSharp.AlgebraicTypes.Tests
 
-open CSharp.UnionTypes
+open CSharp.AlgebraicTypes
 open BrightSword.RoslynWrapper
 open NUnit.Framework
 
-open Microsoft.CodeAnalysis
-open Microsoft.CodeAnalysis.CSharp
 open Microsoft.CodeAnalysis.CSharp.Syntax
 
 [<AutoOpen>]

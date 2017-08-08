@@ -76,7 +76,6 @@
     <Compile Include="AST.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="DeclarationBuilderCommon.fs" />
-    <Compile Include="UnionMemberClassDeclarationBuilder.fs" />
     <Compile Include="UnionTypeClassDeclarationBuilder.fs" />
     <Compile Include="NamespaceDeclarationBuilder.fs" />
     <Compile Include="CompilationUnitDeclarationBuilder.fs" />

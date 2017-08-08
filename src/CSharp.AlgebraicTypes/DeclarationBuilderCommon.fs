@@ -1,10 +1,10 @@
-﻿namespace CSharp.UnionTypes
+﻿namespace CSharp.AlgebraicTypes
 
 open Microsoft.CodeAnalysis.CSharp.Syntax
 open BrightSword.RoslynWrapper
 
 [<AutoOpen>]
-module DeclarationBuilderCommon =
+module internal DeclarationBuilderCommon =
     let toParameterName (str : string) =
         sprintf "%s%s" (str.Substring(0, 1).ToLower()) (str.Substring(1))
 

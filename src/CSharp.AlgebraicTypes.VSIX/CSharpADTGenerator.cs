@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using CSharp.UnionTypes;
+using CSharp.AlgebraicTypes;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSLangProj80;
 
-namespace CSharp.UnionTypes.VSIX
+namespace CSharp.AlgebraicTypes.VSIX
 {
     [ComVisible(true)]
     [Guid("F15F1915-CDBD-46B1-9B35-72E3C04D9D0E")]

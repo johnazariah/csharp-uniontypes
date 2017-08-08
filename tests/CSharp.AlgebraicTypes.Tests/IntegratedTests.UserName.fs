@@ -1,9 +1,9 @@
-﻿namespace CSharp.UnionTypes.Tests
+﻿namespace CSharp.AlgebraicTypes.Tests
 
 open System.IO
 open System.Text.RegularExpressions
 
-open CSharp.UnionTypes
+open CSharp.AlgebraicTypes
 
 open NUnit.Framework
 

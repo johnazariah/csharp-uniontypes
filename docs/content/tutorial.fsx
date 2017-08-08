@@ -19,14 +19,14 @@ This project provides a VSIX for use with Visual Studio 2015. You can also find 
 * Install the VSIX into your working environment
 * Define your union types in a file with extension `.csunion`.
 
-The VSIX contains a "CustomTool" (also known as a Single File Generator) called "CSharpUnionTypeGenerator". This generates "code-behind" C# for your `.csunion` file.
+The VSIX contains a "CustomTool" (also known as a Single File Generator) called "CSharpADTGenerator". This generates "code-behind" C# for your `.csunion` file.
 
 * Create a file to contain your union types in your Visual Studio C# Project.
 
 In the file properties window, ensure that:
     * **Build Action** is set to _Content_
     * **Copy to Output Directory** is set to _Never_
-    * **Custom Tool** is set to _CSharpUnionTypeGenerator_
+    * **Custom Tool** is set to _CSharpADTGenerator_
 
 Whenever you save the `.csunion` file, a `.g.cs` file - which is its "code-behind" - is generated. It will automatically be added to your project.
 
@@ -47,7 +47,7 @@ The command-line executable will generate a `.cs` file with the same name at the
 * You may also add the `.csunion` file to your project, but ensure that its properties are set as follows:
     * **Build Action** is set to _Content_
     * **Copy to Output Directory** is set to _Never_
-    * **Custom Tool** is set to _CSharpUnionTypeGenerator_
+    * **Custom Tool** is set to _CSharpADTGenerator_
 
 * Write more C# code (in traditional `.cs` files) using the union types.
 * Compile the project as usual

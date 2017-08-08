@@ -1,7 +1,7 @@
 ﻿open System.IO
 open System.Text.RegularExpressions
 
-open CSharp.UnionTypes.CodeGenerator
+open CSharp.AlgebraicTypes.CodeGenerator
 
 type CompilerParameters = {
     HelpRequested : bool

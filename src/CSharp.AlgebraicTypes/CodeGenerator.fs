@@ -1,4 +1,4 @@
-﻿namespace CSharp.UnionTypes
+﻿namespace CSharp.AlgebraicTypes
 
 open System.Text.RegularExpressions
 open System.IO

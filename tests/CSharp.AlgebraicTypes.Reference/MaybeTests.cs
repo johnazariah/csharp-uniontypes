@@ -3,11 +3,12 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable EqualExpressionComparison
 // ReSharper disable SuspiciousTypeConversion.Global
 
-namespace BrightSword.CSharpExtensions.Reference
+namespace CSharp.AlgebraicTypes.Reference
 {
     internal class MaybeTests
     {

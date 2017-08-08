@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="MaybeTests.cs" />
     <Compile Include="Maybe.cs" />
+    <Compile Include="Person.cs" />
+    <Compile Include="PersonTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
