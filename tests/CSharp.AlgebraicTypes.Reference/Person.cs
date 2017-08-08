@@ -17,16 +17,10 @@ namespace CSharp.AlgebraicTypes.Reference
             Age = age;
         }
 
-        public Person<G> With(G sex = null, string name = null, int age = default(int))
-        {
-            sex = sex ?? Sex;
-            name = name ?? Name;
-            age = age == default(int) ? Age : age;
+        public Person<G> With(G sex = null, string name = null, int? age = null)
+            => new Person<G>(sex ?? Sex, name ?? Name, age ?? Age);
 
-            return new Person<G>(sex, name, age);
-        }
-
-        public override bool Equals(object other) => this.Equals(other as Person<G>);
+        public override bool Equals(object other) => Equals(other as Person<G>);
 
         public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
 
@@ -34,11 +28,9 @@ namespace CSharp.AlgebraicTypes.Reference
 
         public bool Equals(Person<G> other)
         {
-            if (other == null) return false;
-
-            if (Sex != other.Sex) return false;
-            if (!string.Equals(Name, other.Name)) return false;
-            if (Age != other.Age) return false;
+            if (!Sex.Equals(other?.Sex)) return false;
+            if (!string.Equals(Name, other?.Name)) return false;
+            if (Age != other?.Age) return false;
 
             return true;
         }
@@ -54,14 +46,8 @@ namespace CSharp.AlgebraicTypes.Reference
             }
         }
 
-        public static bool operator ==(Person<G> left, Person<G> right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Person<G> left, Person<G> right) => Equals(left, right);
 
-        public static bool operator !=(Person<G> left, Person<G> right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Person<G> left, Person<G> right) => !Equals(left, right);
     }
 }

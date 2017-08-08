@@ -17,9 +17,7 @@ namespace CSharp.AlgebraicTypes.Reference
 
             public bool Equals(Gender other)
             {
-                if (other == null) return false;
-
-                return string.Equals(this.Tag, other.Tag);
+                return string.Equals(this.Tag, other?.Tag);
             }
 
             public override bool Equals(object other) => Equals(other as Gender);
@@ -48,10 +46,22 @@ namespace CSharp.AlgebraicTypes.Reference
         }
 
         [Test]
-        public void Person_With_Works()
+        public void Person_Single_With_Generates_Equatable_Object()
         {
             var orig = new Person<Gender>(new Gender("Male"), "Jim", 42);
             var left = orig.With(name: "John");
+            var right = new Person<Gender>(new Gender("Male"), "John", 42);
+
+            Assert.AreNotEqual(orig, left);
+            Assert.AreEqual(left, right);
+        }
+
+        [Test]
+        public void Person_Multiple_With_Generates_Equatable_Object()
+        {
+            var orig = new Person<Gender>(new Gender("Male"), "Jim", 40);
+            var left = orig.With(name: "John").With(age: 42);
+
             var right = new Person<Gender>(new Gender("Male"), "John", 42);
 
             Assert.AreNotEqual(orig, left);
