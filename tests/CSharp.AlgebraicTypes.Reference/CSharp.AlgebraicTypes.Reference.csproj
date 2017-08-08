@@ -7,8 +7,8 @@
     <ProjectGuid>{75FCAE41-6E9E-4E79-B77C-6BD77F71A11A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BrightSword.CSharpExtensions.Reference</RootNamespace>
-    <AssemblyName>BrightSword.CSharpExtensions.Reference</AssemblyName>
+    <RootNamespace>CSharp.AlgebraicTypes.Reference</RootNamespace>
+    <AssemblyName>CSharp.AlgebraicTypes.Reference</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -43,8 +43,8 @@ module Parser =
         .>> opt (wstr ";") |>> (UnionType.apply >> UnionType) <?> "Union"
     
     let recordMemberName = word |>> RecordMemberName
-    let recordMemberArgOpt = pointed fullTypeName |> opt
-    let recordMember = ((recordMemberName .>>. recordMemberArgOpt) |> ws) |>> RecordMember.apply
+    let recordMemberArg = pointed fullTypeName
+    let recordMember = ((recordMemberName .>>. recordMemberArg) |> ws) |>> RecordMember.apply
     let recordMembers = sepBy1 recordMember (wstr ";")
     let recordMembersBlock = braced recordMembers
     let recordTypeName = word |>> RecordTypeName

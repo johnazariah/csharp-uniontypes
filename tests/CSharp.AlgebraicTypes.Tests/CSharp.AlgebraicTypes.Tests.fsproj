@@ -8,7 +8,7 @@
     <ProjectGuid>1227f507-f770-483e-8e8b-c90b1e14e316</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>CSharp.UnionTypes.Tests</RootNamespace>
-    <AssemblyName>CSharp.UnionTypes.Tests</AssemblyName>
+    <AssemblyName>CSharp.AlgebraicTypes.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.3.0.0</TargetFSharpCoreVersion>
     <Name>CSharp.AlgebraicTypes.Tests</Name>

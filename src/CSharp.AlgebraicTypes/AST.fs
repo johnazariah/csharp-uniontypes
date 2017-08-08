@@ -123,25 +123,17 @@ module AST =
     
     and RecordMember =
         { MemberName : RecordMemberName
-          MemberArgumentType : FullTypeName option }
+          MemberArgumentType : FullTypeName }
 
         static member apply(memberName, typeArgument) =
             { MemberName = memberName
               MemberArgumentType = typeArgument }
 
-        member this.ChoiceClassName = 
-            sprintf "%sClass" this.MemberName.unapply
-
         member this.RecordMemberAccessName = 
-            this.MemberArgumentType 
-            |> Option.fold (fun c _ -> sprintf "New%s" c) this.MemberName.unapply
-
-        member this.ValueConstructor = this.RecordMemberAccessName
+            this.MemberName.unapply
 
         override this.ToString() =
-            this.MemberArgumentType
-            |> Option.fold (fun _ s -> sprintf "%s of %s" this.MemberName.unapply (s.ToString()))
-                   (sprintf "%s" this.MemberName.unapply)
+            sprintf "%s : %s" this.MemberName.unapply this.MemberArgumentType.CSharpTypeName
 
     and RecordMemberName =
         | RecordMemberName of string

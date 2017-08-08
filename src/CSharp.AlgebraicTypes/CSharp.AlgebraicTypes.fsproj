@@ -8,7 +8,7 @@
     <ProjectGuid>badd2e7c-35a6-413b-a4c8-f291a8ffcb94</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>CSharp.UnionTypes</RootNamespace>
-    <AssemblyName>CSharp.UnionTypes</AssemblyName>
+    <AssemblyName>CSharp.AlgebraicTypes</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.3.0.0</TargetFSharpCoreVersion>
     <Name>CSharp.AlgebraicTypes</Name>

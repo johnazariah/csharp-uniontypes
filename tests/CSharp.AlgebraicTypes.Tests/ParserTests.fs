@@ -113,6 +113,11 @@ module public ParserTests =
         AssertParsesTo unionType input "union TrafficLight ::= [ Red | Amber | Green ]"
 
     [<Test>]
+    let ``parser: record - non-generic record parses``() =
+        let input = @" record Person { Name<string>; Age<int> }";
+        AssertParsesTo recordType input "record Person ::= [ Name : string; Age : int ]"
+
+    [<Test>]
     let ``parser: union - invalid non-generic union does not parse``() =
         let input = @"
 union TrafficLight[A]
@@ -127,6 +132,11 @@ union TrafficLight[A]
     let ``parser: union - generic hybrid union parses``() =
         let input = @"union Maybe<T> { Some<T> | None }";
         AssertParsesTo unionType input "union Maybe<T> ::= [ Some of T | None ]"
+
+    [<Test>]
+    let ``parser: record - generic record parses``() =
+        let input = @"record Person<Gender> { Sex<Gender>; Name<string> }";
+        AssertParsesTo recordType input "record Person<Gender> ::= [ Sex : Gender; Name : string ]"
 
     [<Test>]
     let ``parser: union - total generic union - one argument per case-class``() =
@@ -244,4 +254,30 @@ namespace CoolMonads
 "
         let expected =
             "namespace CoolMonads{System; System.Collections.Generic; Payment; Result<T>}"
+        AssertParsesTo ``namespace`` input expected
+
+    [<Test>]
+    let ``parser: namespace - using, union and record``() =
+        let input = @"
+namespace CoolMonads
+{
+    using System;
+    using System.Collections.Generic;
+
+    union Payment
+    {
+        Cash
+        | CreditCard<CreditCardDetails>
+        | Cheque<ChequeDetails>
+    }
+
+    record Person
+    {
+        Name<string>;
+        Age<int>
+    }
+}
+"
+        let expected =
+            "namespace CoolMonads{System; System.Collections.Generic; Payment; Person}"
         AssertParsesTo ``namespace`` input expected
