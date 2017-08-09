@@ -6,22 +6,16 @@ open System
 [<AutoOpen>]
 module Parser =
     let ws p = spaces >>. p .>> spaces
-    let word : Parser<string, unit> = ws (many1Chars asciiLetter)
+    let word : Parser<string, _> = ws (many1Chars asciiLetter)
 
-    let wchar : char -> Parser<char, unit> =
-        pchar
-        >> ws
-        >> attempt
+    let wchar p = attempt (ws (pchar p))
+    let wstr  p = attempt (ws (pstring p))
+    let braced  p = between (wstr "{") (wstr "}") p
+    let pointed p = between (wstr "<") (wstr ">") p
 
-    let wstr : string -> Parser<string, unit> =
-        pstring
-        >> ws
-        >> attempt
+    let symbol : Parser<Symbol, _> =
+        spaces >>. regex "[\p{L}_]([\p{L}\p{Nd}_]*)" .>> spaces |>> Symbol.Symbol
 
-    let braced p = wstr "{" >>. p .>> wstr "}"
-    let pointed p = wstr "<" >>. p .>> wstr ">"
-    let comma = wstr ","
-    let identifier = ws (regex "[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}_][\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\d_]*[?]?")
     let dotComponent : Parser<string, unit> = (pchar '.') >>. identifier .>> spaces
     let fullTypeName, fullTypeNameImpl = createParserForwardedToRef()
     let typeArguments = pointed (sepBy1 fullTypeName comma)

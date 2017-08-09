@@ -1,5 +1,119 @@
 ﻿namespace CSharp.AlgebraicTypes
+#if !true
 
+[<AutoOpen>]
+module AST' =
+    type Symbol = 
+    | Symbol of string
+    with 
+        override this.ToString() = match this with | Symbol s -> s
+
+    type DottedName = 
+    | DottedName of string
+    with 
+        static member apply (head, rest) = 
+            let tail = String.concat "." rest
+            let value = 
+                if tail = "" then
+                    head
+                else 
+                    sprintf "%s.%s" head tail
+            in
+            DottedName value
+        override this.ToString() = match this with | DottedName s -> s
+
+    type TypedTypeMember = {
+        MemberName : Symbol
+        MemberType : DottedName
+    }
+    with
+        member this.ToUnionMemberString  = sprintf "%s<%s>"  (this.MemberName.ToString()) (this.MemberType.ToString())
+        member this.ToRecordMemberString = sprintf "%s : %s" (this.MemberName.ToString()) (this.MemberType.ToString())
+
+    type TypeArguments = | TypeArguments of Symbol list
+    with
+        override this.ToString() = 
+            match this with 
+            | TypeArguments ts -> 
+                ts
+                |> Seq.map (fun t -> t.ToString())
+                |> String.concat ","
+                |> (fun t -> if t = "" then "" else (sprintf "<%s>" t))
+
+    type UnionTypeMember = 
+    | UntypedMember of Symbol
+    | TypedMember   of TypedTypeMember
+    with
+        override this.ToString() = 
+            match this with
+            | UntypedMember s -> s.ToString()
+            | TypedMember   s -> s.ToUnionMemberString
+
+    type TypeBase<'a> (typeName : 'a, typeArguments : TypeArguments) = 
+        member this.TypeName      = typeName
+        member this.TypeArguments = typeArguments
+        override this.ToString() = 
+            sprintf "%s%s" (this.TypeName.ToString()) (this.TypeArguments.ToString())
+
+    type UnionType (typeName : Symbol, typeArguments : TypeArguments, typeMembers : UnionTypeMember list, baseType : (DottedName * TypeArguments) option) = 
+        inherit TypeBase<Symbol>(typeName, typeArguments)
+        member this.TypeMembers = typeMembers
+        member this.BaseType    = baseType |> Option.map TypeBase<DottedName> 
+        override this.ToString() =
+            let constrains = 
+                this.BaseType 
+                |> Option.fold (fun _ b -> sprintf " constrains %s" (b.ToString())) ""
+            
+            let members = 
+                this.TypeMembers 
+                |> Seq.map (fun m -> m.ToString())
+                |> String.concat (" | ")
+            
+            sprintf "union %s%s {
+                %s
+            }" (base.ToString()) constrains members
+
+    type RecordType  (typeName : Symbol, typeArguments : TypeArguments, typeMembers : TypedTypeMember list) = 
+        inherit TypeBase<Symbol>(typeName, typeArguments)
+        member this.TypeMembers = typeMembers
+        override this.ToString() =
+            let members = 
+                this.TypeMembers 
+                |> Seq.map (fun m -> m.ToRecordMemberString)
+                |> String.concat ("; ")
+            
+            sprintf "record %s {
+                %s
+            }" (base.ToString()) members
+
+    type NamespaceMember = 
+    | Using  of DottedName
+    | Union  of UnionType
+    | Record of RecordType
+    with 
+        override this.ToString() = 
+            match this with
+            | Using  v -> v.ToString()
+            | Union  v -> v.ToString()
+            | Record v -> v.ToString()
+
+    type Namespace = {
+        NamespaceName    : DottedName
+        NamespaceMembers : NamespaceMember list
+    }
+    with 
+        override this.ToString() = 
+            let name = this.NamespaceName.ToString()
+
+            let members = 
+                this.NamespaceMembers
+                |> Seq.map (fun m -> m.ToString())
+                |> String.concat ("; ")
+
+            sprintf "namespace %s {
+                %s
+            }" name members
+#else
 [<AutoOpen>]
 module AST =
     let toDottedName (head, (dotComponents : string list)) =
@@ -249,3 +363,4 @@ module AST =
               TypeArguments = typeArguments |> Option.fold (fun _ s -> s) [] }
 
         override this.ToString() = this.CSharpTypeName
+#endif
