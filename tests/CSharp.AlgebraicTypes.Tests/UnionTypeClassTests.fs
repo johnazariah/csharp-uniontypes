@@ -185,7 +185,7 @@ module UnionTypeClassTests =
 
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>, IStructuralEquatable
     {
-        public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
+        public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? ReferenceEquals(right, null);
     }
 }"
         test_codegen Maybe_T to_eq_operator expected

@@ -96,7 +96,7 @@ module IntegratedTestsMaybe =
         public bool Equals(Maybe<T> other) => Equals(other as object);
         public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
         public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
-        public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
+        public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? ReferenceEquals(right, null);
         public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
     }
 
@@ -140,7 +140,7 @@ module IntegratedTestsMaybe =
         public bool Equals(TrafficLights other) => Equals(other as object);
         public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
         public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
-        public static bool operator ==(TrafficLights left, TrafficLights right) => left?.Equals(right) ?? false;
+        public static bool operator ==(TrafficLights left, TrafficLights right) => left?.Equals(right) ?? ReferenceEquals(right, null);
         public static bool operator !=(TrafficLights left, TrafficLights right) => !(left == right);
     }
 
@@ -185,7 +185,7 @@ module IntegratedTestsMaybe =
         public bool Equals(TrafficLightsToStopFor other) => Equals(other as object);
         public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
         public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
-        public static bool operator ==(TrafficLightsToStopFor left, TrafficLightsToStopFor right) => left?.Equals(right) ?? false;
+        public static bool operator ==(TrafficLightsToStopFor left, TrafficLightsToStopFor right) => left?.Equals(right) ?? ReferenceEquals(right, null);
         public static bool operator !=(TrafficLightsToStopFor left, TrafficLightsToStopFor right) => !(left == right);
         public static explicit operator TrafficLights(TrafficLightsToStopFor value) => value._base;
     }
@@ -224,7 +224,7 @@ module IntegratedTestsMaybe =
         public bool Equals(SingleValue<T> other) => Equals(other as object);
         public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
         public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
-        public static bool operator ==(SingleValue<T> left, SingleValue<T> right) => left?.Equals(right) ?? false;
+        public static bool operator ==(SingleValue<T> left, SingleValue<T> right) => left?.Equals(right) ?? ReferenceEquals(right, null);
         public static bool operator !=(SingleValue<T> left, SingleValue<T> right) => !(left == right);
         public static explicit operator Maybe<T>(SingleValue<T> value) => value._base;
     }

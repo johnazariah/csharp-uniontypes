@@ -50,7 +50,7 @@ module IntegratedTestsUsername =
         public bool Equals(UserName other) => Equals(other as object);
         public bool Equals(object other, IEqualityComparer comparer) => Equals(other);
         public int GetHashCode(IEqualityComparer comparer) => GetHashCode();
-        public static bool operator ==(UserName left, UserName right) => left?.Equals(right) ?? false;
+        public static bool operator ==(UserName left, UserName right) => left?.Equals(right) ?? ReferenceEquals(right, null);
         public static bool operator !=(UserName left, UserName right) => !(left == right);
     }
 }"

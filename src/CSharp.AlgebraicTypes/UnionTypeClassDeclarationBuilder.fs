@@ -269,11 +269,11 @@ module UnionTypeClassDeclarationBuilder =
                 :> MemberDeclarationSyntax
         ]
 
-    //   public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? false;
-    let to_eq_operator du =
+    //   public static bool operator ==(Maybe<T> left, Maybe<T> right) => left?.Equals(right) ?? ReferenceEquals(right, default(Maybe<T>));
+    let to_eq_operator (du : UnionType) =
         [
             ``operator ==`` ("left", "right", union_typename du)
-                (``=>`` (((ident "left") <?.> ("Equals", [ ident "right" ])) <??> ``false``))
+                (``=>`` (((ident "left") <?.> ("Equals", [ ident "right" ])) <??> (``invoke`` (ident "ReferenceEquals") ``(`` [ (ident "right"); (ident "null") ] ``)`` )))
                 :> MemberDeclarationSyntax
         ]
 
