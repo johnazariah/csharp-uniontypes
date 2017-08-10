@@ -30,9 +30,9 @@ module UnitTestUtilities =
             |> class_to_code
         text_matches (expected, actual)
 
-    let internal test_codegen_choice t generator expected =
+    let internal test_codegen_choice (t : UnionType) generator expected =
         let actual =
-            t.UnionMembers
+            t.TypeMembers
             |> List.map ((to_choice_class_internal [ generator ] t) >> class_to_code)
             |> String.concat("\n")
         text_matches (expected, actual)

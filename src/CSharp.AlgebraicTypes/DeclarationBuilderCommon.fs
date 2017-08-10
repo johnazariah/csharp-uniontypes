@@ -10,15 +10,17 @@ module internal DeclarationBuilderCommon =
 
     let to_match_function_parameter_name = toParameterName >> sprintf "%sFunc"
 
-    let to_match_function_parameters result_type du =
+    let to_match_function_parameters result_type (du : UnionType) =
         let to_match_function_parameter um =
             let match_function_parameter_type =
-                um.MemberArgumentType
-                |> Option.fold (fun _ t -> sprintf "Func<%s, %s>" t.CSharpTypeName result_type)
-                       (sprintf "Func<%s>" result_type)
-            let match_function_parameter_name = um.MemberName.unapply |> to_match_function_parameter_name
+                match um with 
+                | UnionTypeMember.UntypedMember _  -> (sprintf "Func<%s>" result_type)
+                | UnionTypeMember.TypedMember   tm -> (sprintf "Func<%s, %s>" tm.MemberType.FullTypeName result_type)
+                       
+            let match_function_parameter_name = um.MemberName |> to_match_function_parameter_name
             (match_function_parameter_name, ``type`` match_function_parameter_type)
-        du.UnionMembers |> Seq.map to_match_function_parameter
+        
+        du.TypeMembers |> Seq.map to_match_function_parameter
 
     let to_match_function invocation du =
         let parameters = to_match_function_parameters "TResult" du

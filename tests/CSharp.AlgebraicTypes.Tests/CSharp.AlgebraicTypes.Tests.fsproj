@@ -64,6 +64,12 @@
   <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <Compile Include="ParserTests.fs" />
+    <Compile Include="SampleTypes.fs" />
+    <Compile Include="UnitTestUtilities.fs" />
+    <Compile Include="UnionTypeClassTests.fs" />
+    <Compile Include="UnionMemberClassTests.fs" />
+    <Compile Include="IntegratedTests.Maybe.fs" />
+    <Compile Include="IntegratedTests.UserName.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
     <None Include="maybe.csunion">

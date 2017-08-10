@@ -7,53 +7,43 @@ module SampleTypes =
     let internal Maybe_T =
         {
             BaseType = None
-            UnionTypeName = UnionTypeName "Maybe"
-            UnionTypeParameters = [ TypeArgument "T" ]
-            UnionMembers =
+            TypeDeclaration = { TypeName = Symbol "Maybe"; TypeArguments = Some ([ Symbol "T" ]) }
+            TypeMembers =
                 [
-                    { MemberName = UnionMemberName "None"; MemberArgumentType = None }
-                    {
-                        MemberName = UnionMemberName "Some"
-                        MemberArgumentType = Some { FullyQualifiedTypeName = "T"; TypeArguments = [] }
-                    }
+                    UnionTypeMember.UntypedMember (Symbol "None")
+                    UnionTypeMember.TypedMember ({MemberName = Symbol "Some"; MemberType = {TypeName = DottedName "T"; TypeParameters = None}})
                 ]
         }
 
     let internal SingleValue_T =
         {
-            BaseType = (("Maybe", []), Some [FullTypeName.apply(("T", []), None)]) |> (FullTypeName.apply >> Some)
-            UnionTypeName = UnionTypeName "SingleValue"
-            UnionTypeParameters = [ TypeArgument "T" ]
-            UnionMembers =
+            BaseType = Some ({TypeName = DottedName "Maybe"; TypeParameters = Some[ {TypeName = DottedName "T"; TypeParameters = None}]})
+            TypeDeclaration = { TypeName = Symbol "SingleValue"; TypeArguments = Some ([ Symbol "T" ]) }
+            TypeMembers =
                 [
-                    {
-                        MemberName = UnionMemberName "Some"
-                        MemberArgumentType = Some { FullyQualifiedTypeName = "T"; TypeArguments = [] }
-                    }
+                    UnionTypeMember.TypedMember ({MemberName = Symbol "Some"; MemberType = {TypeName = DottedName "T"; TypeParameters = None}})
                 ]
         }
 
     let internal TrafficLights =
         {
             BaseType = None
-            UnionTypeName = UnionTypeName "TrafficLights"
-            UnionTypeParameters = []
-            UnionMembers =
+            TypeDeclaration = { TypeName = Symbol "TrafficLights"; TypeArguments = None }
+            TypeMembers =
                 [
-                    { MemberName = UnionMemberName "Red"; MemberArgumentType = None }
-                    { MemberName = UnionMemberName "Amber"; MemberArgumentType = None }
-                    { MemberName = UnionMemberName "Green"; MemberArgumentType = None }
+                    UnionTypeMember.UntypedMember (Symbol "Red")
+                    UnionTypeMember.UntypedMember (Symbol "Amber")
+                    UnionTypeMember.UntypedMember (Symbol "Green")
                 ]
         }
 
     let internal TrafficLightsToStopFor =
         {
-            BaseType = (("TrafficLights", []), None) |> (FullTypeName.apply >> Some)
-            UnionTypeName = UnionTypeName "TrafficLightsToStopFor"
-            UnionTypeParameters = []
-            UnionMembers =
+            BaseType = Some ({TypeName = DottedName "TrafficLights"; TypeParameters = None})
+            TypeDeclaration = { TypeName = Symbol "TrafficLightsToStopFor"; TypeArguments = None }
+            TypeMembers =
                 [
-                    { MemberName = UnionMemberName "Red"; MemberArgumentType = None }
-                    { MemberName = UnionMemberName "Amber"; MemberArgumentType = None }
+                    UnionTypeMember.UntypedMember (Symbol "Red")
+                    UnionTypeMember.UntypedMember (Symbol "Amber")
                 ]
         }

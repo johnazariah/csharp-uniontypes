@@ -75,6 +75,11 @@
     </None>
     <Compile Include="AST.fs" />
     <Compile Include="Parser.fs" />
+    <Compile Include="DeclarationBuilderCommon.fs" />
+    <Compile Include="UnionTypeClassDeclarationBuilder.fs" />
+    <Compile Include="NamespaceDeclarationBuilder.fs" />
+    <Compile Include="CompilationUnitDeclarationBuilder.fs" />
+    <Compile Include="CodeGenerator.fs" />
     <None Include="paket.references" />
     <None Include="paket.template" />
     <Content Include="App.config" />

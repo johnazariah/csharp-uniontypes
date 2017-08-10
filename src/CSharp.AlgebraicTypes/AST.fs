@@ -6,7 +6,8 @@ module AST =
     type Symbol = 
     | Symbol of string
     with 
-        override this.ToString() = match this with | Symbol s -> s
+        member this.unapply = match this with | Symbol s -> s
+        override this.ToString() = this.unapply
 
     type DottedName = 
     | DottedName of string
@@ -15,8 +16,8 @@ module AST =
             components 
             |> String.concat "."
             |> DottedName
-
-        override this.ToString() = match this with | DottedName s -> s
+        member this.unapply = match this with | DottedName s -> s
+        override this.ToString() = this.unapply
 
     let private toPointedTypeParameterString ts =
         ts
@@ -30,14 +31,24 @@ module AST =
     }
     with
         static member apply(typeName, typeArguments) = { TypeName = typeName; TypeArguments = typeArguments }
-        override this.ToString() = 
-            let typeParams = 
-                this.TypeArguments
-                |> Option.fold (fun _ ts -> toPointedTypeParameterString ts) ""
 
-            let typeName = this.TypeName.ToString()
-            in
-            sprintf "%s%s" typeName typeParams
+        member this.SimpleTypeName = 
+            this.TypeName.ToString()
+
+        member this.TypeParametersStringList = 
+            this.TypeArguments 
+            |> Option.fold (fun _ tas -> 
+                tas |> List.map (fun ta -> ta.ToString())) []
+
+        member this.TypeParameterString =
+            this.TypeArguments
+            |> Option.fold (fun _ ts -> toPointedTypeParameterString ts) ""
+
+        member this.FullTypeName = 
+            sprintf "%s%s" this.SimpleTypeName this.TypeParameterString
+
+        override this.ToString() = 
+            this.FullTypeName
 
     type TypeReference = {
         TypeName : DottedName
@@ -45,14 +56,20 @@ module AST =
     }
     with
         static member apply(typeName, typeParameters) = { TypeName = typeName; TypeParameters = typeParameters }
-        override this.ToString() = 
-            let typeParams = 
-                this.TypeParameters
-                |> Option.fold (fun _ ts -> toPointedTypeParameterString ts) ""
 
-            let typeName = this.TypeName.ToString()
-            in
-            sprintf "%s%s" typeName typeParams
+        member this.SimpleTypeName = 
+            this.TypeName.ToString()
+
+        member this.TypeParameterString =
+            this.TypeParameters
+            |> Option.fold (fun _ ts -> toPointedTypeParameterString ts) ""
+
+        member this.FullTypeName = 
+            sprintf "%s%s" this.SimpleTypeName this.TypeParameterString
+
+        override this.ToString() = 
+            this.FullTypeName
+            
 
     type TypedTypeMember = {
         MemberName : Symbol
@@ -68,6 +85,19 @@ module AST =
     | UntypedMember of Symbol
     | TypedMember   of TypedTypeMember
     with
+        member this.MemberName = 
+            match this with
+            | UntypedMember s -> s.ToString()
+            | TypedMember   m -> m.MemberName.ToString()
+
+        member this.ChoiceClassName = 
+            sprintf "%sClass" this.MemberName
+
+        member this.MemberAccessName = 
+            match this with
+            | UntypedMember s -> this.MemberName
+            | TypedMember   m -> sprintf "New%s" this.MemberName
+            
         override this.ToString() = 
             match this with
             | UntypedMember s -> s.ToString()
@@ -127,7 +157,8 @@ module AST =
     type Using = 
     | Using of DottedName
     with
-        override this.ToString() = match this with | Using dn -> sprintf "using %s;" (dn.ToString())
+        member this.unapply = match this with | Using dn -> sprintf "using %s" (dn.ToString())
+        override this.ToString() = this.unapply
 
     type NamespaceMember = 
     | Using  of Using
@@ -139,6 +170,18 @@ module AST =
             | Using  v -> v.ToString()
             | Union  v -> v.ToString()
             | Record v -> v.ToString()
+
+    let IsUsing = function
+    | NamespaceMember.Using u -> Some u
+    | _ -> None
+
+    let IsUnion= function
+    | NamespaceMember.Union u -> Some u
+    | _ -> None
+    
+    let IsRecord = function
+    | NamespaceMember.Record r -> Some r
+    | _ -> None
 
     type Namespace = {
         NamespaceName    : DottedName
@@ -158,6 +201,12 @@ module AST =
                 |> String.concat ("; ")
 
             sprintf  @"namespace %s { %s }" name members
+
+        member this.Usings  = this.NamespaceMembers |> List.choose IsUsing
+        member this.Unions  = this.NamespaceMembers |> List.choose IsUnion
+        member this.Records = this.NamespaceMembers |> List.choose IsRecord
+    
+        
 #else
 [<AutoOpen>]
 module AST =

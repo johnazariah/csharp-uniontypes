@@ -205,7 +205,7 @@ union Either<X, L, R>
     let ``parser: using - simple case``() =
         let input = @"using System.Collections.Generic;"
 
-        AssertParsesTo using input "using System.Collections.Generic;"
+        AssertParsesTo using input "using System.Collections.Generic"
 
     [<Test>]
     let ``parser: namespace - empty``() =
@@ -241,7 +241,7 @@ namespace CoolMonads
 }
 "
         let expected =
-            "namespace CoolMonads { using System;; union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> } }"
+            "namespace CoolMonads { using System; union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> } }"
         AssertParsesTo ``namespace`` input expected
 
     [<Test>]
@@ -263,7 +263,7 @@ namespace CoolMonads
 }
 "
         let expected =
-            "namespace CoolMonads { using System;; using System.Collections.Generic;; union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> }; union Result<T> { Result<T> | Error<System.Exception> } }"
+            "namespace CoolMonads { using System; using System.Collections.Generic; union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> }; union Result<T> { Result<T> | Error<System.Exception> } }"
         AssertParsesTo ``namespace`` input expected
 
     [<Test>]
@@ -289,5 +289,5 @@ namespace CoolMonads
 }
 "
         let expected =
-            "namespace CoolMonads { using System;; using System.Collections.Generic;; union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> }; record Person { Name : string; Age : int } }"
+            "namespace CoolMonads { using System; using System.Collections.Generic; union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> }; record Person { Name : string; Age : int } }"
         AssertParsesTo ``namespace`` input expected

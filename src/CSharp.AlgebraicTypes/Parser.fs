@@ -109,9 +109,9 @@ module Parser =
     // NamespaceMember
     let namespaceMember = 
         choice [
-            attempt unionType    |>> NamespaceMember.Union
-            attempt recordType   |>> NamespaceMember.Record
-            attempt using        |>> NamespaceMember.Using
+            attempt unionType   .>> opt semicolon |>> NamespaceMember.Union
+            attempt recordType  .>> opt semicolon |>> NamespaceMember.Record
+            attempt using       .>> opt semicolon |>> NamespaceMember.Using
         ]
 
     // Namespace
