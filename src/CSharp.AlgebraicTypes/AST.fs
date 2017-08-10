@@ -41,7 +41,7 @@ module AST =
 
     type TypeReference = {
         TypeName : DottedName
-        TypeParameters : (DottedName list) option
+        TypeParameters : (TypeReference list) option
     }
     with
         static member apply(typeName, typeParameters) = { TypeName = typeName; TypeParameters = typeParameters }
@@ -157,9 +157,7 @@ module AST =
                 |> Seq.map (fun m -> m.ToString())
                 |> String.concat ("; ")
 
-            sprintf  @"namespace %s
-{
-%s}"              name members
+            sprintf  @"namespace %s { %s }" name members
 #else
 [<AutoOpen>]
 module AST =

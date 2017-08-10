@@ -24,7 +24,8 @@ module Parser =
     let semicolon  = pstring ";"
     let colon      = pstring ":"
 
-    let identifier = regex "[\p{L}_]([\p{L}\p{Nd}_]*)" 
+    //let identifier = regex "[\p{L}_]([\p{L}\p{Nd}_]*)" 
+    let identifier = ws (regex "[\p{L}_][\p{L}\p{Nd}\d_]*[?]?")
     
     // Symbol
     let symbol = 
@@ -46,10 +47,11 @@ module Parser =
         <!> "TypeDeclaration"
 
     // TypeReference
-    let typeReference =
-        let typeParams = pointed (sepBy dottedName comma)
-        (dottedName .>>. opt typeParams)
-        |>> TypeReference.apply
+    let typeReference, typeReferenceImpl = createParserForwardedToRef ()
+    let typeParams = pointed (sepBy typeReference comma)
+
+    do typeReferenceImpl :=
+        (dottedName .>>. opt typeParams) |>> TypeReference.apply
         <!> "TypeReference"
 
     // UnionTypeMember

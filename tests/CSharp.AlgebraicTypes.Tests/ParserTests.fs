@@ -147,8 +147,8 @@ union TrafficLight[A]
 
     [<Test>]
     let ``parser: record - generic record parses``() =
-        let input = @"record Person<Gender> { Sex<Gender>; Name<string> }";
-        AssertParsesTo recordType input "record Person<Gender> { Sex<Gender>; Name<string> }"
+        let input = @"record Person<Gender> { Sex : Gender; Name : string }";
+        AssertParsesTo recordType input "record Person<Gender> { Sex : Gender; Name : string }"
 
     [<Test>]
     let ``parser: union - total generic union - one argument per case-class``() =
@@ -157,7 +157,7 @@ union Either<L, R>
 {
     Left<L> | Right<R>
 }"
-        AssertParsesTo unionType input "union Either<L, R> ::= [ Left of L | Right of R ]"
+        AssertParsesTo unionType input "union Either<L, R> { Left<L> | Right<R> }"
 
     [<Test>]
     let ``parser: union - total generic union - cannot have more than one generic argument per case-class``() =
@@ -171,7 +171,7 @@ union Either<L, R>
     [<Test>]
     let ``parser: union - total generic union - generic type enclosing type argument``() =
         let input = @"union Either<L, R> { Left<List<L>> | Right<R> }"
-        AssertParsesTo unionType input "union Either<L, R> ::= [ Left of List<L> | Right of R ]"
+        AssertParsesTo unionType input "union Either<L, R> { Left<List<L>> | Right<R> }"
 
     [<Test>]
     let ``parser: union - union generic types - union may contain arguments from only some constituent case classes``() =
@@ -180,12 +180,12 @@ union Result<T>
 {
     Result<T> | Error<Exception>
 }"
-        AssertParsesTo unionType input "union Result<T> ::= [ Result of T | Error of Exception ]"
+        AssertParsesTo unionType input "union Result<T> { Result<T> | Error<Exception> }"
 
     [<Test>]
     let ``parser: union - fully qualified types can be used as case class arguments``() =
         let input = @"union Result<T> { Result<T> | Error<System.Exception> }"
-        AssertParsesTo unionType input "union Result<T> ::= [ Result of T | Error of System.Exception ]"
+        AssertParsesTo unionType input "union Result<T> { Result<T> | Error<System.Exception> }"
 
     [<Test>]
     let ``parser: union - union generic types - union may contain superfluous arguments``() =
@@ -194,7 +194,7 @@ union Either<X, L, R>
 {
     Left<L> | Right<R>
 }"
-        AssertParsesTo unionType input "union Either<X, L, R> ::= [ Left of L | Right of R ]"
+        AssertParsesTo unionType input "union Either<X, L, R> { Left<L> | Right<R> }"
 
     [<Test>]
     let ``parser: union - non generic union may have case class members``() =
@@ -214,9 +214,7 @@ namespace CoolMonads
 {
 }
 "
-        AssertParsesTo ``namespace`` input "namespace CoolMonads
-{
-}"
+        AssertParsesTo ``namespace`` input "namespace CoolMonads {  }"
 
     [<Test>]
     let ``parser: namespace - dotted name``() =
@@ -225,9 +223,7 @@ namespace DU.Tests
 {
 }
 "
-        AssertParsesTo ``namespace`` input @"namespace DU.Tests
-{
-}"
+        AssertParsesTo ``namespace`` input @"namespace DU.Tests {  }"
 
     [<Test>]
     let ``parser: namespace - single using and union``() =
@@ -245,7 +241,7 @@ namespace CoolMonads
 }
 "
         let expected =
-            "namespace CoolMonads{System; Payment}"
+            "namespace CoolMonads { using System;; union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> } }"
         AssertParsesTo ``namespace`` input expected
 
     [<Test>]
@@ -267,7 +263,7 @@ namespace CoolMonads
 }
 "
         let expected =
-            "namespace CoolMonads{System; System.Collections.Generic; Payment; Result<T>}"
+            "namespace CoolMonads { using System;; using System.Collections.Generic;; union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> }; union Result<T> { Result<T> | Error<System.Exception> } }"
         AssertParsesTo ``namespace`` input expected
 
     [<Test>]
@@ -287,11 +283,11 @@ namespace CoolMonads
 
     record Person
     {
-        Name<string>;
-        Age<int>
+        Name : string ;
+        Age : int
     }
 }
 "
         let expected =
-            "namespace CoolMonads{System; System.Collections.Generic; Payment; Person}"
+            "namespace CoolMonads { using System;; using System.Collections.Generic;; union Payment { Cash | CreditCard<CreditCardDetails> | Cheque<ChequeDetails> }; record Person { Name : string; Age : int } }"
         AssertParsesTo ``namespace`` input expected
