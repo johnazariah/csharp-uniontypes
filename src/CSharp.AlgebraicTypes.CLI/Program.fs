@@ -1,7 +1,7 @@
 ﻿open System.IO
 open System.Text.RegularExpressions
 
-open CSharp.AlgebraicTypes.CodeGenerator
+//open CSharp.AlgebraicTypes.CodeGenerator
 
 type CompilerParameters = {
     HelpRequested : bool
@@ -70,12 +70,12 @@ let printUsage errors cp =
     printfn "   --output-file currently has value [%s]" (match cp.OutputFile with | Some f -> f | None -> "")
     printfn ""
     errors |> List.iter (fun e -> printfn "ERROR : %s" e)
-
-let generateCode cp =
-    let input_file = cp.InputFile
-    let output_file = (Some (cp.OutputFile |> Option.fold (fun _ f -> f) (Path.ChangeExtension (cp.InputFile.Value, ".g.cs"))))
-    generate_code_for_csunion_file (input_file, output_file)
-    |> ignore
+//
+//let generateCode cp =
+//    let input_file = cp.InputFile
+//    let output_file = (Some (cp.OutputFile |> Option.fold (fun _ f -> f) (Path.ChangeExtension (cp.InputFile.Value, ".g.cs"))))
+//    generate_code_for_csunion_file (input_file, output_file)
+//    |> ignore
 
 [<EntryPoint>]
 let main argv =
@@ -84,7 +84,7 @@ let main argv =
 
     if (cp.HelpRequested || (errors <> [])) then
         printUsage errors cp
-    else
-        generateCode cp
+//    else
+//        generateCode cp
 
     0 // return an integer exit code

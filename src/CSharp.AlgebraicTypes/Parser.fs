@@ -1,59 +1,121 @@
 ﻿namespace CSharp.AlgebraicTypes
 
 open FParsec
-open System
 
 [<AutoOpen>]
 module Parser =
+    let (<!>) (p: Parser<_,_>) label (stream: CharStream<_>) =
+        printfn "%A: Entering %s" stream.Position label
+        let reply = p stream
+        printfn "%A: Leaving %s (%A)" stream.Position label reply.Status
+        reply
+
     let ws p = spaces >>. p .>> spaces
-    let word : Parser<string, _> = ws (many1Chars asciiLetter)
 
-    let wchar p = attempt (ws (pchar p))
-    let wstr  p = attempt (ws (pstring p))
-    let braced  p = between (wstr "{") (wstr "}") p
-    let pointed p = between (wstr "<") (wstr ">") p
+    let wchar   p  = attempt (ws (pchar p))
+    let wstr    p  = attempt (ws (pstring p))
+                   
+    let braced  p  = between (wstr "{") (wstr "}") p
+    let pointed p  = between (wstr "<") (wstr ">") p
+                   
+    let dot        = pstring "."
+    let comma      = pstring ","
+    let pipe       = pstring "|"
+    let semicolon  = pstring ";"
+    let colon      = pstring ":"
 
-    let symbol : Parser<Symbol, _> =
-        spaces >>. regex "[\p{L}_]([\p{L}\p{Nd}_]*)" .>> spaces |>> Symbol.Symbol
-
-    let dotComponent : Parser<string, unit> = (pchar '.') >>. identifier .>> spaces
-    let fullTypeName, fullTypeNameImpl = createParserForwardedToRef()
-    let typeArguments = pointed (sepBy1 fullTypeName comma)
-    let dottedName = spaces >>. identifier .>>. many dotComponent
-
-    do fullTypeNameImpl := dottedName .>>. opt typeArguments |>> FullTypeName.apply
+    let identifier = regex "[\p{L}_]([\p{L}\p{Nd}_]*)" 
     
-    let typeParameters = (sepBy1 word comma |> pointed) |>> List.map TypeArgument
-    let constrainsOpt = ((wstr "constrains") >>. fullTypeName) |> opt
+    // Symbol
+    let symbol = 
+        ws identifier
+        |>> Symbol.Symbol
+        <!> "Symbol"
 
-    let unionMemberName = word |>> UnionMemberName
-    let unionMemberArgOpt = pointed fullTypeName |> opt
-    let unionMember = ((unionMemberName .>>. unionMemberArgOpt) |> ws) |>> UnionMember.apply
-    let unionMembers = sepBy1 unionMember (wstr "|")
-    let unionMembersBlock = braced unionMembers
-    let unionTypeName = word |>> UnionTypeName
-    let unionType =
-        (wstr "union" >>. unionTypeName) .>>. (opt typeParameters) .>>. constrainsOpt .>>. unionMembersBlock
-        .>> opt (wstr ";") |>> (UnionType.apply >> UnionType) <?> "Union"
+    // DottedName
+    let dottedName = 
+        sepBy1 identifier dot
+        |>> DottedName.apply
+        <!> "DottedName"
+
+    // TypeDeclaration 
+    let typeDeclaration =
+        let typeArgs = pointed (sepBy symbol comma)
+        (symbol .>>. opt typeArgs)
+        |>> TypeDeclaration.apply
+        <!> "TypeDeclaration"
+
+    // TypeReference
+    let typeReference =
+        let typeParams = pointed (sepBy dottedName comma)
+        (dottedName .>>. opt typeParams)
+        |>> TypeReference.apply
+        <!> "TypeReference"
+
+    // UnionTypeMember
+    let unionTypeMember =
+        // UnionTypeTypedMember 
+        let unionTypeTypedMember =
+            symbol .>>. pointed (typeReference) 
+            |>> TypedTypeMember.apply 
+            |>> UnionTypeMember.TypedMember
+            <!> "UnionTypeTypedMember"
     
-    let recordMemberName = word |>> RecordMemberName
-    let recordMemberArg = pointed fullTypeName
-    let recordMember = ((recordMemberName .>>. recordMemberArg) |> ws) |>> RecordMember.apply
-    let recordMembers = sepBy1 recordMember (wstr ";")
-    let recordMembersBlock = braced recordMembers
-    let recordTypeName = word |>> RecordTypeName
+        // UnionTypeUntypedMember 
+        let unionTypeUntypedMember = 
+            symbol 
+            |>> UnionTypeMember.UntypedMember
+            <!> "UnionTypeUntypedMember"
+         
+        choice [
+            attempt unionTypeTypedMember 
+            unionTypeUntypedMember
+        ]
+        <!> "UnionTypeMember"
+
+    // UnionType
+    let unionType = 
+        let constrainsOpt = opt (wstr "constrains" >>. typeReference)        
+        wstr "union" 
+            >>. typeDeclaration 
+            .>>. constrainsOpt 
+            .>>. braced (sepBy1 unionTypeMember pipe) 
+        |>> UnionType.apply
+        <!> "UnionType"
+
+    // RecordTypeMember
+    let recordTypeMember =
+        symbol .>> colon .>>. typeReference
+        |>> TypedTypeMember.apply 
+        |>> RecordTypeMember.TypedMember
+        <!> "RecordTypeMember"
+
+    // RecordType
     let recordType =
-        (wstr "record" >>. recordTypeName) .>>. (opt typeParameters) .>>. recordMembersBlock
-        .>> opt (wstr ";") |>> (RecordType.apply >> RecordType) <?> "Record"
+        wstr "record"
+            >>. typeDeclaration 
+            .>>. braced (sepBy1 recordTypeMember semicolon) 
+        |>> RecordType.apply
+        <!> "RecordType"
 
-    let usingName = dottedName |>> UsingName.apply
-    let using = wstr "using" >>. usingName .>> wstr ";" |>> Using <?> "Using"
- 
-    let namespaceName = dottedName |>> NamespaceName.apply
-    let namespaceMember = using <|> unionType <|> recordType
-    let ``namespace`` =
-        wstr "namespace" >>. namespaceName .>>. (namespaceMember |> (many >> braced)) |>> Namespace.apply
-        <?> "Namespace"
+    // Using
+    let using = 
+        wstr "using" >>. dottedName .>> semicolon
+        |>> Using.Using
+        <!> "Using"
+
+    // NamespaceMember
+    let namespaceMember = 
+        choice [
+            attempt unionType    |>> NamespaceMember.Union
+            attempt recordType   |>> NamespaceMember.Record
+            attempt using        |>> NamespaceMember.Using
+        ]
+
+    // Namespace
+    let ``namespace`` = 
+        wstr "namespace" >>. dottedName .>>. braced (many namespaceMember)
+        |>> Namespace.apply
 
     let parseTextToNamespace str =
         match run ``namespace`` str with

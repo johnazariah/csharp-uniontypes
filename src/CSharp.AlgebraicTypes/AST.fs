@@ -2,7 +2,7 @@
 #if !true
 
 [<AutoOpen>]
-module AST' =
+module AST =
     type Symbol = 
     | Symbol of string
     with 
@@ -11,34 +11,58 @@ module AST' =
     type DottedName = 
     | DottedName of string
     with 
-        static member apply (head, rest) = 
-            let tail = String.concat "." rest
-            let value = 
-                if tail = "" then
-                    head
-                else 
-                    sprintf "%s.%s" head tail
-            in
-            DottedName value
+        static member apply (components) =
+            components 
+            |> String.concat "."
+            |> DottedName
+
         override this.ToString() = match this with | DottedName s -> s
+
+    let private toPointedTypeParameterString ts =
+        ts
+        |> Seq.map (fun t -> t.ToString())
+        |> String.concat ", "
+        |> (fun t -> if t = "" then "" else (sprintf "<%s>" t))
+
+    type TypeDeclaration = {
+        TypeName : Symbol
+        TypeArguments : (Symbol list) option
+    }
+    with
+        static member apply(typeName, typeArguments) = { TypeName = typeName; TypeArguments = typeArguments }
+        override this.ToString() = 
+            let typeParams = 
+                this.TypeArguments
+                |> Option.fold (fun _ ts -> toPointedTypeParameterString ts) ""
+
+            let typeName = this.TypeName.ToString()
+            in
+            sprintf "%s%s" typeName typeParams
+
+    type TypeReference = {
+        TypeName : DottedName
+        TypeParameters : (DottedName list) option
+    }
+    with
+        static member apply(typeName, typeParameters) = { TypeName = typeName; TypeParameters = typeParameters }
+        override this.ToString() = 
+            let typeParams = 
+                this.TypeParameters
+                |> Option.fold (fun _ ts -> toPointedTypeParameterString ts) ""
+
+            let typeName = this.TypeName.ToString()
+            in
+            sprintf "%s%s" typeName typeParams
 
     type TypedTypeMember = {
         MemberName : Symbol
-        MemberType : DottedName
+        MemberType : TypeReference
     }
     with
+        static member apply(memberName, memberType) = { MemberName = memberName; MemberType = memberType }
+
         member this.ToUnionMemberString  = sprintf "%s<%s>"  (this.MemberName.ToString()) (this.MemberType.ToString())
         member this.ToRecordMemberString = sprintf "%s : %s" (this.MemberName.ToString()) (this.MemberType.ToString())
-
-    type TypeArguments = | TypeArguments of Symbol list
-    with
-        override this.ToString() = 
-            match this with 
-            | TypeArguments ts -> 
-                ts
-                |> Seq.map (fun t -> t.ToString())
-                |> String.concat ","
-                |> (fun t -> if t = "" then "" else (sprintf "<%s>" t))
 
     type UnionTypeMember = 
     | UntypedMember of Symbol
@@ -49,17 +73,20 @@ module AST' =
             | UntypedMember s -> s.ToString()
             | TypedMember   s -> s.ToUnionMemberString
 
-    type TypeBase<'a> (typeName : 'a, typeArguments : TypeArguments) = 
-        member this.TypeName      = typeName
-        member this.TypeArguments = typeArguments
-        override this.ToString() = 
-            sprintf "%s%s" (this.TypeName.ToString()) (this.TypeArguments.ToString())
-
-    type UnionType (typeName : Symbol, typeArguments : TypeArguments, typeMembers : UnionTypeMember list, baseType : (DottedName * TypeArguments) option) = 
-        inherit TypeBase<Symbol>(typeName, typeArguments)
-        member this.TypeMembers = typeMembers
-        member this.BaseType    = baseType |> Option.map TypeBase<DottedName> 
+    type UnionType = {
+        TypeDeclaration : TypeDeclaration;
+        TypeMembers     : UnionTypeMember list;
+        BaseType        : TypeReference option
+    }
+    with
+        static member apply((typeDeclaration, baseType), typeMembers) = {
+            TypeDeclaration = typeDeclaration
+            TypeMembers     = typeMembers
+            BaseType        = baseType
+        }
         override this.ToString() =
+            let typeName = this.TypeDeclaration.ToString()
+
             let constrains = 
                 this.BaseType 
                 |> Option.fold (fun _ b -> sprintf " constrains %s" (b.ToString())) ""
@@ -69,25 +96,41 @@ module AST' =
                 |> Seq.map (fun m -> m.ToString())
                 |> String.concat (" | ")
             
-            sprintf "union %s%s {
-                %s
-            }" (base.ToString()) constrains members
+            sprintf @"union %s%s { %s }" typeName constrains members
 
-    type RecordType  (typeName : Symbol, typeArguments : TypeArguments, typeMembers : TypedTypeMember list) = 
-        inherit TypeBase<Symbol>(typeName, typeArguments)
-        member this.TypeMembers = typeMembers
+    type RecordTypeMember =
+    | TypedMember of TypedTypeMember
+    with
+        override this.ToString() = 
+            match this with
+            | TypedMember   s -> s.ToRecordMemberString
+
+    type RecordType = {
+        TypeDeclaration : TypeDeclaration;
+        TypeMembers     : RecordTypeMember list;
+    }
+    with
+        static member apply(typeDeclaration, typeMembers) = {
+            TypeDeclaration = typeDeclaration
+            TypeMembers     = typeMembers
+        }
         override this.ToString() =
+            let typeName = this.TypeDeclaration.ToString()
+
             let members = 
                 this.TypeMembers 
-                |> Seq.map (fun m -> m.ToRecordMemberString)
+                |> Seq.map (fun m -> m.ToString())
                 |> String.concat ("; ")
             
-            sprintf "record %s {
-                %s
-            }" (base.ToString()) members
+            sprintf "record %s { %s }" typeName members
+
+    type Using = 
+    | Using of DottedName
+    with
+        override this.ToString() = match this with | Using dn -> sprintf "using %s;" (dn.ToString())
 
     type NamespaceMember = 
-    | Using  of DottedName
+    | Using  of Using
     | Union  of UnionType
     | Record of RecordType
     with 
@@ -101,7 +144,11 @@ module AST' =
         NamespaceName    : DottedName
         NamespaceMembers : NamespaceMember list
     }
-    with 
+    with
+        static member apply(namespaceName, namespaceMembers) = {
+            NamespaceName    = namespaceName
+            NamespaceMembers = namespaceMembers
+        }
         override this.ToString() = 
             let name = this.NamespaceName.ToString()
 
@@ -110,9 +157,9 @@ module AST' =
                 |> Seq.map (fun m -> m.ToString())
                 |> String.concat ("; ")
 
-            sprintf "namespace %s {
-                %s
-            }" name members
+            sprintf  @"namespace %s
+{
+%s}"              name members
 #else
 [<AutoOpen>]
 module AST =
