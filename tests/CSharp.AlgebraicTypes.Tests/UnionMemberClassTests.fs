@@ -4,6 +4,7 @@ open CSharp.AlgebraicTypes
 open NUnit.Framework
 
 module UnionMemberClassTests =
+    open UnionTypeClassDeclarationBuilder.UnionMemberClassDeclarationBuilder
 
     [<Test>]
     let ``code-gen-choice: ctor singleton | non-constraining``() =

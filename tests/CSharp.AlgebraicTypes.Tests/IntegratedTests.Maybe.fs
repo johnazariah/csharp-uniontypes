@@ -48,7 +48,7 @@ module IntegratedTestsMaybe =
         }
     }
 }"
-        test_codegen Maybe_T to_wrapper_type expected
+        test_codegen Maybe_T UnionTypeClassDeclarationBuilder.to_wrapper_type expected
 
     let COMPLETE_EXPECTED = sprintf @"namespace DU.Tests
 {
@@ -234,7 +234,7 @@ module IntegratedTestsMaybe =
     let ``code-gen: complete - maybe``() =
         let actual =
             [ Maybe_T; TrafficLights; TrafficLightsToStopFor; SingleValue_T ]
-            |> List.map (to_union_class_declaration)
+            |> List.map (UnionTypeClassDeclarationBuilder.to_class_declaration)
             |> classes_to_code
 
         text_matches (COMPLETE_EXPECTED, actual)

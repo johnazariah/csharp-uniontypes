@@ -21,7 +21,7 @@ module NamespaceDeclarationBuilder =
             ``namespace`` ns.NamespaceName.unapply
                 ``{``
                     ((ns.Usings |> List.map (fun u -> u.unapply)) @ ["System"; "System.Collections"] |> Set.ofList |> Set.toList)
-                    (ns.Unions |> List.map to_union_class_declaration)
+                    (ns.Unions  |> List.map UnionTypeClassDeclarationBuilder.to_class_declaration)
                 ``}``
         in
         nsd.WithNamespaceKeyword(

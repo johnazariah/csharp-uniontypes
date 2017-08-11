@@ -4,6 +4,7 @@ open CSharp.AlgebraicTypes
 open NUnit.Framework
 
 module UnionTypeClassTests =
+    open UnionTypeClassDeclarationBuilder
 
     [<Test>]
     let ``code-gen: private constructor - non-constraining``() =

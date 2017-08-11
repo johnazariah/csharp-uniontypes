@@ -26,13 +26,13 @@ module UnitTestUtilities =
     let internal test_codegen t generator expected =
         let actual =
             t
-            |> to_class_declaration_internal [ generator ]
+            |> UnionTypeClassDeclarationBuilder.to_class_declaration_internal [ generator ]
             |> class_to_code
         text_matches (expected, actual)
 
     let internal test_codegen_choice (t : UnionType) generator expected =
         let actual =
             t.TypeMembers
-            |> List.map ((to_choice_class_internal [ generator ] t) >> class_to_code)
+            |> List.map ((UnionTypeClassDeclarationBuilder.UnionMemberClassDeclarationBuilder.to_choice_class_internal [ generator ] t) >> class_to_code)
             |> String.concat("\n")
         text_matches (expected, actual)

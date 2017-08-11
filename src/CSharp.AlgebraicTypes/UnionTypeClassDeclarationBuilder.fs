@@ -4,161 +4,188 @@ open Microsoft.CodeAnalysis.CSharp
 open Microsoft.CodeAnalysis.CSharp.Syntax
 open BrightSword.RoslynWrapper
 
-[<AutoOpen>]
-module UnionMemberClassDeclarationBuilder =
-    let pick_value_or_singleton fv fs um =
-        match um with
-        | UnionTypeMember.UntypedMember _  -> fs
-        | UnionTypeMember.TypedMember   tm -> fv tm.MemberType
-
-    let ctor du (um : UnionTypeMember) =
-        let member_name = um.ChoiceClassName
-        let (args, assignments) =
-            match um with 
-            | UnionTypeMember.UntypedMember _  -> ([], [])
-            | UnionTypeMember.TypedMember   tm ->
-                let arg_type_name = tm.MemberType.FullTypeName
-                ([("value", ``type`` arg_type_name)], [statement (ident "Value" <-- ident "value")])
-
-        let baseargs =
-            du.BaseType
-            |> Option.map (fun b ->
-                let baseCall = sprintf "%s.%s" b.FullTypeName um.MemberAccessName
-                match um with
-                | UnionTypeMember.UntypedMember _ -> baseCall
-                | UnionTypeMember.TypedMember   _ -> sprintf "%s(value)" baseCall)
-            |> Option.fold (fun _ b -> [b]) []
-
-        match (args, assignments, baseargs) with
-        | ([], [], []) -> []
-        | _ ->
-            [
-                ``constructor`` member_name ``(`` args ``)``
-                    ``:`` baseargs
-                    [ ``public`` ]
-                    ``{``
-                        assignments
-                    ``}``
-                    :> MemberDeclarationSyntax
-            ]
-
-    let value_property _ um =
-        let value_property_value (t: TypeReference) =
-            let arg_type_name = t.FullTypeName
-            [
-                propg arg_type_name "Value"
-                    [ ``private`` ]
-                    :> MemberDeclarationSyntax
-            ]
-
-        let value_property_singleton = []
-
-        um
-        |> pick_value_or_singleton value_property_value value_property_singleton
-
-    let match_function_override du (um : UnionTypeMember) =
-        let argument_names =
-            match um with
-            | UnionTypeMember.UntypedMember _ -> []
-            | UnionTypeMember.TypedMember   _ -> [ ident "Value" ]
-
-        let match_function_name = um.MemberName |> to_match_function_parameter_name
-        let invocation = ``=>`` (``invoke`` (ident match_function_name) ``(`` argument_names ``)`` )
-
-        du
-        |> to_match_function (Some invocation)
-
-    let equals_override _ (um : UnionTypeMember) =
-        let member_name = um.ChoiceClassName
-
-        let equality_expression_builder base_expression =
-            let other_value_is_same = ``invoke`` (ident "Value.Equals") ``(`` [ ``((`` (``cast`` member_name (ident "other")) ``))`` <|.|> "Value" ] ``)``
-            base_expression <&&> other_value_is_same
-
-        let equality_expression =
-            match um with
-            | UnionTypeMember.UntypedMember _ -> (``is`` member_name (ident "other"))
-            | UnionTypeMember.TypedMember   _ -> equality_expression_builder (``is`` member_name (ident "other"))
-
-        [
-            ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object") ]``)``
-                [``public``; ``override``]
-                (Some (``=>`` equality_expression))
-                :> MemberDeclarationSyntax
-        ]
-
-    let hashcode_override _ um =
-        let hashcode_expression_builder base_expression =
-            base_expression <^> ``((`` ((ident "Value" <?.> ("GetHashCode", [])) <??> (literal "null" <.> ("GetHashCode", []))) ``))``
-
-        let get_hash_code_expression =
-            ``invoke`` (ident "GetType().FullName.GetHashCode") ``(`` [] ``)``
-
-        let hashcode_expression =
-            match um with
-            | UnionTypeMember.UntypedMember _ -> get_hash_code_expression
-            | UnionTypeMember.TypedMember   _ -> hashcode_expression_builder get_hash_code_expression
-
-        [
-            ``arrow_method`` "int" "GetHashCode" ``<<`` [] ``>>`` ``(`` []``)``
-                [``public``; ``override``]
-                (Some (``=>`` hashcode_expression))
-                :> MemberDeclarationSyntax
-        ]
-
-    let tostring_override _ (um: UnionTypeMember) =
-        let member_name = um.MemberName
-        let string_expression_value _ =
-            ``invoke`` (ident "String.Format") ``(`` [ (literal (sprintf "%s {0}" member_name)) :> ExpressionSyntax; ident "Value" :> ExpressionSyntax ] ``)``
-        let string_expression_singleton =
-            literal (sprintf ("%s") member_name)
-            :> ExpressionSyntax
-        let string_expression =
-            um
-            |> pick_value_or_singleton string_expression_value string_expression_singleton
-        [
-            ``arrow_method`` "string" "ToString" ``<<`` [ ] ``>>`` ``(`` [] ``)``
-                [ ``public``; ``override``]
-                (Some (``=>`` string_expression))
-                :> MemberDeclarationSyntax
-        ]
-
-    let to_choice_class_internal fns (du: UnionType) (um: UnionTypeMember) =
-        let union_name = du.TypeDeclaration.FullTypeName
-        let class_name = um.ChoiceClassName
-
-        let members =
-            fns
-            |> Seq.collect (fun f -> f du um)
-
-        ``class`` class_name ``<<`` [] ``>>``
-            ``:`` (Some union_name) ``,`` [ ]
-            [ ``public``; ``partial`` ]
-            ``{``
-                members
-            ``}``
-            :> MemberDeclarationSyntax
-
-    let to_choice_class du um =
-        let common_member_fns =
-            [
-                ctor
-                value_property
-                match_function_override
-            ]
-
-        let value_semantics_member_fns =
-            [
-                equals_override
-                hashcode_override
-                tostring_override
-            ]
-
-        let fns = common_member_fns @ value_semantics_member_fns
-        to_choice_class_internal fns du um
-
-[<AutoOpen>]
 module UnionTypeClassDeclarationBuilder =
+    [<AutoOpen>]
+    module DeclarationBuilderCommon =
+        let toParameterName (str : string) =
+            sprintf "%s%s" (str.Substring(0, 1).ToLower()) (str.Substring(1))
+
+        let to_match_function_parameter_name = toParameterName >> sprintf "%sFunc"
+
+        let to_match_function_parameters result_type (du : UnionType) =
+            let to_match_function_parameter um =
+                let match_function_parameter_type =
+                    match um with 
+                    | UnionTypeMember.UntypedMember _  -> (sprintf "Func<%s>" result_type)
+                    | UnionTypeMember.TypedMember   tm -> (sprintf "Func<%s, %s>" tm.MemberType.FullTypeName result_type)
+                       
+                let match_function_parameter_name = um.MemberName |> to_match_function_parameter_name
+                (match_function_parameter_name, ``type`` match_function_parameter_type)
+        
+            du.TypeMembers |> Seq.map to_match_function_parameter
+
+        let to_match_function invocation du =
+            let parameters = to_match_function_parameters "TResult" du
+            let override_or_abstract = (invocation |> Option.fold (fun _ _ -> ``override``) ``abstract``)
+            [
+                ``arrow_method`` "TResult" "Match" ``<<`` [ "TResult" ] ``>>`` ``(`` parameters ``)``
+                    [ ``public``; override_or_abstract ]
+                    invocation :> MemberDeclarationSyntax
+            ]
+
+    [<AutoOpen>]
+    module UnionMemberClassDeclarationBuilder =
+        let pick_value_or_singleton fv fs um =
+            match um with
+            | UnionTypeMember.UntypedMember _  -> fs
+            | UnionTypeMember.TypedMember   tm -> fv tm.MemberType
+
+        let ctor du (um : UnionTypeMember) =
+            let member_name = um.ChoiceClassName
+            let (args, assignments) =
+                match um with 
+                | UnionTypeMember.UntypedMember _  -> ([], [])
+                | UnionTypeMember.TypedMember   tm ->
+                    let arg_type_name = tm.MemberType.FullTypeName
+                    ([("value", ``type`` arg_type_name)], [statement (ident "Value" <-- ident "value")])
+
+            let baseargs =
+                du.BaseType
+                |> Option.map (fun b ->
+                    let baseCall = sprintf "%s.%s" b.FullTypeName um.MemberAccessName
+                    match um with
+                    | UnionTypeMember.UntypedMember _ -> baseCall
+                    | UnionTypeMember.TypedMember   _ -> sprintf "%s(value)" baseCall)
+                |> Option.fold (fun _ b -> [b]) []
+
+            match (args, assignments, baseargs) with
+            | ([], [], []) -> []
+            | _ ->
+                [
+                    ``constructor`` member_name ``(`` args ``)``
+                        ``:`` baseargs
+                        [ ``public`` ]
+                        ``{``
+                            assignments
+                        ``}``
+                        :> MemberDeclarationSyntax
+                ]
+
+        let value_property _ um =
+            let value_property_value (t: TypeReference) =
+                let arg_type_name = t.FullTypeName
+                [
+                    propg arg_type_name "Value"
+                        [ ``private`` ]
+                        :> MemberDeclarationSyntax
+                ]
+
+            let value_property_singleton = []
+
+            um
+            |> pick_value_or_singleton value_property_value value_property_singleton
+
+        let match_function_override du (um : UnionTypeMember) =
+            let argument_names =
+                match um with
+                | UnionTypeMember.UntypedMember _ -> []
+                | UnionTypeMember.TypedMember   _ -> [ ident "Value" ]
+
+            let match_function_name = um.MemberName |> to_match_function_parameter_name
+            let invocation = ``=>`` (``invoke`` (ident match_function_name) ``(`` argument_names ``)`` )
+
+            du
+            |> to_match_function (Some invocation)
+
+        let equals_override _ (um : UnionTypeMember) =
+            let member_name = um.ChoiceClassName
+
+            let equality_expression_builder base_expression =
+                let other_value_is_same = ``invoke`` (ident "Value.Equals") ``(`` [ ``((`` (``cast`` member_name (ident "other")) ``))`` <|.|> "Value" ] ``)``
+                base_expression <&&> other_value_is_same
+
+            let equality_expression =
+                match um with
+                | UnionTypeMember.UntypedMember _ -> (``is`` member_name (ident "other"))
+                | UnionTypeMember.TypedMember   _ -> equality_expression_builder (``is`` member_name (ident "other"))
+
+            [
+                ``arrow_method`` "bool" "Equals" ``<<`` [] ``>>`` ``(`` [ ("other", ``type`` "object") ]``)``
+                    [``public``; ``override``]
+                    (Some (``=>`` equality_expression))
+                    :> MemberDeclarationSyntax
+            ]
+
+        let hashcode_override _ um =
+            let hashcode_expression_builder base_expression =
+                base_expression <^> ``((`` ((ident "Value" <?.> ("GetHashCode", [])) <??> (literal "null" <.> ("GetHashCode", []))) ``))``
+
+            let get_hash_code_expression =
+                ``invoke`` (ident "GetType().FullName.GetHashCode") ``(`` [] ``)``
+
+            let hashcode_expression =
+                match um with
+                | UnionTypeMember.UntypedMember _ -> get_hash_code_expression
+                | UnionTypeMember.TypedMember   _ -> hashcode_expression_builder get_hash_code_expression
+
+            [
+                ``arrow_method`` "int" "GetHashCode" ``<<`` [] ``>>`` ``(`` []``)``
+                    [``public``; ``override``]
+                    (Some (``=>`` hashcode_expression))
+                    :> MemberDeclarationSyntax
+            ]
+
+        let tostring_override _ (um: UnionTypeMember) =
+            let member_name = um.MemberName
+            let string_expression_value _ =
+                ``invoke`` (ident "String.Format") ``(`` [ (literal (sprintf "%s {0}" member_name)) :> ExpressionSyntax; ident "Value" :> ExpressionSyntax ] ``)``
+            let string_expression_singleton =
+                literal (sprintf ("%s") member_name)
+                :> ExpressionSyntax
+            let string_expression =
+                um
+                |> pick_value_or_singleton string_expression_value string_expression_singleton
+            [
+                ``arrow_method`` "string" "ToString" ``<<`` [ ] ``>>`` ``(`` [] ``)``
+                    [ ``public``; ``override``]
+                    (Some (``=>`` string_expression))
+                    :> MemberDeclarationSyntax
+            ]
+
+        let to_choice_class_internal fns (du: UnionType) (um: UnionTypeMember) =
+            let union_name = du.TypeDeclaration.FullTypeName
+            let class_name = um.ChoiceClassName
+
+            let members =
+                fns
+                |> Seq.collect (fun f -> f du um)
+
+            ``class`` class_name ``<<`` [] ``>>``
+                ``:`` (Some union_name) ``,`` [ ]
+                [ ``public``; ``partial`` ]
+                ``{``
+                    members
+                ``}``
+                :> MemberDeclarationSyntax
+
+        let to_choice_class du um =
+            let common_member_fns =
+                [
+                    ctor
+                    value_property
+                    match_function_override
+                ]
+
+            let value_semantics_member_fns =
+                [
+                    equals_override
+                    hashcode_override
+                    tostring_override
+                ]
+
+            let fns = common_member_fns @ value_semantics_member_fns
+            to_choice_class_internal fns du um
+
     let union_typename (du : UnionType) =
         let class_name     = du.TypeDeclaration.SimpleTypeName        
         let type_parameters = du.TypeDeclaration.TypeParametersStringList
@@ -314,7 +341,7 @@ module UnionTypeClassDeclarationBuilder =
             ``}``
             :> MemberDeclarationSyntax
 
-    let to_union_class_declaration du =
+    let to_class_declaration du =
         let fns =
             [
                 to_base_value
