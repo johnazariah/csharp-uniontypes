@@ -3,9 +3,7 @@ using System.Collections;
 
 #pragma warning disable 660,661
 
-// ReSharper disable MemberHidesStaticFromOuterClass
-
-namespace BrightSword.CSharpExtensions.Reference
+namespace tests.reference.maybe
 {
     public abstract partial class Maybe<T> : IEquatable<Maybe<T>>,
         IStructuralEquatable
@@ -48,7 +46,7 @@ namespace BrightSword.CSharpExtensions.Reference
                     => someFunc(Value);
 
                 public override bool Equals(object other)
-                    => other is Some && Value.Equals(((Some) other).Value);
+                    => other is Some && Value.Equals(((Some)other).Value);
 
                 public override int GetHashCode() => GetType()
                     .FullName.GetHashCode() ^ (Value?.GetHashCode() ?? "null".GetHashCode());
