@@ -8,7 +8,7 @@ open System.Threading
 
 
 module SourceGenerator =
-    let GenerateNamespace (text: string) =
+    let GenerateNamespaceCode (text: string) =
         parseTextToNamespace text
         |> emitCodeForNamespace
 
@@ -25,13 +25,11 @@ module SourceGenerator =
                     let code =
                         text.GetText cancellationToken
                         |> _.ToString()
-                        |> parseTextToNamespace
-                        |> emitCodeForNamespace
+                        |> GenerateNamespaceCode
                     in (name, code)
 
                 let writeSourceFile (source : SourceProductionContext) ((name:string), (code:string)) =
                     source.AddSource ($"{name}.generated.cs", SourceText.From(code, Encoding.UTF8))
-
 
                 let pipeline =
                     context

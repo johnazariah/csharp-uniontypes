@@ -130,14 +130,15 @@ module AST =
             { MemberName = memberName
               MemberArgumentType = typeArgument }
 
-        member this.ChoiceClassName =
-            sprintf "%sClass" this.MemberName.unapply
+        member this.UnionMemberClassNameWithTypeArgs =
+            let typeParameters =
+                match this.MemberArgumentType with
+                | Some mat -> sprintf "<%s>" mat.CSharpTypeName
+                | None -> ""
 
-        member this.UnionMemberAccessName =
-            this.MemberArgumentType
-            |> Option.fold (fun c _ -> sprintf "New%s" c) this.MemberName.unapply
-
-        member this.ValueConstructor = this.UnionMemberAccessName
+            let bareTypeName = this.MemberName.unapply
+            in
+            sprintf "%s%s" bareTypeName typeParameters
 
         override this.ToString() =
             this.MemberArgumentType

@@ -13,46 +13,44 @@ module CodeEmitter =
         }
     *)
 
+    open System.CodeDom.Compiler
+
     let emitCodeForNamespace (ns : Namespace) : string =
-        let generateUsing (using : UsingName) : string =
-            $"using {using};"
+        let indentWriter : IndentedTextWriter  = new IndentedTextWriter(new System.IO.StringWriter ())
 
-        let generateUnion (union : UnionType) : string =
-            let unionNameWithGenericArguments = ""
-            let unionName = ""
+        let indentAndWriteLine (str : string) =
+            indentWriter.Indent <- indentWriter.Indent + 1
+            indentWriter.WriteLine str
+            indentWriter.Indent <- indentWriter.Indent - 1
 
-            let generateUnionMember (unionMember : UnionMember) : string =
-                let unionMemberName = ""
-                $"public sealed partial record {unionMemberName} : {unionNameWithGenericArguments}"
+        let generateUsing (using : UsingName) =
+            indentAndWriteLine $"using {using};"
 
-            let unionMembers =
-                union.UnionMembers
-                |> Seq.map generateUnionMember
-                |> Seq.reduce (fun res curr -> $"\t{res}\r\n{curr}")
+        let generateUnion (union : UnionType) =
+            let generateUnionMember (unionMember : UnionMember) =
+                indentAndWriteLine $"public sealed partial record {unionMember.UnionMemberClassNameWithTypeArgs} : {union.UnionClassNameWithTypeArgs};"
 
-            $"public abstract partial record {unionNameWithGenericArguments}
-            {{
-                private {unionName}() {{ }}
+            indentAndWriteLine $"public abstract partial record {union.UnionClassNameWithTypeArgs}"
+            indentAndWriteLine $"{{"
 
-            {unionMembers}
-            }}"
+            indentWriter.Indent <- indentWriter.Indent + 1
 
-        let usings =
-            ns.Usings
-            |> Seq.map generateUsing
-            |> Seq.map (fun s -> $"\t{s}")
-            |> Seq.reduce (fun res curr -> $"\t{res}\r\n{curr}")
+            indentAndWriteLine $"private {union.UnionClassName}() {{ }}"
 
-        let unions =
-            ns.Unions
-            |> Seq.map generateUnion
-            |> Seq.reduce (fun res curr -> $"\t{res}\r\n{curr}")
+            union.UnionMembers
+            |> Seq.iter generateUnionMember
 
-        $"namespace {ns.NamespaceName}
-        {{
-        {usings}
+            indentWriter.Indent <- indentWriter.Indent - 1
 
-        {unions}
-        }}"
+            indentAndWriteLine $"}}"
 
+        indentWriter.WriteLine  $"namespace {ns.NamespaceName}"
+        indentWriter.WriteLine  $"{{"
+
+        ns.Usings |> Seq.iter generateUsing
+        ns.Unions |> Seq.iter generateUnion
+
+        indentWriter.WriteLine  $"}}"
+
+        indentWriter.InnerWriter.ToString();
 

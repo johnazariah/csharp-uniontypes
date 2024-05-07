@@ -8,6 +8,8 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Tests.CSharp.UnionTypes.Par
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp.UnionTypes.TestApplication", "src\CSharp.UnionTypes.TestApplication\CSharp.UnionTypes.TestApplication.csproj", "{7E8FE3DA-41F6-4E2C-A9C2-26C1262E606E}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Tests.CSharp.UnionTypes.SourceGenerator", "tests\Tests.CSharp.UnionTypes.SourceGenerator\Tests.CSharp.UnionTypes.SourceGenerator.fsproj", "{B39E883D-B0AE-493F-BD2D-C1699D041815}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{7E8FE3DA-41F6-4E2C-A9C2-26C1262E606E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E8FE3DA-41F6-4E2C-A9C2-26C1262E606E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E8FE3DA-41F6-4E2C-A9C2-26C1262E606E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B39E883D-B0AE-493F-BD2D-C1699D041815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B39E883D-B0AE-493F-BD2D-C1699D041815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B39E883D-B0AE-493F-BD2D-C1699D041815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B39E883D-B0AE-493F-BD2D-C1699D041815}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
