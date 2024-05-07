@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>10.0</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference
+		  Include="..\CSharp.UnionTypes.Parser\CSharp.UnionTypes.Parser.fsproj"
+		  OutputItemType="Analyzer"
+		  ReferenceOutputAssembly="false"/>
+	</ItemGroup>
+
+</Project>

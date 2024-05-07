@@ -1,7 +1,6 @@
 ﻿namespace CSharp.UnionTypes
 
 open FParsec
-open System
 
 [<AutoOpen>]
 module Parser =

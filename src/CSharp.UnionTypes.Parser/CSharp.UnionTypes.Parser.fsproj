@@ -1,17 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="AST.fs" />
-    <Compile Include="Parser.fs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="AST.fs" />
+		<Compile Include="Parser.fs" />
+		<Compile Include="CodeEmitter.fs" />
+		<Compile Include="SourceGenerator.fs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FParsec" Version="1.1.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Update="FSharp.Core" Version="8.0.200" />
+		<PackageReference Include="FParsec" Version="1.1.1" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2" />
+	</ItemGroup>
 </Project>
