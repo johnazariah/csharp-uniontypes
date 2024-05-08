@@ -6,19 +6,11 @@ open System.Text
 open System.IO
 open System.Threading
 
-
 module SourceGenerator =
-    let GenerateNamespaceCode (text: string) =
-        parseTextToNamespace text
-        |> emitCodeForNamespace
-
     [<Generator>]
     type FileTransformGenerator() =
         interface IIncrementalGenerator with
             member _.Initialize (context : IncrementalGeneratorInitializationContext) =
-                let fileIsCSUnion (text : AdditionalText) =
-                    text.Path.EndsWith (".csunion")
-
                 let generateUnion (text: AdditionalText) (cancellationToken: CancellationToken) =
                     let name =
                         Path.GetFileName text.Path
@@ -34,7 +26,7 @@ module SourceGenerator =
                 let pipeline =
                     context
                         .AdditionalTextsProvider
-                        .Where(fileIsCSUnion)
+                        .Where(fun text -> text.Path.EndsWith (".csunion"))
                         .Select(generateUnion)
 
-                context.RegisterSourceOutput<string * string>(pipeline, writeSourceFile)
+                context.RegisterSourceOutput (pipeline, writeSourceFile)

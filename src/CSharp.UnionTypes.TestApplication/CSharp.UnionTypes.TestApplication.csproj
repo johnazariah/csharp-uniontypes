@@ -1,16 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>net8</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>10.0</LangVersion>
+		<OutputType>Exe</OutputType>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference
-		  Include="..\CSharp.UnionTypes.Parser\CSharp.UnionTypes.Parser.fsproj"
-		  OutputItemType="Analyzer"
-		  ReferenceOutputAssembly="false"/>
+		<AdditionalFiles Include="maybe.csunion" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CSharp.UnionTypes.Parser\CSharp.UnionTypes.Parser.fsproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<Analyzer Include="C:\code\csharp-algebraictypes\src\CSharp.UnionTypes.Parser\bin\Debug\netstandard2.0\FSharp.Core.dll" />
+		<Analyzer Include="C:\code\csharp-algebraictypes\src\CSharp.UnionTypes.Parser\bin\Debug\netstandard2.0\FParsec.dll" />
+		<Analyzer Include="C:\code\csharp-algebraictypes\src\CSharp.UnionTypes.Parser\bin\Debug\netstandard2.0\FParsecCS.dll" />
 	</ItemGroup>
 
 </Project>

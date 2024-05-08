@@ -1,10 +1,10 @@
-module Tests
+module Tests.CSharp.UnionTypes.SourceGenerator.CodeEmitterTests
 
-open CSharp.UnionTypes.SourceGenerator
+open CSharp.UnionTypes.CodeEmitter
 open Xunit
 
 [<Fact>]
-let ``Maybe<T> is generated`` () =
+let ``Maybe<T> is generated correctly`` () =
     let actual =
         """namespace CSharp.UnionTypes.TestApplication
 {
@@ -18,8 +18,8 @@ let ``Maybe<T> is generated`` () =
     public abstract partial record Maybe<T>
     {
         private Maybe() { }
-        public sealed partial record Some<T> : Maybe<T>;
-        public sealed partial record None : Maybe<T>;
+        public sealed partial record Some(T Value) : Maybe<T>;
+        public sealed partial record None() : Maybe<T>;
     }
 }
 """

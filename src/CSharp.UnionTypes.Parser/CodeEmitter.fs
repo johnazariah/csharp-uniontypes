@@ -15,7 +15,7 @@ module CodeEmitter =
 
     open System.CodeDom.Compiler
 
-    let emitCodeForNamespace (ns : Namespace) : string =
+    let generateCodeForNamespace (ns : Namespace) : string =
         let indentWriter : IndentedTextWriter  = new IndentedTextWriter(new System.IO.StringWriter ())
 
         let indentAndWriteLine (str : string) =
@@ -28,7 +28,7 @@ module CodeEmitter =
 
         let generateUnion (union : UnionType) =
             let generateUnionMember (unionMember : UnionMember) =
-                indentAndWriteLine $"public sealed partial record {unionMember.UnionMemberClassNameWithTypeArgs} : {union.UnionClassNameWithTypeArgs};"
+                indentAndWriteLine $"public sealed partial record {unionMember.MemberName.unapply}{unionMember.UnionMemberValueMember} : {union.UnionClassNameWithTypeArgs};"
 
             indentAndWriteLine $"public abstract partial record {union.UnionClassNameWithTypeArgs}"
             indentAndWriteLine $"{{"
@@ -53,4 +53,8 @@ module CodeEmitter =
         indentWriter.WriteLine  $"}}"
 
         indentWriter.InnerWriter.ToString();
+
+    let GenerateNamespaceCode (text: string) =
+        parseTextToNamespace text
+        |> generateCodeForNamespace
 

@@ -140,6 +140,11 @@ module AST =
             in
             sprintf "%s%s" bareTypeName typeParameters
 
+        member this.UnionMemberValueMember =
+            match this.MemberArgumentType with
+            | Some mat -> sprintf "(%s Value)" mat.CSharpTypeName
+            | None -> "()"
+
         override this.ToString() =
             this.MemberArgumentType
             |> Option.fold (fun _ s -> sprintf "%s of %s" this.MemberName.unapply (s.ToString()))
