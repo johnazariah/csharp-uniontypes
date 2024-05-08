@@ -1,4 +1,4 @@
-module Tests.CSharp.UnionTypes.SourceGenerator.CodeEmitterTests
+module CSharp.UnionTypes.SourceGenerator.CodeEmitterTests
 
 open CSharp.UnionTypes.CodeEmitter
 open Xunit

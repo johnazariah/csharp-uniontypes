@@ -8,6 +8,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+    	<Compile Include="ParserTests.fs">
+    	  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    	</Compile>
 		<Compile Include="CodeEmitterTests.fs" />
 		<Compile Include="SourceGeneratorTests.fs" />
 	</ItemGroup>
@@ -17,6 +20,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" Version="1.1.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2" />
 	</ItemGroup>
 
@@ -34,6 +38,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\CSharp.UnionTypes.Parser\CSharp.UnionTypes.Parser.fsproj" />
+		<ProjectReference Include="..\..\src\CSharp.UnionTypes.SourceGenerator\CSharp.UnionTypes.SourceGenerator.fsproj" />
 	</ItemGroup>
 </Project>

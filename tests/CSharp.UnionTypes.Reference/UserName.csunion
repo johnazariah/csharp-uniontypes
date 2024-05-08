@@ -1,4 +1,0 @@
-﻿namespace Foo
-{
-    union UserName { UserName<string> }
-}

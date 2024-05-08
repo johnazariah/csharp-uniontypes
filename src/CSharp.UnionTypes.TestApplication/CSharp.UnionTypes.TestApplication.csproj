@@ -12,10 +12,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\CSharp.UnionTypes.Parser\CSharp.UnionTypes.Parser.fsproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-		<Analyzer Include="C:\code\csharp-algebraictypes\src\CSharp.UnionTypes.Parser\bin\Debug\netstandard2.0\FSharp.Core.dll" />
-		<Analyzer Include="C:\code\csharp-algebraictypes\src\CSharp.UnionTypes.Parser\bin\Debug\netstandard2.0\FParsec.dll" />
-		<Analyzer Include="C:\code\csharp-algebraictypes\src\CSharp.UnionTypes.Parser\bin\Debug\netstandard2.0\FParsecCS.dll" />
+		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\Debug\netstandard2.0\FSharp.Core.dll" />
+		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\Debug\netstandard2.0\FParsec.dll" />
+		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\Debug\netstandard2.0\FParsecCS.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CSharp.UnionTypes.SourceGenerator\CSharp.UnionTypes.SourceGenerator.fsproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
 	</ItemGroup>
 
 </Project>
