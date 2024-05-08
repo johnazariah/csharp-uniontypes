@@ -5,6 +5,13 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
+	<PropertyGroup>
+		<Authors>John Azariah</Authors>
+		<PackageId>CSharp.UnionTypes</PackageId>
+		<Title>Discriminated Union DSL for C#</Title>
+		<Copyright>Copyright (c)  John Azariah 2015</Copyright>
+		<PackageProjectUrl>https://github.com/johnazariah/csharp-algebraictypes</PackageProjectUrl>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<Compile Include="AST.fs" />
