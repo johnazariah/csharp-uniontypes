@@ -1,18 +1,14 @@
-(*** hide ***)
-// This block of code is omitted in the generated HTML documentation. Use
-// it to define helpers that you do not want to show in the documentation.
-#I "../../bin"
 
-(**
 Union Types for C#
 ========================
+
 ## Summary
 
 This project provides a tool-based solution to allow modelling of union types within a C# project.
 
 It defines a minimal extension to the C# language, and provides a CustomTool to automatically generate idiomatic C# classes which provide the functionality of union types.
 
-## Usage Instructions for Visual Studio 2015
+<!-- ## Usage Instructions for Visual Studio 2015
 
 This project provides a VSIX for use with Visual Studio 2015. You can also find this [VSIX at the Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=JohnAzariah.CUnionTypes).
 
@@ -50,7 +46,7 @@ The command-line executable will generate a `.cs` file with the same name at the
     * **Custom Tool** is set to _CSharpUnionTypeGenerator_
 
 * Write more C# code (in traditional `.cs` files) using the union types.
-* Compile the project as usual
+* Compile the project as usual -->
 
 ## Structure of a .csunion file
 
@@ -145,7 +141,7 @@ _Note that in this case, one or more `using` directives including the assembly (
     union Either<L, R> { Left<L> | Right<R> }
 ```
 This discriminated union demonstrates multiple type parameters.
-
+<!-- 
 #### Constrained Types
 ```
     union TrafficLightsToStopFor constrains TrafficLights { Red | Amber }
@@ -154,7 +150,7 @@ Typically, classes are specified with base functionality, which can be augmented
 
 The `constrains` keyword allows for such a specification.
 
-* **It is illegal to specify a member in a constrained type that does not exist in the type it is constraining.**
+* **It is illegal to specify a member in a constrained type that does not exist in the type it is constraining.** -->
 
 ## How to code against a union type
 
@@ -170,16 +166,16 @@ Instead, one must use static members provided in the abstract class to construct
 For singleton choices, you can simply reference the readonly singleton member as follows:
 
 ```
-    var none = Maybe<string>.None;
+    var none = new Maybe<string>.None();
 ```
 
 #### 'Value Constructor' choices
 For value constructor choices, you will need to provide the value to the constructor member as follows:
 
 ```
-    var name = Maybe<string>.Some("John");
+    var name = new Maybe<string>.Some("John");
 ```
-
+<!-- 
 ### Pattern Matching
 
 Given an instance of the Union Type, one may wish to discriminate between the various choices and extract any wrapped values.
@@ -259,7 +255,7 @@ public void Some_equals_Some()
 }
 ```
 
-## Background : Algebraic Data Types
+## Background : Algebraic Data Types 
 [Algebraic Data Types](https://en.wikipedia.org/wiki/Algebraic_data_type) are composite data types - types that are made up of other types.
 
 ### Product Types
@@ -309,4 +305,4 @@ Indeed, if one was willing to include a F# project in their solution and express
 
 Alternately, one could use this project to model union-types without switching languages.
 
-*)
+*)-->
