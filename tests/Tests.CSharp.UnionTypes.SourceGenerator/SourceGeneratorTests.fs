@@ -1,0 +1,3 @@
+module CSharp.UnionTypes.SourceGenerator.SourceGeneratorTests
+open CSharp.UnionTypes.SourceGenerator
+

@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Authors>John Azariah</Authors>
+		<PackageId>CSharp.UnionTypes</PackageId>
+		<Title>Discriminated Union DSL for C#</Title>
+		<Copyright>Copyright (c) 2016 John Azariah</Copyright>
+		<PackageProjectUrl>https://github.com/johnazariah/csharp-algebraictypes</PackageProjectUrl>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<!-- Generates a package at build -->
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<Description>Languages like F#, Scala and Haskell have special types to represent a choice of a finite set of values. These types are variously called 'Union Types', 'Sum Types' or 'Discriminated Unions (DUs)'.
+
+Union Types are a powerful way of representing choices. They enforce value semantics and can represent choices between other Record and Union types. They are very useful constructs because they can help model the domain of a problem more precisely, and can help eliminate entire classes of runtime bugs.
+
+Modern C# provides record types, which implicitly implement value semantics; and has suport for pattern matching - both of which make implementation of Union Types possible, if tedious.
+
+This library relieves us of the tedium of building out boilerplate code for Union Types. Instead, one is able to define Union Types in a DSL with syntax that is familiar to C# users, and have the source-generator based library generate the necessary code to support pattern matching and other idiomatic C# features.
+
+The objects generated are extensible so additional methods can be added to them allowing these Union Types to be used in a rich domain model.
+</Description>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>C#; CSharp; Types; Discriminated Unions; Union Types; Choice Types; Sum Types; Type Theory; DSL; </PackageTags>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<!-- Do not include the generator as a lib dependency -->
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\LICENSE.txt">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
+		<Compile Include="AST.fs" />
+		<Compile Include="Parser.fs" />
+		<Compile Include="CodeEmitter.fs" />
+		<Compile Include="SourceGenerator.fs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Update="FSharp.Core" Version="8.0.200" GeneratePathProperty="true" />
+		<PackageReference Include="FParsec" Version="1.1.1" GeneratePathProperty="true" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Package the generator in the analyzer directory of the nuget package -->
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+		<!-- Package the Newtonsoft.Json dependency alongside the generator assembly -->
+		<None Include="$(PkgFSharp_Core)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="$(PkgFParsec)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="bin\Debug\netstandard2.0\\CSharp.UnionTypes.SourceGenerator.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2" />
+	</ItemGroup>
+</Project>

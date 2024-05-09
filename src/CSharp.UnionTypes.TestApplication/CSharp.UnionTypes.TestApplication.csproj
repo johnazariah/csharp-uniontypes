@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>10.0</LangVersion>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="maybe.csunion" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\Debug\netstandard2.0\FSharp.Core.dll" />
+		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\Debug\netstandard2.0\FParsec.dll" />
+		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\Debug\netstandard2.0\FParsecCS.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CSharp.UnionTypes.SourceGenerator\CSharp.UnionTypes.SourceGenerator.fsproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,4 @@
+﻿namespace CSharp.UnionTypes.TestApplication
+{
+	union Maybe<T> { Some<T> | None };
+}

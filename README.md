@@ -1,26 +1,16 @@
-# csharp-algebraictypes
-
-Get started with using Immutable Record and Union Types right within your existing C# Visual Studio Projects!
+# csharp-uniontypes
 
 Languages like F#, Scala and Haskell have special types to represent a choice of a finite set of values. These types are variously called 'Union Types', 'Sum Types' or 'Discriminated Unions (DUs)'.
 
-Record Types are effectively immutable namd tuples. They enforce value semantics and can be composed of other Record and Union Types.
-
 Union Types are a powerful way of representing choices. They enforce value semantics and can represent choices between other Record and Union types. They are very useful constructs because they can help model the domain of a problem more precisely, and can help eliminate entire classes of runtime bugs.
 
-Languages like C# and Java can build these types using structs, inheritance and a class hierarchy, but the boilerplate required to do this is too onerous for widespread use.
+Modern C# provides record types, which implicitly implement value semantics; and has support for pattern matching - both of which make implementation of Union Types possible, if tedious.
 
-This library presents a language extension to C# to specify Records and Discriminated Union types; a tool which parses these specifications; a code-generation mechanism and generates idiomatic C# classes which provide the correct functionality; and a Visual Studion extension which allows for integration into the standard development process. A command-line tool is also available. 
+This library relieves us of the tedium of building out boilerplate code for Union Types. Instead, one is able to define Union Types in a DSL with syntax that is familiar to C# users, and have the source-generator based library generate the necessary code to support pattern matching and other idiomatic C# features.
 
-The Visual Studio 2015 extension [is available from the marketplace](https://marketplace.visualstudio.com/items?itemName=JohnAzariah.CUnionTypes).
-
-Follow the [tutorial](https://johnazariah.github.io/csharp-algebraictypes/tutorial.html) for more detailed instructions.
+The objects generated are extensible so additional methods can be added to them allowing these Union Types to be used in a rich domain model.
 
 ## Build Status
-
-Mono | .NET
----- | ----
-[![Mono CI Build Status](https://img.shields.io/travis/johnazariah/csharp-uniontypes/master.svg)](https://travis-ci.org/johnazariah/csharp-uniontypes) | [![.NET Build Status](https://img.shields.io/appveyor/ci/johnazariah/csharp-uniontypes/master.svg)](https://ci.appveyor.com/project/johnazariah/csharp-uniontypes)
 
 ## Maintainer(s)
 
