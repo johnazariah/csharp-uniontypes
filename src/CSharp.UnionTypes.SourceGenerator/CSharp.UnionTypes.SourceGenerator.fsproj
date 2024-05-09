@@ -10,7 +10,7 @@
 		<PackageId>CSharp.UnionTypes</PackageId>
 		<Title>Discriminated Union DSL for C#</Title>
 		<Copyright>Copyright (c) 2016 John Azariah</Copyright>
-		<PackageProjectUrl>https://github.com/johnazariah/csharp-algebraictypes</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/johnazariah/csharp-uniontypes</PackageProjectUrl>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -63,7 +63,7 @@ The objects generated are extensible so additional methods can be added to them 
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="bin\Debug\netstandard2.0\\CSharp.UnionTypes.SourceGenerator.dll" />
+	  <None Remove="bin\Debug\netstandard2.0\CSharp.UnionTypes.SourceGenerator.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
