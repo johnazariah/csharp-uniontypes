@@ -11,6 +11,7 @@ on:
   release:
       types:
         - published    # Run the workflow when a new GitHub release is published
+        - edited
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
