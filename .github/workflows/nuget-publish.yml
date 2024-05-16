@@ -34,7 +34,7 @@ jobs:
         dotnet restore --force
         dotnet build --configuration Release --no-restore
         dotnet test --configuration Release --no-build
-        dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
+        dotnet pack --configuration Release "src/CSharp.UnionTypes.SourceGenerator" --output ${{ env.NuGetDirectory }}
 
     # Publish the NuGet package as an artifact, so they can be used in the following jobs
     - uses: actions/upload-artifact@v3
