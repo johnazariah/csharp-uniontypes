@@ -13,7 +13,6 @@
 		<PackageVersion>1.0.0-alpha</PackageVersion>
 		<Authors>John Azariah</Authors>
 		<PackageId>JohnAz.CSharp.UnionTypes</PackageId>
-		<PackageId>CSharp.UnionTypes</PackageId>
 		<Title>Discriminated Union DSL for C#</Title>
 		<Copyright>Copyright (c) 2016 John Azariah</Copyright>
 		<PackageProjectUrl>https://github.com/johnazariah/csharp-uniontypes</PackageProjectUrl>
@@ -63,7 +62,7 @@ The objects generated are extensible so additional methods can be added to them 
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="bin\Debug\netstandard2.0\CSharp.UnionTypes.SourceGenerator.dll" />
+	  <None Remove="bin\$(Configuration)\netstandard2.0\CSharp.UnionTypes.SourceGenerator.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
