@@ -12,7 +12,7 @@
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<PackageVersion>1.0.0-alpha</PackageVersion>
 		<Authors>John Azariah</Authors>
-		<PackageId>CSharp.UnionTypes</PackageId>
+		<PackageId>JohnAz.CSharp.UnionTypes</PackageId>
 		<Title>Discriminated Union DSL for C#</Title>
 		<Copyright>Copyright (c) 2016 John Azariah</Copyright>
 		<PackageProjectUrl>https://github.com/johnazariah/csharp-uniontypes</PackageProjectUrl>
