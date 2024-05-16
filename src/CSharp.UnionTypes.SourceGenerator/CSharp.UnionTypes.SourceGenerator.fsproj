@@ -5,18 +5,17 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
-	<PropertyGroup>
-		<Authors>John Azariah</Authors>
-		<PackageId>CSharp.UnionTypes</PackageId>
-		<Title>Discriminated Union DSL for C#</Title>
-		<Copyright>Copyright (c) 2016 John Azariah</Copyright>
-		<PackageProjectUrl>https://github.com/johnazariah/csharp-uniontypes</PackageProjectUrl>
-	</PropertyGroup>
 
 	<PropertyGroup>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<!-- Generates a package at build -->
 		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<PackageVersion>1.0.0-alpha</PackageVersion>
+		<Authors>John Azariah</Authors>
+		<PackageId>JohnAz.CSharp.UnionTypes</PackageId>
+		<Title>Discriminated Union DSL for C#</Title>
+		<Copyright>Copyright (c) 2016 John Azariah</Copyright>
+		<PackageProjectUrl>https://github.com/johnazariah/csharp-uniontypes</PackageProjectUrl>
 		<Description>Languages like F#, Scala and Haskell have special types to represent a choice of a finite set of values. These types are variously called 'Union Types', 'Sum Types' or 'Discriminated Unions (DUs)'.
 
 Union Types are a powerful way of representing choices. They enforce value semantics and can represent choices between other Record and Union types. They are very useful constructs because they can help model the domain of a problem more precisely, and can help eliminate entire classes of runtime bugs.
