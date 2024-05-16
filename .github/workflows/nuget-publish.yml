@@ -3,12 +3,6 @@
 name: publish
 on:
   workflow_dispatch: # Allow running the workflow manually from the GitHub UI
-  push:
-    branches:
-      - 'main'       # Run the workflow when pushing to the main branch
-  pull_request:
-    branches:
-      - '*'          # Run the workflow for all pull requests
   release:
     types:
       - published    # Run the workflow when a new GitHub release is published
