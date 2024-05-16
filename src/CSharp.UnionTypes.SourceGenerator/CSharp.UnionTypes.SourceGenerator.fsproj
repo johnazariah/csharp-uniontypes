@@ -62,7 +62,7 @@ The objects generated are extensible so additional methods can be added to them 
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="bin\Debug\netstandard2.0\CSharp.UnionTypes.SourceGenerator.dll" />
+	  <None Remove="bin\$(Configuration)\netstandard2.0\CSharp.UnionTypes.SourceGenerator.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
