@@ -1,4 +1,7 @@
 ﻿namespace CSharp.UnionTypes.TestApplication
 {
+	using System;
+
+	union Result<T> { Return<T> | Error<Exception> };
 	union Maybe<T> { Some<T> | None };
 }
