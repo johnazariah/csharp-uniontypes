@@ -12,9 +12,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\Debug\netstandard2.0\FSharp.Core.dll" />
-		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\Debug\netstandard2.0\FParsec.dll" />
-		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\Debug\netstandard2.0\FParsecCS.dll" />
+		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\$(Configuration)\netstandard2.0\FSharp.Core.dll" />
+		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\$(Configuration)\netstandard2.0\FParsec.dll" />
+		<Analyzer Include="..\CSharp.UnionTypes.SourceGenerator\bin\$(Configuration)\netstandard2.0\FParsecCS.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
