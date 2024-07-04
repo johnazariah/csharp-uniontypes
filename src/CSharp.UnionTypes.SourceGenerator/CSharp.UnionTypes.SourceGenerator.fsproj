@@ -62,6 +62,10 @@ The objects generated are extensible so additional methods can be added to them 
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="bin\Debug\netstandard2.0\\CSharp.UnionTypes.SourceGenerator.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -2,17 +2,6 @@
 
 [<AutoOpen>]
 module CodeEmitter =
-    (*
-        // union Maybe<T> { Some<T> | None }
-        public abstract partial record Maybe<T>
-        {
-            private Maybe() { }
-
-            public sealed partial record Some(T Value) : Maybe<T>;
-            public sealed partial record None() : Maybe<T>;
-        }
-    *)
-
     open System.CodeDom.Compiler
 
     let generateCodeForNamespace (ns : Namespace) : string =
@@ -28,7 +17,16 @@ module CodeEmitter =
 
         let generateUnion (union : UnionType) =
             let generateUnionMember (unionMember : UnionMember) =
-                indentAndWriteLine $"public sealed partial record {unionMember.MemberName.unapply}{unionMember.UnionMemberValueMember} : {union.UnionClassNameWithTypeArgs};"
+                indentAndWriteLine $"public sealed partial record {unionMember.MemberName.unapply}{unionMember.UnionMemberValueMember} : {union.UnionClassNameWithTypeArgs}"
+                indentAndWriteLine $"{{"
+                indentWriter.Indent <- indentWriter.Indent + 1
+                let memberValuePattern =
+                    match unionMember.MemberArgumentType with
+                    | Some _ -> $" {{Value}}"
+                    | None -> ""
+                indentAndWriteLine $"override public string ToString() => $\"{union.UnionClassNameWithTypeArgs}.{unionMember.MemberName.unapply}{memberValuePattern}\";"
+                indentWriter.Indent <- indentWriter.Indent - 1
+                indentAndWriteLine $"}}"
 
             indentAndWriteLine $"public abstract partial record {union.UnionClassNameWithTypeArgs}"
             indentAndWriteLine $"{{"

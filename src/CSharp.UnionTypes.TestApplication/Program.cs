@@ -9,12 +9,15 @@ namespace CSharp.UnionTypes.TestApplication
         {
             Maybe<int> m23 = new Maybe<int>.Some(23);
 
-            Console.WriteLine(m23 switch
+            var str = m23 switch
             {
                 Maybe<int>.Some { Value: var v } => $"Some {v}",
                 Maybe<int>.None => "None",
                 _ => throw new NotImplementedException()
-            });
+            };
+
+            Console.WriteLine(str);
+            Console.WriteLine($"{m23}");
         }
     }
 }
