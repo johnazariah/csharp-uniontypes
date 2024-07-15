@@ -10,7 +10,6 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<!-- Generates a package at build -->
 		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<PackageVersion>1.0.0-alpha</PackageVersion>
 		<Authors>John Azariah</Authors>
 		<PackageId>JohnAz.CSharp.UnionTypes</PackageId>
 		<Title>Discriminated Union DSL for C#</Title>
@@ -66,6 +65,10 @@ The objects generated are extensible so additional methods can be added to them 
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
