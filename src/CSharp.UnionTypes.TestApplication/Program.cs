@@ -18,6 +18,7 @@ namespace CSharp.UnionTypes.TestApplication
 
             Console.WriteLine(str);
             Console.WriteLine($"{m23}");
+            Console.WriteLine($"{new Result<int, Exception>.Return(18)}");
         }
     }
 }

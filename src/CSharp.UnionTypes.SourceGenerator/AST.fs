@@ -87,11 +87,26 @@ module AST =
         member this.UnionClassNameWithTypeArgs =
             let typeParameters =
                 this.UnionTypeParameters
-                |> Seq.map (fun a -> a.ToString())
+                |> Seq.map (fun a -> $"{a}")
                 |> String.concat ", "
                 |> (fun a ->
-                if a <> "" then sprintf "<%s>" a
-                else "")
+                        if a <> ""
+                        then sprintf "<%s>" a
+                        else "")
+
+            let bareTypeName = this.UnionTypeName.unapply
+            in
+            sprintf "%s%s" bareTypeName typeParameters
+
+        member this.UnionClassNameWithTypeofTypeArgs =
+            let typeParameters =
+                this.UnionTypeParameters
+                |> Seq.map (fun a -> $"{{typeof({a})}}")
+                |> String.concat ", "
+                |> (fun a ->
+                        if a <> ""
+                        then sprintf "<%s>" a
+                        else "")
 
             let bareTypeName = this.UnionTypeName.unapply
             in

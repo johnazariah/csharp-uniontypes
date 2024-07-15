@@ -24,7 +24,7 @@ module CodeEmitter =
                     match unionMember.MemberArgumentType with
                     | Some _ -> $" {{Value}}"
                     | None -> ""
-                indentAndWriteLine $"override public string ToString() => $\"{union.UnionClassNameWithTypeArgs}.{unionMember.MemberName.unapply}{memberValuePattern}\";"
+                indentAndWriteLine $"override public string ToString() => $\"{union.UnionClassNameWithTypeofTypeArgs}.{unionMember.MemberName.unapply}{memberValuePattern}\";"
                 indentWriter.Indent <- indentWriter.Indent - 1
                 indentAndWriteLine $"}}"
 

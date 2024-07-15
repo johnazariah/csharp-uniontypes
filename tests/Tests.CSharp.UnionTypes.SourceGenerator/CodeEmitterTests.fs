@@ -20,11 +20,11 @@ let ``Maybe<T> is generated correctly`` () =
         private Maybe() { }
         public sealed partial record Some(T Value) : Maybe<T>
         {
-            override public string ToString() => $"Some {Value}";
+            override public string ToString() => $"Maybe<{typeof(T)}>.Some {Value}";
         }
         public sealed partial record None() : Maybe<T>
         {
-            override public string ToString() => $"None";
+            override public string ToString() => $"Maybe<{typeof(T)}>.None";
         }
     }
 }

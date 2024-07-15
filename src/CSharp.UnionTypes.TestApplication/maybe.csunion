@@ -2,6 +2,6 @@
 {
 	using System;
 
-	union Result<T> { Return<T> | Error<Exception> };
+	union Result<V,E> { Return<V> | Error<E> };
 	union Maybe<T> { Some<T> | None };
 }
