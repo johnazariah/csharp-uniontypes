@@ -155,10 +155,20 @@ module AST =
             in
             sprintf "%s%s" bareTypeName typeParameters
 
+        member this.ValueMember =
+            match this.MemberArgumentType with
+            | Some _ -> "Value"
+            | None -> ""
+
         member this.UnionMemberValueMember =
             match this.MemberArgumentType with
-            | Some mat -> sprintf "(%s Value)" mat.CSharpTypeName
+            | Some mat -> sprintf "(%s %s)" mat.CSharpTypeName this.ValueMember
             | None -> "()"
+
+        member this.UnionMemberValueAccessor(varName) =
+            match this.MemberArgumentType with
+            | Some _ -> sprintf "%s.%s" varName this.ValueMember
+            | None -> ""
 
         override this.ToString() =
             this.MemberArgumentType
