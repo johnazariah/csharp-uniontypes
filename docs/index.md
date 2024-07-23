@@ -10,13 +10,10 @@ The JohnAz.CSharp.UnionTypes library can be [installed from NuGet](https://www.n
 
   <pre>PM> NuGet\Install-Package JohnAz.CSharp.UnionTypes</pre>
 
-### Example
+### Use
 -------
 
-Unions are defined in `.csunion` files using a little DSL, which are processed by a [Source Generator](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview), which then generates the appropriate objects to implement the  discriminated union in C#.
-
-Consider a `.csunion` file containing the following text:
-
+* Define a union type in a  `.csunion` file. We have a special DSL for this with a syntax that should be familiar to C# users:
 ```c++
 
 namespace Monads
@@ -25,9 +22,11 @@ namespace Monads
 }
 ```
 
-This signifies that we want a type called `Maybe<T>` which can be _either_ a value of type `Some<T>` or of `None`.
+This indicates that a `Maybe<T>` type is _either_ a `Some` wrapping a value of type `T`, or a `None` "marker" value.
 
-Using value semantics provided by records in C# 10.0 and above, we can then generate the following code which implements the discriminated union.
+* This `.csunion` file is processed by a [Source Generator](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview), which then generates the appropriate objects to implement the  discriminated union in C#.
+
+Using value semantics provided by records in C# 9.0 and above, we can then generate the following code which implements the discriminated union.
 
 ```csharp
 namespace Monads
@@ -41,7 +40,7 @@ namespace Monads
 }
 ```
 
-Then, when we wanted to use the `Maybe<T>` type in our code, we could make use of [switch expressions](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/switch-expression) to properly handle the various cases.
+* We can then use the `Maybe<T>` type in our code with of [switch expressions](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/switch-expression) to properly handle the various cases.
 
 ```csharp
 public static void Main (string[] args)
