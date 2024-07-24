@@ -4,49 +4,9 @@ Union Types for C#
 
 ## Summary
 
-This project provides a tool-based solution to allow modelling of union types within a C# project.
+This library provides a source-generator based solution to allow modelling of union types within a C# project.
 
-It defines a minimal extension to the C# language, and provides a CustomTool to automatically generate idiomatic C# classes which provide the functionality of union types.
-
-<!-- ## Usage Instructions for Visual Studio 2015
-
-This project provides a VSIX for use with Visual Studio 2015. You can also find this [VSIX at the Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=JohnAzariah.CUnionTypes).
-
-* Install the VSIX into your working environment
-* Define your union types in a file with extension `.csunion`.
-
-The VSIX contains a "CustomTool" (also known as a Single File Generator) called "CSharpUnionTypeGenerator". This generates "code-behind" C# for your `.csunion` file.
-
-* Create a file to contain your union types in your Visual Studio C# Project.
-
-In the file properties window, ensure that:
-    * **Build Action** is set to _Content_
-    * **Copy to Output Directory** is set to _Never_
-    * **Custom Tool** is set to _CSharpUnionTypeGenerator_
-
-Whenever you save the `.csunion` file, a `.g.cs` file - which is its "code-behind" - is generated. It will automatically be added to your project.
-
-* Write more C# code (in traditional `.cs` files) using the union types.
-* Compile the project as usual
-
-## Manual Usage Instructions for other environments
-
-This project provides a command-line version of the tool packaged in the Nuget package. This executable is called 'csutc.exe'.
-
-* Download the Nuget package and update your PATH to have 'csutc.exe' accessible
-* Define your union types in a file with extension `.csunion`.
-* Run `csutc.exe --input-file=<full-path-to-your-file>.csunion`. You will need to do this every time you change the `.csunion` file's contents.
-
-The command-line executable will generate a `.cs` file with the same name at the same location by default.
-
-* Add this C# file to your C# Project.
-* You may also add the `.csunion` file to your project, but ensure that its properties are set as follows:
-    * **Build Action** is set to _Content_
-    * **Copy to Output Directory** is set to _Never_
-    * **Custom Tool** is set to _CSharpUnionTypeGenerator_
-
-* Write more C# code (in traditional `.cs` files) using the union types.
-* Compile the project as usual -->
+It defines a minimal extension to the C# language, and automatically generate idiomatic C# classes which provide the functionality of union types.
 
 ## Structure of a .csunion file
 
@@ -141,7 +101,7 @@ _Note that in this case, one or more `using` directives including the assembly (
     union Either<L, R> { Left<L> | Right<R> }
 ```
 This discriminated union demonstrates multiple type parameters.
-<!-- 
+
 #### Constrained Types
 ```
     union TrafficLightsToStopFor constrains TrafficLights { Red | Amber }
@@ -150,7 +110,7 @@ Typically, classes are specified with base functionality, which can be augmented
 
 The `constrains` keyword allows for such a specification.
 
-* **It is illegal to specify a member in a constrained type that does not exist in the type it is constraining.** -->
+* **It is illegal to specify a member in a constrained type that does not exist in the type it is constraining.**
 
 ## How to code against a union type
 
@@ -174,20 +134,6 @@ For value constructor choices, you will need to provide the value to the constru
 
 ```
     var name = new Maybe<string>.Some("John");
-```
-<!-- 
-### Pattern Matching
-
-Given an instance of the Union Type, one may wish to discriminate between the various choices and extract any wrapped values.
-
-One of the primary benefits of using Union Types is to provide safety - to always ensure that all possible options are handled, for example. Therefore, we do not provide a way to enumerate over the choices with `switch` or `if-then-else` statements.
-
-Instead, each Union Type defines a `Match` function, which takes lambdas for each of the choices and invokes the appropriate function. In this way, modifying the Union enforces the appropriate updates in _all_ the places where the Union is used.
-
-Given the `name` definition above, we can get the wrapped value (or `String.Empty` if it isn't available) by:
-
-```
-    var value = name.Match(() => String.Empty, v => v);
 ```
 
 ### Augmenting the partial class
@@ -303,6 +249,4 @@ This is far more precise than a record which may introduce illegal states where 
 
 Indeed, if one was willing to include a F# project in their solution and express the domain model in F#, they could simply use the F# types in C# without any further work.
 
-Alternately, one could use this project to model union-types without switching languages.
-
-*)-->
+Alternately, one could use this library to model union-types without switching languages.

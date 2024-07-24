@@ -25,8 +25,17 @@ module CodeEmitter =
                     | Some _ -> $" {{Value}}"
                     | None -> ""
                 indentAndWriteLine $"override public string ToString() => $\"{union.UnionClassNameWithTypeofTypeArgs}.{unionMember.MemberName.unapply}{memberValuePattern}\";"
+                match union.BaseType with
+                | Some baseType ->
+                    let valueAccessor = unionMember.UnionMemberValueAccessor("value")
+                    indentAndWriteLine $"public static implicit operator {unionMember.MemberName.unapply}({baseType.CSharpTypeName}.{unionMember.MemberName.unapply} value) => new {unionMember.MemberName.unapply}({valueAccessor});"
+                    indentAndWriteLine $"public static implicit operator {baseType.CSharpTypeName}.{unionMember.MemberName.unapply}({unionMember.MemberName.unapply} value) => new {baseType.CSharpTypeName}.{unionMember.MemberName.unapply}({valueAccessor});"
+                | None ->
+                    ()
+
                 indentWriter.Indent <- indentWriter.Indent - 1
                 indentAndWriteLine $"}}"
+
 
             indentAndWriteLine $"public abstract partial record {union.UnionClassNameWithTypeArgs}"
             indentAndWriteLine $"{{"

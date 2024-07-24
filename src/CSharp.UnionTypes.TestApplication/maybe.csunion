@@ -2,6 +2,11 @@
 {
 	using System;
 
-	union Result<V,E> { Return<V> | Error<E> };
 	union Maybe<T> { Some<T> | None };
+
+	union PaymentMethod<TCard, TCheque> { Cash | Card<TCard> | Cheque<TCheque> };
+	union AuditablePaymentMethod<TCard, TCheque> constrains PaymentMethod<TCard, TCheque> { Card<TCard> | Cheque<TCheque> };
+
+	union TrafficLights { Red | Amber | Green };
+	union TrafficLightsToStopFor constrains TrafficLights { Red | Amber };
 }
