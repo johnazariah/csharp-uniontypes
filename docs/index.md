@@ -14,8 +14,8 @@ The JohnAz.CSharp.UnionTypes library can be [installed from NuGet](https://www.n
 -------
 
 * Define a union type in a  `.csunion` file. We have a special DSL for this with a syntax that should be familiar to C# users:
-```c++
 
+```csharp
 namespace Monads
 {
   union Maybe<T> { Some<T> | None };
